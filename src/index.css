@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+body {
+    background-color: #f5f5fa;
+}
+@layer utilities {
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        /* IE/Edge */
+        scrollbar-width: none;
+        /* Firefox */
+    }
+}
+
+.padding-md {
+    padding: 5px;
+}
+
+.padding-lg {
+    padding: 10px;
+}
+
+.margin-md {
+    margin: 20px;
+}
+
+.title {
+    font-size: 40px;
+}
+
+.container-simple {
+    padding: 5px;
+}
+
+.container {
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    padding: 16px;
+    margin: auto;
+}
+
+.container-mini {
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+}
+
+.text-menu {
+    font-size: 20px;
+}
+
+@keyframes spinSlow {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin-slow {
+    animation: spinSlow 20s linear infinite;
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.title {
+    font-size: 24px;
+    /* Kích thước chữ */
+    font-weight: bold;
+    /* In đậm */
+    text-transform: uppercase;
+    /* Viết hoa */
+    letter-spacing: 2px;
+    /* Áp dụng gradient cho chữ */
+    /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); */
+    /* Đổ bóng */
+    padding-bottom: 10px;
+    /* Khoảng cách với nội dung dưới */
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    50% { transform: translateX(4px); }
+    75% { transform: translateX(-4px); }
+    100% { transform: translateX(0); }
+  }
+  
+  .shake {
+    animation: shake 0.3s;
+  }
+  
