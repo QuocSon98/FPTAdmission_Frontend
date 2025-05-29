@@ -1,0 +1,144 @@
+.header {
+  width: 100%;
+  background: #fff;
+}
+
+.header-top {
+  padding: 15px 0;
+}
+
+.containerTC {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.header-top-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logoTC  {
+  height: 90px;
+}
+
+.imgTC{
+  height: 100%;
+  width: auto;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.language-switch {
+  display: flex;
+  gap: 5px;
+}
+
+.lang-btn {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  background: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.lang-btn.active {
+  background: #FF6B00;
+  color: rgb(0, 0, 0);
+  border-color: #FF6B00;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+}
+
+.search-box input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px 0 0 4px;
+  width: 200px;
+}
+
+.search-box button {
+  padding: 8px 12px;
+  background: #FF6B00;
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+
+.main-nav {
+  background: #f05123;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-menu li a {
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  padding: 20px 10px;
+  display: block;
+  font-style:  bold ;
+  text-transform: uppercase;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Roboto', sans-serif;
+}
+
+.nav-menu li a:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.mobile-menu-btn span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background: white;
+  margin: 5px 0;
+  transition: 0.3s;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .nav-menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #FF6B00;
+    z-index: 1000;
+  }
+
+  .nav-menu.active {
+    display: flex;
+  }
+
+  .search-box input {
+    width: 150px;
+  }
+} 

@@ -37,10 +37,10 @@ body {
 }
 
 .container {
-    background-color: white;
+    /* background-color: white;
     border-radius: 10px;
     border: 1px solid #e5e7eb;
-    padding: 16px;
+    padding: 16px; */
     margin: auto;
 }
 
