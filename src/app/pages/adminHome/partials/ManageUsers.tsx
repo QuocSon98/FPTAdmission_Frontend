@@ -26,7 +26,7 @@ export default function ManageUsers({ showModal = false, setShowModal }: ManageU
     password: "",
     fullName: "",
     address: "",
-    role: "ADMIN",
+    role: "USER",
   })
   const [adding, setAdding] = useState<boolean>(false)
   const [addError, setAddError] = useState<string>("")
@@ -112,7 +112,7 @@ export default function ManageUsers({ showModal = false, setShowModal }: ManageU
         password: "",
         fullName: "",
         address: "",
-        role: "ADMIN",
+        role: "USER",
       })
       await loadAccounts(currentPage)
     } catch (err: any) {
@@ -200,6 +200,7 @@ export default function ManageUsers({ showModal = false, setShowModal }: ManageU
                 className="pl-10 pr-8 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 appearance-none bg-white"
               >
                 <option value="ALL">Tất cả vai trò</option>
+                <option value="USER">User</option>
                 <option value="ADMIN">Admin</option>
                 <option value="CONSULTANT">Consultant</option>
               </select>
@@ -494,6 +495,7 @@ export default function ManageUsers({ showModal = false, setShowModal }: ManageU
                         onChange={handleNewUserChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       >
+                        <option value="USER">User</option>
                         <option value="ADMIN">Admin</option>
                         <option value="CONSULTANT">Consultant</option>
                       </select>
