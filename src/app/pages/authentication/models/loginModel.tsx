@@ -9,7 +9,25 @@ export interface UserGoogle {
     picture: string;
   }
 
-export interface LoginResponse {
-  token: string;
-  role: 'ADMIN' | 'CONSULTANT' | string;
+export interface AccountResponse {
+  uuid: string,
+  userName: string,
+  fullName: string,
+  phone: string,
+  email: string,
+  address: string,
+  role: 'USER' | 'ADMIN' | 'CONSULTANT' | string,
+  token: string,
+  image: string
+}
+
+export interface AccountUpdate {
+  uuid: string,
+  userName: string,
+  fullName: string,
+  phone: string,
+  email: string,
+  role: 'USER' | 'ADMIN' | 'CONSULTANT' | string,
+  address: string,
+  image: string
 }

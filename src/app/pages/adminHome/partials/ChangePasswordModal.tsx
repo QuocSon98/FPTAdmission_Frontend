@@ -1,10 +1,10 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { FiLock, FiX, FiEye, FiEyeOff } from "react-icons/fi"
 import { motion } from "framer-motion"
+import { api } from "../../../hooks/api"
 
 interface ChangePasswordModalProps {
   isOpen: boolean
@@ -29,35 +29,49 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (formData.newPassword !== formData.confirmPassword) {
+    const { newPassword, confirmPassword, currentPassword } = formData;
+
+    if (newPassword !== confirmPassword) {
       setError("Mật khẩu mới và xác nhận không khớp")
       return
+    }
+    if (newPassword === currentPassword) {
+      setError("Mật khẩu mới và mật khẩu hiện tại không được giống nhau")
+      return
+    }
+    if (newPassword.length < 6) {
+      setError("Mật khẩu phải có ít nhất 6 ký tự");
+      return;
+    }
+
+    if (newPassword.length > 32) {
+      setError("Mật khẩu không được vượt quá 32 ký tự");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setError("Mật khẩu mới và xác nhận không khớp");
+      return;
     }
 
     setLoading(true)
     setError("")
 
     try {
-      const token = localStorage.getItem("token")
-      const response = await fetch("http://localhost:8082/api/change-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          currentPassword: formData.currentPassword,
-          newPassword: formData.newPassword,
-        }),
+      const response = await api.post("/change-password", {
+        currentPassword: formData.currentPassword,
+        newPassword: formData.newPassword,
       })
 
-      if (response.ok) {
+      if (response.status === 200) {
         setSuccess(true)
       } else {
         setError("Mật khẩu hiện tại không đúng.")
       }
     } catch (err) {
       setError("Không thể kết nối đến server.")
+      console.log(err);
+
     } finally {
       setLoading(false)
     }
