@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FiMenu, FiBell, FiSearch, FiUser, FiLogOut, FiHome, FiMessageSquare, FiFileText, FiLock, FiKey, FiMail } from 'react-icons/fi';
+import { FiMenu, FiBell, FiSearch, FiUser, FiLogOut, FiHome, FiMessageSquare, FiFileText, FiLock } from 'react-icons/fi';
 import type { IconType } from 'react-icons';
 import { AnimatePresence, motion } from 'framer-motion';
 import logoFPT from '../../../app/assets/logo-fpt.png';
@@ -7,12 +7,12 @@ import ManageUsers from './partials/ManageUsers';
 import DashboardStats from './partials/DashboardStats';
 import QuickActions from './partials/QuickAction';
 import RecentActivity from './partials/RecentActivities';
-import ForgotPasswordModal from './partials/ForgotPasswordModal';
-import ResetPasswordModal from './partials/ResetPasswordModal';
-import ChangePasswordModal from './partials/ChangePasswordModal';
+import ProfileManagement from './partials/profileManagement';
+import { useNavigate } from 'react-router-dom';
+import AdminConsultationsPage from './partials/Consultations';
 
 interface MenuItem {
-  key: "dashboard" | "users" | "consultations" | "reports" | "password-management"
+  key: "dashboard" | "users" | "consultations" | "reports" | "profile-management"
   label: string
   icon: IconType
 }
@@ -23,18 +23,16 @@ const menuItems: MenuItem[] = [
   { key: 'reports', label: 'Reports', icon: FiBell },
   { key: "consultations", label: "Tư vấn", icon: FiMessageSquare },
   { key: "reports", label: "Báo cáo", icon: FiFileText },
-  { key: "password-management", label: "Quản lý mật khẩu", icon: FiLock },
+  { key: "profile-management", label: "Thông tin cá nhân", icon: FiLock },
 ];
 
 export default function AdminHome() {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  const [active, setActive] = useState<"dashboard" | "users" | "consultations" | "reports" | "password-management">(
+  const [active, setActive] = useState<"dashboard" | "users" | "consultations" | "reports" | "profile-management">(
     "dashboard",
   )
   const [showAddUserModal, setShowAddUserModal] = useState<boolean>(false)
-  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState<boolean>(false)
-  const [showResetPasswordModal, setShowResetPasswordModal] = useState<boolean>(false)
-  const [showChangePasswordModal, setShowChangePasswordModal] = useState<boolean>(false)
+  const navigate = useNavigate();
 
   const renderContent = () => {
     switch (active) {
@@ -63,16 +61,7 @@ export default function AdminHome() {
       case "users":
         return <ManageUsers showModal={showAddUserModal} setShowModal={setShowAddUserModal} />
       case "consultations":
-        return (
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-900">Quản lý tư vấn</h2>
-            <div className="text-center py-12">
-              <FiMessageSquare className="mx-auto text-gray-400 mb-4" size={48} />
-              <p className="text-gray-600">Module tư vấn đang được phát triển</p>
-              <p className="text-sm text-gray-500 mt-2">Sẽ có sớm trong phiên bản tiếp theo</p>
-            </div>
-          </div>
-        )
+        return <AdminConsultationsPage/>
       case "reports":
         return (
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
@@ -84,62 +73,19 @@ export default function AdminHome() {
             </div>
           </div>
         )
-      case "password-management":
+      case "profile-management":
         return (
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-900">Quản lý mật khẩu</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setShowForgotPasswordModal(true)}
-                className="p-6 border-2 border-orange-200 rounded-xl hover:border-orange-300 transition-colors group"
-              >
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-200 transition-colors">
-                    <FiMail className="text-orange-600" size={24} />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Quên mật khẩu</h3>
-                  <p className="text-sm text-gray-600">Gửi email đặt lại mật khẩu cho người dùng</p>
-                </div>
-              </motion.button>
-
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setShowResetPasswordModal(true)}
-                className="p-6 border-2 border-blue-200 rounded-xl hover:border-blue-300 transition-colors group"
-              >
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-200 transition-colors">
-                    <FiKey className="text-blue-600" size={24} />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Đặt lại mật khẩu</h3>
-                  <p className="text-sm text-gray-600">Đặt lại mật khẩu bằng token xác thực</p>
-                </div>
-              </motion.button>
-
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setShowChangePasswordModal(true)}
-                className="p-6 border-2 border-green-200 rounded-xl hover:border-green-300 transition-colors group"
-              >
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-green-200 transition-colors">
-                    <FiLock className="text-green-600" size={24} />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Đổi mật khẩu</h3>
-                  <p className="text-sm text-gray-600">Thay đổi mật khẩu hiện tại của bạn</p>
-                </div>
-              </motion.button>
-            </div>
-          </div>
+          <ProfileManagement/>
         )
       default:
         return null
     }
   }
+  const handleLogout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("account");
+  navigate("/login");
+};
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
@@ -161,10 +107,9 @@ export default function AdminHome() {
                   onClick={() => setActive(item.key)}
                   className={`
                     flex items-center w-full p-4 rounded-xl transition-all duration-200
-                    ${
-                      isActive
-                        ? "bg-white bg-opacity-20 shadow-lg backdrop-blur-sm"
-                        : "hover:bg-white hover:bg-opacity-10"
+                    ${isActive
+                      ? "bg-white bg-opacity-20 shadow-lg backdrop-blur-sm"
+                      : "hover:bg-white hover:bg-opacity-10"
                     }
                   `}
                 >
@@ -191,18 +136,19 @@ export default function AdminHome() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+              className="fixed inset-0 bg-black/30 bg-opacity-50 z-40 lg:hidden"
               onClick={() => setSidebarOpen(false)}
             />
             <motion.aside
               initial={{ x: -300 }}
               animate={{ x: 0 }}
               exit={{ x: -300 }}
-              className="fixed inset-y-0 left-0 w-72 bg-gradient-to-b from-orange-500 to-orange-600 text-white z-50 lg:hidden shadow-xl"
+              className="fixed inset-y-0 left-0 w-72 bg-gradient-to-b from-orange-500 to-orange-600 text-black z-50 lg:hidden shadow-xl"
             >
               <div className="flex items-center justify-between h-20 px-6 border-b border-orange-400">
-                <img src={logoFPT || "/placeholder.svg"} alt="FPT" className="h-10" />
-                <button
+                <div className="flex items-center justify-center border-b border-orange-400 bg-white shadow-sm">
+                  <img src={logoFPT || "/placeholder.svg"} alt="FPT" className="h-12" />
+                </div>                <button
                   onClick={() => setSidebarOpen(false)}
                   className="p-2 hover:bg-white hover:bg-opacity-10 rounded-lg transition"
                 >
@@ -278,16 +224,7 @@ export default function AdminHome() {
                 </div>
               </button>
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto">
-                <button className="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-gray-50 transition">
-                  <FiUser className="mr-3" size={16} />
-                  Thông tin cá nhân
-                </button>
-                <button className="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-gray-50 transition">
-                  <FiLock className="mr-3" size={16} />
-                  Đổi mật khẩu
-                </button>
-                <hr className="my-1" />
-                <button className="flex items-center w-full px-4 py-3 text-red-600 hover:bg-red-50 transition">
+                <button onClick={handleLogout} className="flex items-center w-full px-4 py-3 text-red-600 hover:bg-red-50 transition">
                   <FiLogOut className="mr-3" size={16} />
                   Đăng xuất
                 </button>
@@ -299,11 +236,6 @@ export default function AdminHome() {
         {/* Content */}
         <main className="flex-1 overflow-auto p-6">{renderContent()}</main>
       </div>
-
-      {/* Modals */}
-      <ForgotPasswordModal isOpen={showForgotPasswordModal} onClose={() => setShowForgotPasswordModal(false)} />
-      <ResetPasswordModal isOpen={showResetPasswordModal} onClose={() => setShowResetPasswordModal(false)} />
-      <ChangePasswordModal isOpen={showChangePasswordModal} onClose={() => setShowChangePasswordModal(false)} />
     </div>
   )
 }

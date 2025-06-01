@@ -1,9 +1,10 @@
 import { useState, type FormEvent } from 'react';
-import axios, { type AxiosResponse } from 'axios';
+import { type AxiosResponse } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import logoFPT from '../../../app/assets/logo-fpt.png';
-import type { LoginResponse } from './models/loginModel';
-import { login } from './services/authService';
+import type { AccountResponse } from './models/loginModel';
+import { useAuth } from '../../hooks/AuthContext';
+import { api } from '../../hooks/api';
 
 interface ForgotPasswordRequest {
   email: string
@@ -17,40 +18,53 @@ export default function Login() {
   const [showForgotPassword, setShowForgotPassword] = useState<boolean>(false);
   const [forgotEmail, setForgotEmail] = useState<string>('');
   const [forgotMessage, setForgotMessage] = useState<string>('');
-
   const navigate = useNavigate();
+  const { login } = useAuth();
+
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!userName || !password) {
-      setMessage('Vui lòng nhập đầy đủ thông tin');
+      setMessage("Vui lòng nhập đầy đủ thông tin");
       return;
     }
 
     try {
-      const res: AxiosResponse<LoginResponse> = await login({ userName, password });
+      const res: AxiosResponse<AccountResponse> = await api.post('/login', { userName, password });
+      login(res.data, res.data.token);
+      const { token, ...accountInfo } = res.data;
 
-      const token = res.data.token;
-      localStorage.setItem('token', token);
+      // Lưu token riêng biệt
+      localStorage.setItem("token", token);
 
-      switch (res.data.role) {
-        case 'ADMIN':
-          navigate('/admin');
+      // Lưu thông tin tài khoản (loại bỏ token)
+      localStorage.setItem("account", JSON.stringify(accountInfo));
+
+      // Điều hướng dựa trên role
+      switch (accountInfo.role) {
+        case "ADMIN":
+          navigate("/admin");
           break;
-        case 'CONSULTANT':
-          navigate('/consultant/home');
+        case "CONSULTANT":
+          navigate("/consultant/home");
+          break;
+        case "CUSTOMER":
+          navigate("/"); // ví dụ khách hàng về home
           break;
         default:
-          setMessage('Tài khoản không có quyền truy cập phù hợp');
+          setMessage("Tài khoản không có quyền truy cập phù hợp");
           break;
       }
-    } catch (err) {
-      setMessage('Tên đăng nhập hoặc mật khẩu không đúng');
+    } catch (error) {
+      setMessage("Tên đăng nhập hoặc mật khẩu không đúng");
+      console.error("Login error:", error);
     }
   };
 
+
   const forgotPassword = async (data: ForgotPasswordRequest): Promise<AxiosResponse<any>> => {
-    return await axios.post("http://localhost:8082/api/forgot-password", data)
+    return await api.post("/forgot-password", data)
   }
 
   const handleForgotPassword = async (e: FormEvent<HTMLFormElement>) => {
@@ -71,7 +85,7 @@ export default function Login() {
     } catch (err) {
       setForgotMessage("Email không tồn tại trong hệ thống")
       console.log("Error sending forgot password email:", err);
-      
+
     }
   }
 
@@ -227,8 +241,8 @@ export default function Login() {
               {forgotMessage && (
                 <div
                   className={`px-4 py-3 mb-4 rounded ${forgotMessage.includes("Đã gửi")
-                      ? "text-green-700 bg-green-100 border border-green-400"
-                      : "text-red-700 bg-red-100 border border-red-400"
+                    ? "text-green-700 bg-green-100 border border-green-400"
+                    : "text-red-700 bg-red-100 border border-red-400"
                     }`}
                 >
                   {forgotMessage}
