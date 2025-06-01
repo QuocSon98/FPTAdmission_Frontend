@@ -51,7 +51,7 @@ const Header: React.FC = () => {
             <li><Link to="/trai-nghiem">Trải nghiệm toàn cầu</Link></li>
             <li><Link to="/sinh-vien">Sinh viên</Link></li>
             <li><Link to="/cuu-sinh-vien">Cựu Sinh viên</Link></li>
-            <li><Link to="/lien-he">Liên hệ</Link></li>
+            <li><Link to="/contract">Liên hệ</Link></li>
           </ul>
         </div>
       </nav>
