@@ -2,6 +2,9 @@ export interface Account {
   uuid: string;
   userName: string;
   email: string;
+  phone: string;
+  fullName: string;
+  address: string;
   role: string;
 }
 
