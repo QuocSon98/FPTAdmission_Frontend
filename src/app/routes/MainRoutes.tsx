@@ -7,6 +7,7 @@ import ProtectedRoute from "./ProtectedRoutes";
 import Layout from"../layouts/layout";
 import Home from "../pages/public/homePage/home";
 import Contract from "../pages/public/contract/contract";
+import Introduction from "../pages/public/introduction/introduction";
 
 
 const MainRoutes = () => {
@@ -17,6 +18,7 @@ const MainRoutes = () => {
                     <Route path="/" element={<Layout/>}>
                         <Route index element={<Home/>} />
                         <Route path="/contract" element={<Contract/>} />
+                        <Route path="/introduction" element={<Introduction/>} />
                     </Route>
                     <Route path="/login" element={<Login/>} />
                     <Route path="/register" element={<Register />} />

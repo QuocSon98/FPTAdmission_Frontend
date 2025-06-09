@@ -44,7 +44,7 @@ const Header: React.FC = () => {
           </button>
           <ul className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
             <li><Link to="/">Trang chủ</Link></li>
-            <li><Link to="/gioi-thieu">Giới thiệu</Link></li>
+            <li><Link to="/introduction">Giới thiệu</Link></li>
             <li><Link to="/tin-tuc">Tin tức & Sự kiện</Link></li>
             <li><Link to="/nganh-hoc">Ngành học</Link></li>
             <li><Link to="/tuyen-sinh">Tuyển sinh</Link></li>
