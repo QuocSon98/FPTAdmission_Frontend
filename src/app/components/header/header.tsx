@@ -117,7 +117,7 @@ const Header: React.FC = () => {
               <li><Link to="/" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl ">Trang chủ</Link></li>
               <li><Link to="/gioi-thieu" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Giới thiệu</Link></li>
               <li><Link to="/tin-tuc" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Tin tức & Sự kiện</Link></li>
-              <li><Link to="/nganh-hoc" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Ngành học</Link></li>
+              <li><Link to="/major" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Ngành học</Link></li>
               <li><Link to="/tuyen-sinh" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Tuyển sinh</Link></li>
               <li><Link to="/contract" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Liên hệ</Link></li>
             </ul>
