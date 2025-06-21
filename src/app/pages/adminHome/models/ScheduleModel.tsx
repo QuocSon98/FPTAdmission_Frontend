@@ -11,3 +11,11 @@ export interface ScheduleItem {
     endTime: string
   }[]
 }
+
+export interface Slot {
+  date: string
+  time: string
+  assignedTo: string[]
+  displayNames?: string[]
+  statuses?: string[]
+}
