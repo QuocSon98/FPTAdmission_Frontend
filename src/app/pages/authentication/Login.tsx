@@ -1,14 +1,10 @@
 import { useState, type FormEvent } from 'react';
 import { type AxiosResponse } from 'axios';
 import { useNavigate } from 'react-router-dom';
-import logoFPT from '../../../app/assets/logo-fpt.png';
+import logoFPT from '../../assets/logo-fpt.png';
 import type { AccountResponse } from './models/loginModel';
 import { useAuth } from '../../hooks/AuthContext';
-import { api } from '../../hooks/api';
-
-interface ForgotPasswordRequest {
-  email: string
-}
+import { forgotPasswordAPI, loginAPI } from './services/authService';
 
 export default function Login() {
   const [userName, setUsername] = useState<string>('');
@@ -31,7 +27,7 @@ export default function Login() {
     }
 
     try {
-      const res: AxiosResponse<AccountResponse> = await api.post('/login', { userName, password });
+      const res: AxiosResponse<AccountResponse> = await loginAPI({ userName, password });
       login(res.data, res.data.token);
       const { token, ...accountInfo } = res.data;
 
@@ -49,7 +45,7 @@ export default function Login() {
         case "CONSULTANT":
           navigate("/consultant/home");
           break;
-        case "CUSTOMER":
+        case "USER":
           navigate("/"); // ví dụ khách hàng về home
           break;
         default:
@@ -62,11 +58,6 @@ export default function Login() {
     }
   };
 
-
-  const forgotPassword = async (data: ForgotPasswordRequest): Promise<AxiosResponse<any>> => {
-    return await api.post("/forgot-password", data)
-  }
-
   const handleForgotPassword = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!forgotEmail) {
@@ -75,15 +66,18 @@ export default function Login() {
     }
 
     try {
-      await forgotPassword({ email: forgotEmail })
-      setForgotMessage("Đã gửi link reset mật khẩu đến email của bạn!")
+      const res = await forgotPasswordAPI(forgotEmail)
+      if(res.status === 200){
+        setForgotMessage("Đã gửi link reset mật khẩu đến email của bạn!")
       setTimeout(() => {
         setShowForgotPassword(false)
         setForgotEmail("")
         setForgotMessage("")
       }, 2000)
+      }
+      
     } catch (err) {
-      setForgotMessage("Email không tồn tại trong hệ thống")
+      setForgotMessage("Có lỗi xảy ra khi gửi email")
       console.log("Error sending forgot password email:", err);
 
     }

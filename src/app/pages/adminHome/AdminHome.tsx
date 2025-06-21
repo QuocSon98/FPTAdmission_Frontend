@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FiMenu, FiBell, FiSearch, FiUser, FiLogOut, FiHome, FiMessageSquare, FiFileText, FiLock } from 'react-icons/fi';
+import { FiMenu, FiBell, FiSearch, FiUser, FiLogOut, FiHome, FiFileText, FiLock, FiCalendar } from 'react-icons/fi';
 import type { IconType } from 'react-icons';
 import { AnimatePresence, motion } from 'framer-motion';
 import logoFPT from '../../../app/assets/logo-fpt.png';
@@ -19,10 +19,9 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   { key: "dashboard", label: "Tổng quan", icon: FiHome },
-  { key: 'users', label: 'Users', icon: FiUser },
-  { key: 'reports', label: 'Reports', icon: FiBell },
-  { key: "consultations", label: "Tư vấn", icon: FiMessageSquare },
-  { key: "reports", label: "Báo cáo", icon: FiFileText },
+  { key: 'users', label: 'Quản lý tài khoản', icon: FiUser },
+  { key: 'reports', label: 'Báo cáo', icon: FiFileText },
+  { key: "consultations", label: "Lịch tư vấn", icon: FiCalendar },
   { key: "profile-management", label: "Thông tin cá nhân", icon: FiLock },
 ];
 
@@ -90,7 +89,7 @@ export default function AdminHome() {
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
       {/* Sidebar */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-72 bg-gradient-to-b from-orange-500 to-orange-600 text-white shadow-xl">
+      <aside className="hidden lg:flex lg:flex-col lg:w-62 bg-gradient-to-b from-orange-500 to-orange-600 text-white shadow-xl">
         <div className="flex items-center justify-center h-20 border-b border-orange-400 bg-white shadow-sm">
           <img src={logoFPT || "/placeholder.svg"} alt="FPT" className="h-12" />
         </div>
@@ -234,7 +233,7 @@ export default function AdminHome() {
         </header>
 
         {/* Content */}
-        <main className="flex-1 overflow-auto p-6">{renderContent()}</main>
+        <main className="flex-1 h-screen overflow-auto p-6">{renderContent()}</main>
       </div>
     </div>
   )

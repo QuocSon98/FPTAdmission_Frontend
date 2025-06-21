@@ -1,7 +1,7 @@
 import axios from "axios"
 import type { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from "axios"
 
-const baseURL = "http://localhost:8082/api/users"
+const baseURL = "http://localhost:8085/api"
 
 export const api = axios.create({
   baseURL: baseURL,
