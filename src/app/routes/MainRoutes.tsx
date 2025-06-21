@@ -20,8 +20,8 @@ const MainRoutes = () => {
                     </Route>
                     <Route path="/login" element={<Login/>} />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/admin" element={ <ProtectedRoute> <AdminHome /> </ProtectedRoute>} />
-                    <Route path="/reset-password" element={ <ProtectedRoute> <ResetPassword/> </ProtectedRoute>} />
+                    <Route path="/admin" element={  <AdminHome /> } />
+                    <Route path="/reset-password" element={  <ResetPassword/> } />
                 </Routes>
             </BrowserRouter>
         </>
