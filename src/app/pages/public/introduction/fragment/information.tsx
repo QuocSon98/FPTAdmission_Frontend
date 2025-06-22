@@ -11,7 +11,7 @@ const Information: React.FC<InformationProps> = ({ title, content }) => {
         <>
             <div className='grid grid-cols-2 my-5'>
                 <h2 className='text-[30px] font-semibold'>{title}</h2>
-                <h3 className=''>
+                <h3 className='text-content'>
                     {content}
                 </h3>
             </div>

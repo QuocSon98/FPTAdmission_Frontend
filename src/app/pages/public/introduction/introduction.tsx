@@ -12,7 +12,7 @@ const Introduction: React.FC = () => {
             {/* Introduction Content */}
             <div className='mx-60 my-5'>
                 <div className=''>
-                    <h1 className='text-center text-[40px]'>Trường Đại học FPT</h1>
+                    <h1 className='text-center text-[40px] text-title'>Trường Đại học FPT</h1>
                     <Information title='Khát vọng đổi thay' content='Là trường đại học thế hệ mới được hình thành trong lòng doanh nghiệp, Trường Đại học FPT hiểu rõ nhu cầu của thị trường và nhạy bén nắm bắt xu hướng khoa học công nghệ để từ đó xây dựng và triển khai chương trình đào tạo khác biệt, chú trọng phát triển cá nhân gắn liền với đa dạng trải nghiệm đồng thời cung cấp kiến thức cập nhật từ những chương trình đào tạo được kiểm định đạt chuẩn quốc tế cùng kỹ năng nghề nghiệp và năng lực tự học suốt đời cho người học, khát vọng phát triển nền kinh tế tri thức và kiến tạo xã hội hạnh phúc'/>
                     <div className='my-10'>
                         <img src="https://daihoc.fpt.edu.vn/wp-content/uploads/2024/11/128519036_1735296023299592_2956495484616895293_n-1536x1058.avif" alt="" />
@@ -26,7 +26,7 @@ const Introduction: React.FC = () => {
                     <Information title='Triết lý giáo dục' content='Giáo dục và đào tạo là tổ chức và quản trị việc tự học của người học.' />
                 </div>
                 <div className=''>
-                    <h1 className='text-center text-[40px]'>Đẳng cấp quốc tế - Giải thưởng và thành tựu</h1>
+                    <h1 className='text-center text-[40px] text-title'>Đẳng cấp quốc tế - Giải thưởng và thành tựu</h1>
                     <AchievementList />
                 </div>
             </div>
