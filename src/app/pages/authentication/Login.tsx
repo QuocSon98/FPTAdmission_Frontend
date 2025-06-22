@@ -43,7 +43,7 @@ export default function Login() {
           navigate("/admin");
           break;
         case "CONSULTANT":
-          navigate("/consultant/home");
+          navigate("/staff");
           break;
         case "USER":
           navigate("/"); // ví dụ khách hàng về home

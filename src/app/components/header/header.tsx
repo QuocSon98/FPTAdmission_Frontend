@@ -64,13 +64,44 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.png';
+import { useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  const handleLogin = () => {
+    // Logic for handling login can be added here
+    // For now, we will just set isAuthenticated to true
+    navigate('/login');
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("account");
+    setIsAuthenticated(false);
+  };
+
+  // Function to check if user is authenticated
+  const checkAuthentication = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  };
+
+  // Check authentication when component mounts
+  React.useEffect(() => {
+    checkAuthentication();
+  }, []);
 
   return (
     <header className="w-full bg-white shadow-md">
@@ -84,12 +115,12 @@ const Header: React.FC = () => {
             </div>
             <div className="flex items-center space-x-6">
               <div className="flex">
-                <input 
-                  type="text" 
-                  placeholder="Tìm kiếm..." 
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm..."
                   className="px-15 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
-                <button 
+                <button
                   type="button"
                   className="px-4 py-2 bg-orange-500 text-white rounded-r-md hover:bg-orange-600"
                 >
@@ -97,34 +128,47 @@ const Header: React.FC = () => {
                 </button>
               </div>
             </div>
+            <div className=''>
+              {isAuthenticated ?
+                (
+                  <button className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
+                    onClick={() => handleLogout()}>
+                    Logout
+                  </button>
+                ) : (
+                  <button className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
+                    onClick={() => handleLogin()}>
+                    Login
+                  </button>
+                )}
+            </div>
           </div>
         </div>
+        <nav className="bg-orange-600">
+          <div className="max-w-8xl mx-auto px-7 flex justify-center">
+            <div className="relative">
+              <button
+                className="md:hidden p-2 text-white"
+                onClick={toggleMenu}
+              >
+                <div className="space-y-2">
+                  <span className="block w-8 h-0.5 bg-white"></span>
+                  <span className="block w-8 h-0.5 bg-white"></span>
+                  <span className="block w-8 h-0.5 bg-white"></span>
+                </div>
+              </button>
+              <ul className={`${isMenuOpen ? 'block' : 'hidden'} md:flex md:space-x-6 py-4 md:py-0 ${isMenuOpen ? 'absolute top-full left-0 right-0 bg-orange-500' : ''}uppercase`}>
+                <li><Link to="/" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl ">Trang chủ</Link></li>
+                <li><Link to="/introduction" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Giới thiệu</Link></li>
+                <li><Link to="/tin-tuc" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Tin tức & Sự kiện</Link></li>
+                <li><Link to="/major" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Ngành học</Link></li>
+                <li><Link to="/contract" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Liên hệ</Link></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
       </div>
-      <nav className="bg-orange-600">
-        <div className="max-w-8xl mx-auto px-7 flex justify-center">
-          <div className="relative">
-            <button 
-              className="md:hidden p-2 text-white"
-              onClick={toggleMenu}
-            >
-              <div className="space-y-2">
-                <span className="block w-8 h-0.5 bg-white"></span>
-                <span className="block w-8 h-0.5 bg-white"></span>
-                <span className="block w-8 h-0.5 bg-white"></span>
-              </div>
-            </button>
-            <ul className={`${isMenuOpen ? 'block' : 'hidden'} md:flex md:space-x-6 py-4 md:py-0 ${isMenuOpen ? 'absolute top-full left-0 right-0 bg-orange-500' : ''}uppercase`}>
-              <li><Link to="/" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl ">Trang chủ</Link></li>
-              <li><Link to="/introduction" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Giới thiệu</Link></li>
-              <li><Link to="/tin-tuc" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Tin tức & Sự kiện</Link></li>
-              <li><Link to="/major" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Ngành học</Link></li>
-              <li><Link to="/tuyen-sinh" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Tuyển sinh</Link></li>
-              <li><Link to="/contract" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Liên hệ</Link></li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-    </header>
+    </header >
   );
 };
 

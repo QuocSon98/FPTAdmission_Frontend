@@ -9,7 +9,8 @@ import Home from "../pages/public/homePage/home";
 import Contract from "../pages/public/contract/contract";
 import Major from "../pages/public/major/major";
 import Introduction from "../pages/public/introduction/introduction";
-
+import StaffLayout from "../layouts/staffLayout";
+import Schedule from "../pages/staff/schedule/Schedule";
 
 const MainRoutes = () => {
     return (
@@ -21,6 +22,10 @@ const MainRoutes = () => {
                         <Route path="/contract" element={<Contract/>} />
                         <Route path="/major" element={<Major/>} />
                         <Route path="/introduction" element={<Introduction/>} />
+                    </Route>
+                    <Route path="/staff" element={<StaffLayout/>}>
+                        <Route index element={<Schedule/>} />
+                        {/* Add more staff routes here */}
                     </Route>
                     <Route path="/login" element={<Login/>} />
                     <Route path="/register" element={<Register />} />
