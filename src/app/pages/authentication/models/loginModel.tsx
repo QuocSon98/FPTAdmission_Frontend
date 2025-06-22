@@ -9,6 +9,17 @@ export interface UserGoogle {
     picture: string;
   }
 
+export interface RegisterFormData {
+  userName: string
+  email: string
+  phone: string
+  password: string
+  confirmPassword: string
+  fullName: string
+  address: string
+  role: string
+}
+
 export interface AccountResponse {
   uuid: string,
   userName: string,

@@ -1,19 +1,9 @@
 import type React from "react"
 import { useState } from "react"
-import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import logoFPT from '../../../app/assets/logo-fpt.png'
-
-interface RegisterFormData {
-  userName: string
-  email: string
-  phone: string
-  password: string
-  confirmPassword: string
-  fullName: string
-  address: string
-  role: string
-}
+import { registerAPI } from "./services/authService"
+import type { RegisterFormData } from "./models/loginModel"
 
 export default function Register() {
   const [data, setData] = useState<RegisterFormData>({
@@ -95,19 +85,12 @@ export default function Register() {
     if (!validateForm()) return
     setIsLoading(true)
     try {
-      await axios.post("http://localhost:8082/api/register", {
-        userName: data.userName,
-        email: data.email,
-        phone: data.phone,
-        password: data.password,
-        fullName: data.fullName,
-        address: data.address,
-        role: data.role,
-      })
-
-      setMessage("Đăng ký thành công!")
-      setMessageType("success")
-      setTimeout(() => navigate("/login"), 1500)
+      const res = await registerAPI(data)
+      if(res.status === 200 ){
+        setMessage("Đăng ký thành công!")
+        setMessageType("success")
+        setTimeout(() => navigate("/login"), 1500)
+      }
     } catch (error) {
       setMessage("Đăng ký thất bại! Vui lòng thử lại.")
       setMessageType("error")
