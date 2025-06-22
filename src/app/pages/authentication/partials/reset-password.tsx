@@ -3,7 +3,8 @@
 import type React from "react"
 import { useState, useEffect } from "react"
 import { useSearchParams, useNavigate } from "react-router-dom"
-import axios from "axios"
+import logoFPT from '../../../assets/logo-fpt.png';
+import { resetPasswordAPI } from "../services/authService";
 
 export default function ResetPassword() {
   const [password, setPassword] = useState("")
@@ -21,8 +22,8 @@ export default function ResetPassword() {
 
   useEffect(() => {
     if (!token) {
-      setMessage("Token không hợp lệ")
-      setMessageType("error")
+      setMessage("Token không hợp lệ");
+      setMessageType("error");
     }
   }, [token])
 
@@ -49,17 +50,18 @@ export default function ResetPassword() {
 
     setIsLoading(true)
     try {
-      await axios.post("http://localhost:8082/api/reset-password", {
-        password: password,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      setMessage("Đặt lại mật khẩu thành công!")
-      setMessageType("success")
-      setTimeout(() => navigate("/login"), 2000)
+      if (!token) {
+        setMessage("Token không hợp lệ");
+        setMessageType("error");
+        setIsLoading(false);
+        return;
+      }
+      const res = await resetPasswordAPI(password, token)
+      if(res.status === 200){
+        setMessage("Đặt lại mật khẩu thành công!")
+        setMessageType("success")
+        setTimeout(() => navigate("/login"), 2000)
+      }
     } catch (error) {
       setMessage("Có lỗi xảy ra. Vui lòng thử lại.")
       setMessageType("error")
@@ -144,7 +146,7 @@ export default function ResetPassword() {
 
                   <button
                     type="submit"
-                    disabled={isLoading || !token}
+                    disabled={isLoading }
                     className="w-full tracking-wide font-semibold bg-orange-500 text-gray-100 py-4 rounded-lg hover:bg-orange-700 transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isLoading ? "Đang xử lý..." : "Đặt lại mật khẩu"}
@@ -164,7 +166,7 @@ export default function ResetPassword() {
         <div className="flex-1 bg-indigo-100 text-center hidden lg:flex">
           <div className="flex flex-col items-center justify-center w-full">
             <div className="w-60 h-60 bg-orange-100 rounded-full flex items-center justify-center mb-4">
-              <div className="text-6xl font-bold text-orange-500">FPT</div>
+              <img src={logoFPT} alt="FPT University Logo" className="" />
             </div>
             <div className="text-center">
               <h2 className="text-2xl font-bold text-orange-600">Đại học FPT</h2>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import type { ChangeEvent, FormEvent } from "react"
-import { FiTrash2,FiEdit3, FiSearch, FiPlus, FiX, FiUser, FiMail, FiPhone, FiMapPin,FiEye,FiEyeOff,FiUsers, FiFilter,} from "react-icons/fi"
+import { FiTrash2, FiSearch, FiPlus, FiX, FiUser, FiMail, FiPhone, FiMapPin,FiEye,FiEyeOff,FiUsers, FiFilter,} from "react-icons/fi"
 import { motion, AnimatePresence } from "framer-motion"
 import { register, searchAccounts, deleteAccount, getAllAccounts } from "../services/accountService"
 import type { Account, NewUser } from "../models/UserModel"
@@ -298,15 +298,15 @@ export default function ManageUsers({ showModal = false, setShowModal }: ManageU
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex items-center justify-end space-x-2">
-                        <motion.button
+                      <div className="flex items-center justify-center space-x-2">
+                        {/* <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                           title="Chỉnh sửa"
                         >
                           <FiEdit3 size={16} />
-                        </motion.button>
+                        </motion.button> */}
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}

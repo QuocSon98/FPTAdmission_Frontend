@@ -19,6 +19,7 @@ import {
     DigitalDesign,
     DigitalConversion 
 } from "../pages/public/major/IT/IT";
+import Introduction from "../pages/public/introduction/introduction";
 
 
 const MainRoutes = () => {
@@ -38,11 +39,12 @@ const MainRoutes = () => {
                         <Route path="/semiconductorDesign" element={<SemiconductorDesign/>} />
                         <Route path="/digitalDesign" element={<DigitalDesign/>} />
                         <Route path="/digitalConversion" element={<DigitalConversion/>} />
+                        <Route path="/introduction" element={<Introduction/>} />
                     </Route>
                     <Route path="/login" element={<Login/>} />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/admin" element={ <ProtectedRoute> <AdminHome /> </ProtectedRoute>} />
-                    <Route path="/reset-password" element={ <ProtectedRoute> <ResetPassword/> </ProtectedRoute>} />
+                    <Route path="/admin" element={  <AdminHome /> } />
+                    <Route path="/reset-password" element={  <ResetPassword/> } />
                 </Routes>
             </BrowserRouter>
         </>

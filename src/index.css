@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 body {
-    background-color: #f5f5fa;
+    background-color: #ffffff;
 }
 @layer utilities {
     .scrollbar-hide::-webkit-scrollbar {

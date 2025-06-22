@@ -1,6 +1,7 @@
 import React from 'react';
 import './Contract.css'; // Assuming you have a CSS file for styling
 import Admission from './form/admission';
+import TitleBanner from '../../../components/banner/TitleBanner';
 
 const Contract: React.FC = () => {
 
@@ -8,12 +9,9 @@ const Contract: React.FC = () => {
     return (
         <>
             {/* Banner */}
-            <div className='flex items-center justify-center text-center relative h-[300px]'>
-                <img src="/src/app/assets/img03.png" alt="" className='brightness-[0.6]' />
-                <h1 className='absolute text-[50px] text-white text-shadow-[2px_2px_4px_rgba(0_0_0_/_0.7)]'>LIÊN HỆ VỚI CHÚNG TÔI</h1>
-            </div>
+            <TitleBanner title='LIÊN HỆ VỚI CHÚNG TÔI' />
             {/* Campus Contract Information */}
-            <div className='mx-45 my-10'>
+            <div className='mx-60 my-10'>
                 <div className='text-[40px]'>
                     <h1>Trường Đại học FPT</h1>
                 </div>
@@ -49,7 +47,7 @@ const Contract: React.FC = () => {
                 </div>
             </div>
             {/* Admission Register Form */}
-            <div className='mx-45 my-10'>
+            <div className='mx-60 my-10'>
                 <Admission />
             </div>
         </>

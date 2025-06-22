@@ -115,7 +115,7 @@ const Header: React.FC = () => {
             </button>
             <ul className={`${isMenuOpen ? 'block' : 'hidden'} md:flex md:space-x-6 py-4 md:py-0 ${isMenuOpen ? 'absolute top-full left-0 right-0 bg-orange-500' : ''}uppercase`}>
               <li><Link to="/" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl ">Trang chủ</Link></li>
-              <li><Link to="/gioi-thieu" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Giới thiệu</Link></li>
+              <li><Link to="/introduction" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Giới thiệu</Link></li>
               <li><Link to="/tin-tuc" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Tin tức & Sự kiện</Link></li>
               <li><Link to="/major" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Ngành học</Link></li>
               <li><Link to="/tuyen-sinh" className="block py-4 px-5 text-white hover:bg-orange-700 font-semibold text-xl">Tuyển sinh</Link></li>
