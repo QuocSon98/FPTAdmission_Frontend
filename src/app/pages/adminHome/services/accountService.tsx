@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8082/api',
+  baseURL: 'http://localhost:8082/api/users',
   headers: { 'Content-Type': 'application/json' }
 });
 
@@ -20,7 +20,7 @@ export const getAllAccounts = ({ page = 0, size = 10 }) =>{
 // Tìm theo name với paging (ADMIN only)
 // GET /api/accounts/search?name=abc&page=0&size=10
 export const searchAccounts = ({ name = '', page = 0, size = 10 }) => {
-  return api.get('/users/search', { params: { name, page, size } });
+  return api.get('/search', { params: { name, page, size } });
 }
 
 // Cập nhật account theo id
@@ -36,5 +36,5 @@ export const deleteAccount = (id: any) =>{
 }
 
 export const register = (data: any) =>{
-  return api.post('/users/register', data);
+  return api.post('/register', data);
 }
