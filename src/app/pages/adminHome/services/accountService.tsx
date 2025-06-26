@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8082/api',
+  baseURL: 'http://localhost:8080/api',
   headers: { 'Content-Type': 'application/json' }
 });
 
@@ -14,7 +14,7 @@ api.interceptors.request.use(config => {
 // Lấy page đầu của tất cả account (ADMIN only)
 // GET /api/account?page=0&size=10
 export const getAllAccounts = ({ page = 0, size = 10 }) =>{
-  return api.get('/account', { params: { page, size } });
+  return api.get('/users/account', { params: { page, size } });
 }
 
 // Tìm theo name với paging (ADMIN only)
@@ -26,7 +26,7 @@ export const searchAccounts = ({ name = '', page = 0, size = 10 }) => {
 // Cập nhật account theo id
 // PUT /api/account/{id}
 export const updateAccount = (id: any, data: any) =>{
-  return api.put(`/account/${id}`, data);
+  return api.put(`/users/account/${id}`, data);
 }
 
 // Xóa account theo id (ADMIN only)

@@ -5,6 +5,7 @@ import type React from "react"
 import { useState } from "react"
 import { FiMail, FiX } from "react-icons/fi"
 import { motion } from "framer-motion"
+import { forgotPasswordAPI } from "../../authentication/services/authService"
 
 interface ForgotPasswordModalProps {
   isOpen: boolean
@@ -22,19 +23,10 @@ export default function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordM
     setLoading(true)
     setError("")
 
-    const token = localStorage.getItem("token")
-
     try {
-      const response = await fetch("http://localhost:8082/api/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({ email }),
-      })
+      const response = await forgotPasswordAPI(email)
 
-      if (response.ok) {
+      if (response.status === 200) {
         setSuccess(true)
       } else {
         setError("Có lỗi xảy ra. Vui lòng thử lại.")

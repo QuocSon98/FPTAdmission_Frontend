@@ -2,7 +2,7 @@ import axios from "axios"
 import type { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from "axios"
 import type { RegisterFormData } from "../models/loginModel";
 
-const baseURL = "http://localhost:8084/api/users"
+const baseURL = "http://localhost:8080/api"
 
 export const api = axios.create({
     baseURL: baseURL,
@@ -33,13 +33,13 @@ api.interceptors.response.use((response: AxiosResponse) => {
 });
 
 export const loginAPI = ({ userName, password }: { userName: string; password: string }) => {
-    return api.post('/login', { userName, password });
+    return api.post('auth/login', { userName, password });
 }
 export const registerAPI = (data: RegisterFormData) => {
-    return api.post('/register', data)
+    return api.post('auth/register', data)
 }
 export const resetPasswordAPI = (password: string, token: string) => {
-    return api.post('/reset-password', { password },
+    return api.post('auth/reset-password', { password },
         {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -49,9 +49,9 @@ export const resetPasswordAPI = (password: string, token: string) => {
 }
 
 export const forgotPasswordAPI = (email: string) => {
-    return api.post('/forgot-password', { email })
+    return api.post('auth/forgot-password', { email })
 }
 
 export const changePasswordAPI = (data: any) => {
-    return api.post('/change-password', data)
+    return api.post('auth/change-password', data)
 }
