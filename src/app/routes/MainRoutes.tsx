@@ -22,6 +22,8 @@ import {
 import Introduction from "../pages/public/introduction/introduction";
 import StaffLayout from "../layouts/staffLayout";
 import Schedule from "../pages/staff/schedule/Schedule";
+import Consultant from "../pages/public/consultant/consultant";
+import { News } from "../pages/public/news/news";
 
 const MainRoutes = () => {
     return (
@@ -41,7 +43,10 @@ const MainRoutes = () => {
                         <Route path="/digitalDesign" element={<DigitalDesign/>} />
                         <Route path="/digitalConversion" element={<DigitalConversion/>} />
                         <Route path="/introduction" element={<Introduction/>} />
+                        <Route path="/consultant" element={<Consultant/>} />
                     </Route>
+                    <Route path="/tin-tuc" element={<News/>}/>
+
                     <Route path="/staff" element={<StaffLayout/>}>
                         <Route index element={<Schedule/>} />
                         {/* Add more staff routes here */}
