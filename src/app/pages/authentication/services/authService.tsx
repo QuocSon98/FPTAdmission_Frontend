@@ -2,7 +2,7 @@ import axios from "axios"
 import type { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from "axios"
 import type { RegisterFormData } from "../models/loginModel";
 
-const baseURL = "http://localhost:8084/api/users"
+const baseURL = "http://localhost:8084/api/auth"
 
 export const api = axios.create({
     baseURL: baseURL,
