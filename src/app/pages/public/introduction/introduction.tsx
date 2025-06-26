@@ -1,5 +1,5 @@
 import React from 'react'
-import TitleBanner from '../../../components/banner/TitleBanner'
+import TitleBanner from './../../../components/banner/titleBanner'
 import Information from './fragment/information'
 import AchievementList from './dataIni/achievementList' // Adjust the import path as necessary
 import './Introduction.css' // Assuming you have a CSS file for styling
