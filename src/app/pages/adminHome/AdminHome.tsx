@@ -10,10 +10,11 @@ import RecentActivity from './partials/RecentActivities';
 import ProfileManagement from './partials/profileManagement';
 import { useNavigate } from 'react-router-dom';
 import AdminConsultationsPage from './partials/Consultations';
-// import Blog from './partials/Blog';
+import Blog from './partials/Blog';
+import ProgramManagement from './partials/ProgramManagement';
 
 interface MenuItem {
-  key: "dashboard" | "users" | "consultations" | "reports" | "profile-management" | "blog"
+  key: "dashboard" | "users" | "consultations" | "reports" | "profile-management" | "blog" | "program-management"
   label: string
   icon: IconType
 }
@@ -24,12 +25,13 @@ const menuItems: MenuItem[] = [
   // { key: 'reports', label: 'Báo cáo', icon: FiFileText },
   { key: "blog", label: "Bài viết", icon: FiFileText },
   { key: "consultations", label: "Lịch tư vấn", icon: FiCalendar },
+  { key: "program-management", label: "Chương trình đào tạo", icon: FiFileText },
   { key: "profile-management", label: "Thông tin cá nhân", icon: FiLock },
 ];
 
 export default function AdminHome() {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  const [active, setActive] = useState<"dashboard" | "users" | "consultations" | "reports" | "profile-management" | "blog">(
+  const [active, setActive] = useState<"dashboard" | "users" | "consultations" | "reports" | "profile-management" | "blog" | "program-management">(
     "dashboard",
   )
   const [showAddUserModal, setShowAddUserModal] = useState<boolean>(false)
@@ -80,8 +82,11 @@ export default function AdminHome() {
         )
       case "blog":
         return (
-          // <Blog type="post" object={null}/>
-          <div>blog</div>
+          <Blog type="post" object={null}/>
+        )
+      case "program-management":
+        return (
+          <ProgramManagement/>
         )
       default:
         return null
@@ -96,7 +101,7 @@ export default function AdminHome() {
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
       {/* Sidebar */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-62 bg-gradient-to-b from-orange-500 to-orange-600 text-white shadow-xl">
+      <aside className="hidden lg:flex lg:flex-col lg:w-69 bg-gradient-to-b from-orange-500 to-orange-600 text-white shadow-xl">
         <div className="flex items-center justify-center h-20 border-b border-orange-400 bg-white shadow-sm">
           <img src={logoFPT || "/placeholder.svg"} alt="FPT" className="h-12" />
         </div>
