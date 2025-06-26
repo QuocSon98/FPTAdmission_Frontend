@@ -6,7 +6,7 @@ import { FiUser, FiMail, FiPhone, FiMapPin, FiCamera, FiEdit3, FiSave, FiX, FiLo
 import { motion } from "framer-motion"
 import ChangePasswordModal from "./ChangePasswordModal"
 import type { AccountUpdate } from "../../authentication/models/loginModel"
-import { api } from "../../../hooks/api"
+import { updateAccount } from "../services/accountService"
 
 export default function ProfileManagement() {
     const [profile, setProfile] = useState<AccountUpdate>({
@@ -62,7 +62,7 @@ export default function ProfileManagement() {
         setLoading(true)
         setError("")
         try {
-            const response = await api.put(`/account/${profile.uuid}`, {
+            const response = await updateAccount(`/${profile.uuid}`, {
                 email: profile.email,
                 phone: profile.phone,
                 fullName: profile.fullName,

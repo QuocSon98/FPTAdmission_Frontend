@@ -10,9 +10,10 @@ import RecentActivity from './partials/RecentActivities';
 import ProfileManagement from './partials/profileManagement';
 import { useNavigate } from 'react-router-dom';
 import AdminConsultationsPage from './partials/Consultations';
+// import Blog from './partials/Blog';
 
 interface MenuItem {
-  key: "dashboard" | "users" | "consultations" | "reports" | "profile-management"
+  key: "dashboard" | "users" | "consultations" | "reports" | "profile-management" | "blog"
   label: string
   icon: IconType
 }
@@ -20,14 +21,15 @@ interface MenuItem {
 const menuItems: MenuItem[] = [
   { key: "dashboard", label: "Tổng quan", icon: FiHome },
   { key: 'users', label: 'Quản lý tài khoản', icon: FiUser },
-  { key: 'reports', label: 'Báo cáo', icon: FiFileText },
+  // { key: 'reports', label: 'Báo cáo', icon: FiFileText },
+  { key: "blog", label: "Bài viết", icon: FiFileText },
   { key: "consultations", label: "Lịch tư vấn", icon: FiCalendar },
   { key: "profile-management", label: "Thông tin cá nhân", icon: FiLock },
 ];
 
 export default function AdminHome() {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  const [active, setActive] = useState<"dashboard" | "users" | "consultations" | "reports" | "profile-management">(
+  const [active, setActive] = useState<"dashboard" | "users" | "consultations" | "reports" | "profile-management" | "blog">(
     "dashboard",
   )
   const [showAddUserModal, setShowAddUserModal] = useState<boolean>(false)
@@ -75,6 +77,11 @@ export default function AdminHome() {
       case "profile-management":
         return (
           <ProfileManagement/>
+        )
+      case "blog":
+        return (
+          // <Blog type="post" object={null}/>
+          <div>blog</div>
         )
       default:
         return null

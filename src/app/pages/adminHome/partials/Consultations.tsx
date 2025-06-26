@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import {
   parse,
   format,
@@ -11,7 +11,6 @@ import {
   addHours,
   isBefore,
   startOfDay,
-  endOfDay,
 } from "date-fns"
 import {
   FiEdit,
@@ -44,8 +43,10 @@ export default function AdminConsultationsPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [showFilters, setShowFilters] = useState<boolean>(false)
   const [staffList, setStaffList] = useState<Account[]>([])
-  const [rawScheduleData, setRawScheduleData] = useState<ScheduleItem[]>([])
+  const [candidate, setCandidate] = useState<Account[]>([])
   const [slotDetails, setSlotDetails] = useState<ScheduleItem["bookingList"] | null>(null)
+  const [isDetailLoading, setIsDetailLoading] = useState<boolean>(false)
+
 
   const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 })
   const days = Array.from({ length: 7 }).map((_, i) => {
@@ -55,67 +56,94 @@ export default function AdminConsultationsPage() {
 
   const today = startOfDay(new Date())
 
-  useEffect(() => {
-    const fetchSlots = async () => {
-      setIsLoading(true)
+  const fetchSlots = useCallback(async () => {
+    setIsLoading(true)
+    const res = await getAllAccounts({ page: 0, size: 100 });
+    const allAccounts = res.data?.listData || [];
+    const staffs: Account[] = allAccounts.filter((acc: Account) => acc.role === "CONSULTANT");
+    const candidate: Account[] = allAccounts.filter((acc: Account) => acc.role === "USER");
+    setStaffList(staffs);
+    setCandidate(candidate);
 
-      const from = startOfDay(days[0])
-      const to = endOfDay(days[6])
+     try {
+    const res = await api.get("/scheduler/get", {
+      params: { page: 0, size: 100 },
+    });
+    const apiData: ScheduleItem[] = res.data?.listData || [];
+    
+    console.log("Bắt đầu xử lý. Tổng số ScheduleItem từ API:", apiData.length);
 
-      try {
-        const staffRes = await getAllAccounts({ page: 0, size: 100 })
-        const allAccounts = staffRes.data?.listData || []
-        const consultants: Account[] = allAccounts.filter((acc: Account) => acc.role === "CONSULTANT")
-        setStaffList(consultants)
+    const processedSlots: { [key: string]: Slot } = {};
 
-        const res = await api.get("/scheduler/get", {
-          params: { page: 0, size: 100 },
-        })
-        const apiData: ScheduleItem[] = res.data?.listData || []
-        setRawScheduleData(apiData)
+    apiData.forEach((item, index) => {
+      console.log(`%c[${index}] Đang xử lý item:`, "color: blue", item);
 
-        const allSlots: Slot[] = []
-
-        apiData.forEach((item) => {
-          if (!item.bookingList?.length) return
-
-          const sample = item.bookingList[0]
-          const availableDate = parse(sample.availableDate, "dd-MM-yy", new Date())
-          const startTime = parse(sample.startTime, "dd-MM-yy HH:mm", new Date())
-
-          if (availableDate < from || availableDate > to) return
-
-          const staffUuids: string[] = []
-          const displayNames: string[] = []
-          const statuses: string[] = []
-
-          item.bookingList.forEach((booking) => {
-            if (booking.staffUuid) {
-              staffUuids.push(booking.staffUuid)
-              const name = consultants.find((s) => s.uuid === booking.staffUuid)?.fullName || booking.staffUuid
-              displayNames.push(name)
-            }
-          })
-
-          allSlots.push({
-            date: format(availableDate, "yyyy-MM-dd"),
-            time: format(startTime, "HH:mm"),
-            assignedTo: staffUuids,
-            displayNames,
-            statuses,
-          })
-        })
-
-        setSlots(allSlots)
-      } catch (err) {
-        console.error("Error fetching schedules:", err)
-      } finally {
-        setIsLoading(false)
+      if (!item.bookingList || item.bookingList.length === 0) {
+        console.warn("-> Item này không có bookingList, bỏ qua.");
+        return;
       }
-    }
+      
+      const booking = item.bookingList[0];
 
-    fetchSlots()
+      // === BƯỚC KIỂM TRA QUAN TRỌNG NHẤT ===
+      console.log(`--> Input cho parse: "${booking.startTime}"`);
+      const startTimeObject = parse(booking.startTime, "dd-MM-yy HH:mm", new Date());
+      console.log("--> Kết quả của parse:", startTimeObject);
+      // =====================================
+
+      if (isNaN(startTimeObject.getTime())) {
+        console.error("--> LỖI: Parse ngày tháng thất bại! Bỏ qua item này.");
+        return; 
+      }
+
+      // Vô hiệu hóa bộ lọc tuần để kiểm tra
+      // const from = startOfDay(days[0]);
+      // const to = endOfDay(days[6]);
+      // if (startTimeObject < from || startTimeObject > to) {
+      //   console.warn("--> Bị lọc do nằm ngoài tuần xem, bỏ qua.");
+      //   return;
+      // }
+
+      const date = format(startTimeObject, "yyyy-MM-dd");
+      const time = format(startTimeObject, "HH:mm");
+      const slotKey = `${date}-${time}`;
+      
+      console.log(`--> Đã xử lý thành công: key = ${slotKey}`);
+
+      if (!processedSlots[slotKey]) {
+        processedSlots[slotKey] = {
+          date,
+          time,
+          assignedTo: [],
+          displayNames: [],
+          statuses: [],
+        };
+      }
+
+      if (booking.staffUuid) {
+        // ... logic thêm nhân viên ...
+      }
+      
+      console.log("--> SUCCESS: Đã thêm/cập nhật slot. Trạng thái processedSlots hiện tại:", {...processedSlots});
+    });
+    
+    console.log("%cVòng lặp kết thúc. Kết quả processedSlots cuối cùng:", "color: green; font-weight: bold;", processedSlots);
+    setSlots(Object.values(processedSlots));
+
+  } catch (err) {
+    console.error("Error fetching schedules:", err);
+  } finally {
+    setIsLoading(false);
+  }
   }, [weekOffset])
+
+// useEffect(() => {
+//   console.log("%cDữ liệu slots đã được cập nhật:", "color: green; font-weight: bold;", slots);
+// }, [slots]);
+
+  useEffect(() => {
+    fetchSlots()
+  }, [fetchSlots])
 
   const toggleAssign = (date: string, time: string) => {
     const slot = slots.find((s) => s.date === date && s.time === time)
@@ -123,16 +151,30 @@ export default function AdminConsultationsPage() {
     setModalStaff(slot?.assignedTo || [])
   }
 
-  const handleSlotClick = (date: string, time: string) => {
-    const match = rawScheduleData.find((item) =>
-      item.bookingList.some(
-        (b) =>
-          format(parse(b.startTime, "dd-MM-yy HH:mm", new Date()), "yyyy-MM-dd") === date &&
-          format(parse(b.startTime, "dd-MM-yy HH:mm", new Date()), "HH:mm") === time,
-      ),
-    )
 
-    setSlotDetails(match?.bookingList || [])
+  const handleSlotClick = async (date: string, time: string) => {
+    if (isDetailLoading) return
+    setIsDetailLoading(true)
+    setSlotDetails(null) // Xóa chi tiết cũ trước khi gọi API
+
+    try {
+      const payload = {
+        time: time, // "HH:mm"
+        date: date, // "yyyy-MM-dd"
+        page: 0,
+        size: 10, // Đặt size > 0 để nhận được dữ liệu, ví dụ 10
+      }
+
+      const res = await api.get("/scheduler/filter", { params: payload })
+      const bookingDetails = res.data?.listData || []
+      setSlotDetails(bookingDetails)
+
+    } catch (error) {
+      console.error("Error fetching slot details:", error)
+      alert("Không thể tải chi tiết lịch. Vui lòng thử lại.")
+    } finally {
+      setIsDetailLoading(false)
+    }
   }
 
   const saveSlot = async () => {
@@ -146,7 +188,7 @@ export default function AdminConsultationsPage() {
     const payload = {
       bookings: modalStaff.map((staffUuid) => ({
         staff_uuid: staffUuid,
-        availableDate: format(new Date(editingSlot.date), "dd-MM-yy"),
+        availableDate: format(new Date(editingSlot.date ?? ""), "dd-MM-yy"),
         startTime: format(start, "dd-MM-yy HH:mm"),
         endTime: format(end, "dd-MM-yy HH:mm"),
       })),
@@ -319,11 +361,10 @@ export default function AdminConsultationsPage() {
               return (
                 <div
                   key={i}
-                  className={`p-4 text-center font-semibold transition-all duration-200 ${
-                    isCurrentDay
-                      ? "bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg"
-                      : "bg-gradient-to-br from-gray-50 to-gray-100 text-gray-700 hover:from-gray-100 hover:to-gray-150"
-                  } ${i < filteredDays.length - 1 ? "border-r border-gray-100" : ""}`}
+                  className={`p-4 text-center font-semibold transition-all duration-200 ${isCurrentDay
+                    ? "bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg"
+                    : "bg-gradient-to-br from-gray-50 to-gray-100 text-gray-700 hover:from-gray-100 hover:to-gray-150"
+                    } ${i < filteredDays.length - 1 ? "border-r border-gray-100" : ""}`}
                 >
                   <div className="text-sm uppercase tracking-wide opacity-80">{format(day, "EEE")}</div>
                   <div className={`text-lg mt-1 ${isCurrentDay ? "font-bold" : ""}`}>{format(day, "dd/MM")}</div>
@@ -377,11 +418,10 @@ export default function AdminConsultationsPage() {
                         key={`${dateStr}-${time}`}
                         className={`p-4 border-r last:border-r-0 min-h-[100px] border-2 transition-all duration-300 relative group ${getSlotStatusClass(
                           status,
-                        )} ${
-                          isPastSlot
-                            ? "opacity-40 cursor-not-allowed"
-                            : "hover:shadow-lg hover:scale-[1.02] cursor-pointer hover:-translate-y-1"
-                        }`}
+                        )} ${isPastSlot
+                          ? "opacity-40 cursor-not-allowed"
+                          : "hover:shadow-lg hover:scale-[1.02] cursor-pointer hover:-translate-y-1"
+                          }`}
                         onClick={() => {
                           if (isPastSlot) return
                           handleSlotClick(dateStr, time)
@@ -499,7 +539,7 @@ export default function AdminConsultationsPage() {
                 <div className="flex items-center text-gray-500 text-sm mt-1">
                   <FiCalendar className="mr-2" />
                   <span>
-                    {format(new Date(editingSlot.date), "EEEE, dd/MM/yyyy")} - {editingSlot.time}
+                    {format(new Date(editingSlot.date ?? ""), "EEEE, dd/MM/yyyy")} - {editingSlot.time}
                   </span>
                 </div>
               </div>
@@ -570,33 +610,38 @@ export default function AdminConsultationsPage() {
                       </p>
                     </div>
                     <div>
+                      <span className="text-sm font-semibold text-gray-600">Sinh viên:</span>
+                      <p className="font-medium text-gray-900">
+                        {candidate.find((s) => s.uuid === b.candidateUuid)?.fullName || "Chưa có"}
+                      </p>
+                    </div>
+                    <div>
                       <span className="text-sm font-semibold text-gray-600">Thời gian:</span>
                       <p className="font-medium text-gray-900">
-                        {b.startTime} → {b.endTime}
+                        {format(new Date(b.startTime), 'dd/MM/yyyy HH:mm')} → {format(new Date(b.endTime),'HH:mm')}
                       </p>
                     </div>
                     <div>
                       <span className="text-sm font-semibold text-gray-600">Trạng thái:</span>
                       <span
-                        className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                          b.status === "COMPLETED"
-                            ? "bg-emerald-100 text-emerald-800"
-                            : b.status === "PROCESSING"
-                              ? "bg-yellow-100 text-yellow-800"
-                              : b.status === "BOOKED"
-                                ? "bg-blue-100 text-blue-800"
-                                : b.status === "CANCEL"
-                                  ? "bg-red-100 text-red-800"
-                                  : "bg-gray-100 text-gray-800"
-                        }`}
+                        className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${b.status === "COMPLETED"
+                          ? "bg-emerald-100 text-emerald-800"
+                          : b.status === "PROCESSING"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : b.status === "BOOKED"
+                              ? "bg-blue-100 text-blue-800"
+                              : b.status === "CANCEL"
+                                ? "bg-red-100 text-red-800"
+                                : "bg-gray-100 text-gray-800"
+                          }`}
                       >
                         {b.status}
                       </span>
                     </div>
-                    <div>
+                    {/* <div>
                       <span className="text-sm font-semibold text-gray-600">Tạo lúc:</span>
                       <p className="font-medium text-gray-900">{format(new Date(b.createdAt), "dd/MM/yyyy HH:mm")}</p>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               ))}
