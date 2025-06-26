@@ -6,21 +6,21 @@ export const getApi = async (url: string, params?: Record<string, any>) => {
 
     const queryString = new URLSearchParams(params).toString();
     const fullUrl = `${BASE_URL}${url}${queryString ? `?${queryString}` : ''}`;
-
-    const response = axios.get(fullUrl,
-        {
+    try {
+        const response = await axios.get(fullUrl, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
             },
-        }
-    );
-    
-    return response.then(response => response.data)
-        .catch(error => {
-            console.error("Error fetching data:", error);
-            throw error;
         });
+        if (!response.data) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.data;
+        return data;
+    } catch (error) {
+        console.error('Error fetching news:', error);
+    }
 };
 
 export const sendData = async (url: string, method: string, data: any) => {
@@ -59,5 +59,5 @@ export const sendData = async (url: string, method: string, data: any) => {
         default:
             throw new Error(`Unsupported method: ${method}`);
     }
-    
+
 }

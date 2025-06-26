@@ -14,7 +14,7 @@ export interface ProcessPage {
 
 export interface Form {
     fullname: string | '',
-    email: string | '', 
+    email: string | '',
     phone: string | '',
     province: string | '',
     address: string | '',
@@ -23,3 +23,21 @@ export interface Form {
     scholarshipUuid: boolean | false,
     schedularUuid: string | ''
 }
+
+export interface Specialization {
+    name: string,
+    description: string,
+    major: {
+        id: string,
+        name: string,
+        description: string
+    },
+    specializationId: string
+}
+
+export interface Campus   {
+    id: string,
+    name: string,
+    address: string,
+    description: string
+  }

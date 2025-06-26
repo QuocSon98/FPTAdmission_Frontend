@@ -1,88 +1,111 @@
-import React, { use, useEffect, useState } from 'react';
-import { FormInput1, ProvinceList } from '../data/data';
-import type { Form, ProcessPage } from '../interface/interface';
+import React, { useEffect } from 'react';
+import { FiUser, FiMail, FiPhone, FiMapPin, FiHome } from 'react-icons/fi';
+import { ProvinceList } from '../data/data';
+import type { ProcessPage } from '../interface/interface';
 
-const PersonalInformation: React.FC<ProcessPage> = ({ formData, updateFormData, onNext }) => {
-
+const PersonalInformation: React.FC<ProcessPage> = ({ 
+    formData, 
+    updateFormData, 
+    onNext 
+}) => {
     useEffect(() => {
         const accountData = localStorage.getItem('account');
         if (accountData) {
-            const account = JSON.parse(accountData);
-            updateFormData({
-                ...formData,
-                fullname: account.fullname,
-                email: account.email,
-                phone: account.phone,
-                address: account.address
-            });
+            try {
+                const account = JSON.parse(accountData);
+                updateFormData({
+                    fullname: account.fullname || '',
+                    email: account.email || '',
+                    phone: account.phone || '',
+                    address: account.address || ''
+                });
+            } catch (error) {
+                console.error('Error parsing account data:', error);
+            }
         }
-    }, []);
-
+    }, [updateFormData]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { id, value } = e.target;
-        updateFormData({
-            ...formData,
-            [id]: value
-        });
-    }
+        const { name, value } = e.target;
+        updateFormData({ [name]: value });
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Validate form data here if needed
         if (onNext) {
             onNext();
         }
-    }
+    };
+
+    const formFields = [
+        { name: 'fullname', label: 'Họ và tên', type: 'text', icon: FiUser, required: true },
+        { name: 'email', label: 'Email', type: 'email', icon: FiMail, required: true },
+        { name: 'phone', label: 'Số điện thoại', type: 'tel', icon: FiPhone, required: true, pattern: '[0-9]{10,11}' },
+        { name: 'address', label: 'Địa chỉ', type: 'text', icon: FiHome, required: true }
+    ];
 
     return (
-        <>
-            <div className='text-[40px] text-center'>
-                <h1>Đăng kí tư vấn</h1>
+        <div className="max-w-2xl mx-auto">
+            <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">Thông tin cá nhân</h2>
+                <p className="text-gray-600">Vui lòng cung cấp thông tin cá nhân của bạn</p>
             </div>
-            <form className='' onSubmit={handleSubmit}>
-                {FormInput1.map(({ id, label, type, pattern }) => (
-                    <div className='my-3'>
-                        <label className='block text-[17px] font-bold my-2'>
-                            {label}
-                            <span className='text-red-700 mx-2'>*</span>
-                        </label>
-                        {type === 'select' ? <select
-                            id={id}
-                            required
-                            value={ formData?.[id as keyof Form] as any || null }
-                            onChange={handleInputChange}
-                            className='rounded-md border w-full block border-gray-300 h-10 my-2 px-2'>
-                            {ProvinceList.map(({ value, label }) => (
-                                <option value={value}>
-                                    {label}
-                                </option>
-                            ))}
-                        </select> :
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {formFields.map(({ name, label, type, icon: Icon, required, pattern }) => (
+                        <div key={name} className="space-y-2">
+                            <label className="flex items-center text-sm font-semibold text-gray-700">
+                                <Icon className="h-4 w-4 mr-2 text-orange-500" />
+                                {label}
+                                {required && <span className="text-red-500 ml-1">*</span>}
+                            </label>
                             <input
-                                id={id}
                                 type={type}
-                                pattern={pattern ? pattern : undefined}
-                                value={ formData?.[id as keyof Form] as any || null }
+                                name={name}
+                                value={formData[name as keyof typeof formData] as string || ''}
                                 onChange={handleInputChange}
-                                required
-                                className='rounded-md border w-full block border-gray-300 h-10 my-2 px-2'
+                                required={required}
+                                pattern={pattern}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-gray-400"
+                                placeholder={`Nhập ${label.toLowerCase()}`}
                             />
-                        }
-                    </div>
-                ))}
-                <div>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="space-y-2">
+                    <label className="flex items-center text-sm font-semibold text-gray-700">
+                        <FiMapPin className="h-4 w-4 mr-2 text-orange-500" />
+                        Tỉnh/Thành phố
+                        <span className="text-red-500 ml-1">*</span>
+                    </label>
+                    <select
+                        name="province"
+                        value={formData.province}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-gray-400"
+                    >
+                        {ProvinceList.map(({ value, label }) => (
+                            <option key={value} value={value}>
+                                {label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="flex justify-end pt-6">
                     <button
                         type="submit"
-                        // onClick={}
-                        className='rounded-md bg-[rgba(240_81_35)] text-white h-10 w-20 font-bold text-[17px] my-2' >
-                        {onNext ? 'Tiếp theo' : 'Gửi'}
+                        className="px-8 py-3 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl"
+                    >
+                        Tiếp theo
                     </button>
                 </div>
             </form>
-        </>
-    )
-
-}
+        </div>
+    );
+};
 
 export default PersonalInformation;

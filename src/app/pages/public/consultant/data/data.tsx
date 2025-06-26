@@ -87,3 +87,24 @@ export const processesList: Array<Process> = [
     { id: '3', status: 'upcoming', title: 'Đặt lịch tư vấn' },
     { id: '4', status: 'upcoming', title: 'Hoàn tất' },
 ];
+
+export const timeSlots = [
+    { startTime: '08:00', endTime: '08:30', available: true },
+    { startTime: '08:30', endTime: '09:00', available: true },
+    { startTime: '09:00', endTime: '09:30', available: false },
+    { startTime: '09:30', endTime: '10:00', available: true },
+    { startTime: '10:00', endTime: '10:30', available: true },
+    { startTime: '10:30', endTime: '11:00', available: false },
+    { startTime: '11:00', endTime: '11:30', available: true },
+    { startTime: '11:30', endTime: '12:00', available: true },
+    { startTime: '13:00', endTime: '13:30', available: true },
+    { startTime: '13:30', endTime: '14:00', available: false },
+    { startTime: '14:00', endTime: '14:30', available: true },
+    { startTime: '14:30', endTime: '15:00', available: true },
+    { startTime: '15:00', endTime: '15:30', available: true },
+    { startTime: '15:30', endTime: '16:00', available: false },
+    { startTime: '16:00', endTime: '16:30', available: true },
+    { startTime: '16:30', endTime: '17:00', available: true },
+    { startTime: '17:00', endTime: '17:30', available: true },
+    { startTime: '17:30', endTime: '18:00', available: false }
+];
