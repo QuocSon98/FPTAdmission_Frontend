@@ -22,10 +22,12 @@ import {
 import Introduction from "../pages/public/introduction/introduction";
 import StaffLayout from "../layouts/staffLayout";
 import Schedule from "../pages/staff/schedule/Schedule";
+import { Toaster } from "react-hot-toast";
 
 const MainRoutes = () => {
     return (
         <>
+        <Toaster position="top-right"  reverseOrder={false}/>
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Layout/>}>

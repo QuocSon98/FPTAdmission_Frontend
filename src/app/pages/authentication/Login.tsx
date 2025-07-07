@@ -5,6 +5,8 @@ import logoFPT from '../../assets/logo-fpt.png';
 import type { AccountResponse } from './models/loginModel';
 import { useAuth } from '../../hooks/AuthContext';
 import { forgotPasswordAPI, loginAPI } from './services/authService';
+import { BiLoader } from "react-icons/bi"
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 
 export default function Login() {
   const [userName, setUsername] = useState<string>('');
@@ -16,10 +18,12 @@ export default function Login() {
   const [forgotMessage, setForgotMessage] = useState<string>('');
   const navigate = useNavigate();
   const { login } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
 
     if (!userName || !password) {
       setMessage("Vui lòng nhập đầy đủ thông tin");
@@ -55,6 +59,8 @@ export default function Login() {
     } catch (error) {
       setMessage("Tên đăng nhập hoặc mật khẩu không đúng");
       console.error("Login error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -67,15 +73,15 @@ export default function Login() {
 
     try {
       const res = await forgotPasswordAPI(forgotEmail)
-      if(res.status === 200){
+      if (res.status === 200) {
         setForgotMessage("Đã gửi link reset mật khẩu đến email của bạn!")
-      setTimeout(() => {
-        setShowForgotPassword(false)
-        setForgotEmail("")
-        setForgotMessage("")
-      }, 2000)
+        setTimeout(() => {
+          setShowForgotPassword(false)
+          setForgotEmail("")
+          setForgotMessage("")
+        }, 2000)
       }
-      
+
     } catch (err) {
       setForgotMessage("Có lỗi xảy ra khi gửi email")
       console.log("Error sending forgot password email:", err);
@@ -108,6 +114,7 @@ export default function Login() {
                     placeholder="Tên đăng nhập"
                     value={userName}
                     onChange={(e) => setUsername(e.target.value)}
+                    disabled={isLoading}
                   />
                   <div className="relative">
                     <input
@@ -117,6 +124,7 @@ export default function Login() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
+                      disabled={isLoading}
                     />
                     <button
                       type="button"
@@ -124,7 +132,11 @@ export default function Login() {
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       <span className={showPassword ? 'text-red-500 font-medium' : 'text-blue-500 font-medium'}>
-                        {showPassword ? 'Ẩn' : 'Hiện'}
+                        {showPassword ? (
+                          <AiOutlineEyeInvisible className="h-5 w-5 transition-colors" />
+                        ) : (
+                          <AiOutlineEye className="h-5 w-5 transition-colors" />
+                        )}
                       </span>
                     </button>
                   </div>
@@ -142,8 +154,16 @@ export default function Login() {
                   <button
                     type="submit"
                     className="mt-8 tracking-wide font-semibold bg-orange-500 text-gray-100 w-full py-4 rounded-lg hover:bg-orange-700 transition-all duration-300 ease-in-out"
+                    disabled={isLoading}
                   >
-                    Đăng Nhập
+                    {isLoading ? (
+                      <div className="flex items-center justify-center">
+                        <BiLoader className="animate-spin h-5 w-5 mr-2" />
+                        Đang đăng nhập...
+                      </div>
+                    ) : (
+                      "Đăng Nhập"
+                    )}
                   </button>
                 </form>
 

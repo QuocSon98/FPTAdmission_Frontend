@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom"
 import logoFPT from '../../../app/assets/logo-fpt.png'
 import { registerAPI } from "./services/authService"
 import type { RegisterFormData } from "./models/loginModel"
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
+import { BiLoader } from "react-icons/bi"
 
 export default function Register() {
   const [data, setData] = useState<RegisterFormData>({
@@ -86,7 +88,7 @@ export default function Register() {
     setIsLoading(true)
     try {
       const res = await registerAPI(data)
-      if(res.status === 200 ){
+      if (res.status === 200) {
         setMessage("Đăng ký thành công!")
         setMessageType("success")
         setTimeout(() => navigate("/login"), 1500)
@@ -109,11 +111,10 @@ export default function Register() {
               <div className="mx-auto max-w-sm">
                 {message && (
                   <div
-                    className={`px-4 py-3 rounded mb-5 ${
-                      messageType === "success"
-                        ? "bg-green-100 border border-green-400 text-green-700"
-                        : "bg-red-100 border border-red-400 text-red-700"
-                    }`}
+                    className={`px-4 py-3 rounded mb-5 ${messageType === "success"
+                      ? "bg-green-100 border border-green-400 text-green-700"
+                      : "bg-red-100 border border-red-400 text-red-700"
+                      }`}
                   >
                     {message}
                   </div>
@@ -139,6 +140,7 @@ export default function Register() {
                         onChange={(e) => handleInputChange(id as keyof RegisterFormData, e.target.value)}
                         className="w-full px-5 py-3 rounded-lg bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
                         required
+                        disabled={isLoading}
                       />
                     </div>
                   ))}
@@ -157,6 +159,7 @@ export default function Register() {
                         onChange={(e) => handleInputChange("password", e.target.value)}
                         className="w-full px-5 py-3 rounded-lg bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
                         required
+                        disabled={isLoading}
                       />
                       <button
                         type="button"
@@ -164,7 +167,11 @@ export default function Register() {
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         <span className={showPassword ? "text-red-500 font-medium" : "text-blue-500 font-medium"}>
-                          {showPassword ? "Ẩn" : "Hiện"}
+                          {showPassword ? (
+                            <AiOutlineEyeInvisible className="h-5 w-5 transition-colors" />
+                          ) : (
+                            <AiOutlineEye className="h-5 w-5 transition-colors" />
+                          )}
                         </span>
                       </button>
                     </div>
@@ -193,7 +200,11 @@ export default function Register() {
                         <span
                           className={showConfirmPassword ? "text-red-500 font-medium" : "text-blue-500 font-medium"}
                         >
-                          {showConfirmPassword ? "Ẩn" : "Hiện"}
+                          {showConfirmPassword ? (
+                            <AiOutlineEyeInvisible className="h-5 w-5 transition-colors" />
+                          ) : (
+                            <AiOutlineEye className="h-5 w-5 transition-colors" />
+                          )}
                         </span>
                       </button>
                     </div>
@@ -204,7 +215,15 @@ export default function Register() {
                     disabled={isLoading}
                     className="mt-4 tracking-wide font-semibold bg-orange-500 text-white w-full py-3 rounded-lg hover:bg-orange-600 transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isLoading ? "Đang xử lý..." : "Đăng Ký"}
+                    {isLoading ? (
+                      <div className="flex items-center justify-center">
+                        <BiLoader className="animate-spin h-5 w-5 mr-2" />
+                        Đang xử lí...
+                      </div>
+                    ) : (
+                      "Đăng Ký"
+                    )}
+
                   </button>
                 </form>
 
