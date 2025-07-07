@@ -9,28 +9,14 @@ export interface Campus {
   name: string
   address: string
   description: string
+  email: String
+  phone: String
+  imageUrl?: String
 }
 
 export interface Specialization {
-  id: string
+  specializationId: string
   name: string
   description: string
   major: Major
-}
-
-export interface Offering {
-  id: string
-  year: number
-  target: number
-  price: number
-  campus: Campus
-  specialization: Specialization
-}
-
-export interface Program {
-  id: string
-  name: string
-  description: string
-  duration: number
-  degree: string
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import type { ChangeEvent, FormEvent } from "react"
-import { FiTrash2, FiSearch, FiPlus, FiX, FiUser, FiMail, FiPhone, FiMapPin,FiEye,FiEyeOff,FiUsers, FiFilter,} from "react-icons/fi"
+import { FiTrash2, FiSearch, FiPlus, FiX, FiUser, FiMail, FiPhone, FiMapPin, FiEye, FiEyeOff, FiUsers, FiFilter, } from "react-icons/fi"
 import { motion, AnimatePresence } from "framer-motion"
 import { register, searchAccounts, deleteAccount, getAllAccounts } from "../services/accountService"
 import type { Account, NewUser } from "../models/UserModel"
@@ -101,6 +101,70 @@ export default function ManageUsers({ showModal = false, setShowModal }: ManageU
     setAdding(true)
     setAddError("")
 
+    const { userName, email, phone, password, fullName, address } = newUser
+
+    // Validation
+    if (!userName.trim()) {
+      setAddError("UserName cannot be blank")
+      setAdding(false)
+      return
+    }
+    if (!/^\S+$/.test(userName)) {
+      setAddError("Username cannot have space!")
+      setAdding(false)
+      return
+    }
+
+    if (!email.trim()) {
+      setAddError("Email cannot be blank")
+      setAdding(false)
+      return
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setAddError("Invalid Email!")
+      setAdding(false)
+      return
+    }
+
+    if (!phone.trim()) {
+      setAddError("Phone cannot be blank")
+      setAdding(false)
+      return
+    }
+    if (!/^(84|0[3|5|7|8|9])(\d{8})$/.test(phone)) {
+      setAddError("Invalid phone!")
+      setAdding(false)
+      return
+    }
+
+    if (!password.trim()) {
+      setAddError("Password cannot be blank")
+      setAdding(false)
+      return
+    }
+    if (password.length < 6) {
+      setAddError("Password must be at least 6 characters!")
+      setAdding(false)
+      return
+    }
+
+    if (!fullName.trim()) {
+      setAddError("Name cannot be blank")
+      setAdding(false)
+      return
+    }
+    if (/\d/.test(fullName)) {
+      setAddError("Name cannot contain numbers!")
+      setAdding(false)
+      return
+    }
+
+    if (!address.trim()) {
+      setAddError("Address cannot be blank")
+      setAdding(false)
+      return
+    }
+
     try {
       await register(newUser)
       setShowAddModal(false)
@@ -170,7 +234,7 @@ export default function ManageUsers({ showModal = false, setShowModal }: ManageU
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => setShowAddModal(true)}
-          className="flex items-center px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors shadow-sm"
+          className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors shadow-sm"
         >
           <FiPlus className="mr-2" size={18} />
           Thêm người dùng
@@ -209,7 +273,7 @@ export default function ManageUsers({ showModal = false, setShowModal }: ManageU
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleSearch}
-              className="px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+              className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
             >
               Tìm kiếm
             </motion.button>
@@ -358,9 +422,8 @@ export default function ManageUsers({ showModal = false, setShowModal }: ManageU
                     <button
                       key={page}
                       onClick={() => handlePageChange(page)}
-                      className={`px-3 py-2 text-sm rounded-lg ${
-                        page === currentPage ? "bg-orange-500 text-white" : "border border-gray-300 hover:bg-gray-50"
-                      }`}
+                      className={`px-3 py-2 text-sm rounded-lg ${page === currentPage ? "bg-orange-500 text-white" : "border border-gray-300 hover:bg-gray-50"
+                        }`}
                     >
                       {page + 1}
                     </button>
