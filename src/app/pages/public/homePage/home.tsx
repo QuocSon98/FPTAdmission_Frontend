@@ -13,8 +13,8 @@ const Home: React.FC = () => {
             <h1 className="font-bold text-6xl mt-18">TUYỂN SINH ĐẠI HỌC</h1>
             <h1 className="font-bold text-6xl mt-1">NĂM HỌC 2025</h1>
             <h2 className="italic text-5xl font-initial mt-4">chính thức bắt đầu!</h2>
-            <Link to="/dang-ky" className="inline-block px-8 py-4 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition w-48 text-center mt-4">
-              ĐĂNG KÝ NGAY
+            <Link to="/consultant" className="inline-block px-8 py-4 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition w-48 text-center mt-4">
+              TƯ VẤN NGAY
             </Link>
           </div>
         </section>
@@ -93,10 +93,10 @@ const Home: React.FC = () => {
       {/* CTA Section */}
       <section className="bg-orange-500 text-white py-20 text-center">
         <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-4xl font-bold mb-4">ĐĂNG KÝ XÉT TUYỂN NGAY HÔM NAY</h2>
+          <h2 className="text-4xl font-bold mb-4">TƯ VẤN XÉT TUYỂN NGAY HÔM NAY</h2>
           <p className="text-2xl mb-8">VỮNG CHẮC TƯƠNG LAI NGÀY MAI</p>
-          <Link to="/dang-ky" className="inline-block px-8 py-4 bg-white text-orange-500 rounded-full font-bold hover:bg-gray-100 transition">
-            ĐĂNG KÝ NGAY
+          <Link to="/consultant" className="inline-block px-8 py-4 bg-white text-orange-500 rounded-full font-bold hover:bg-gray-100 transition">
+            TƯ VẤN NGAY
           </Link>
         </div>
       </section>

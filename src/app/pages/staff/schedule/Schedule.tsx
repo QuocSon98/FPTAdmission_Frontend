@@ -8,107 +8,78 @@ import {
     AiOutlineEdit,
     AiOutlineMail,
     AiOutlinePhone,
-    AiOutlineLink,
 } from 'react-icons/ai';
+import UpcomingCard from './component/UpcomingCard';
+import TimeCard from './component/TimeCard';
+import DetailCard from './component/DetailCard';
 
 interface Appointment {
     id: string;
-    name: string;
-    email: string;
-    phone: string;
-    link?: string;
+    candidate: string;
     date: Date;
-    time: string;
-    duration: string;
-    type: 'consultation' | 'meeting' | 'interview' | 'call';
-    notes?: string;
-    status: 'confirmed' | 'pending' | 'cancelled';
+    starttime: Date;
+    endtime: Date;
+    status: 'AVAILABLE' | 'BOOKED' | 'PROCESSING' | 'CANCEL' | 'COMPLETED';
 }
 
-const appointmentTypes = {
-    consultation: { color: 'bg-blue-500', textColor: 'text-blue-700', bgLight: 'bg-blue-50' },
-    meeting: { color: 'bg-green-500', textColor: 'text-green-700', bgLight: 'bg-green-50' },
-    interview: { color: 'bg-purple-500', textColor: 'text-purple-700', bgLight: 'bg-purple-50' },
-    call: { color: 'bg-orange-500', textColor: 'text-orange-700', bgLight: 'bg-orange-50' }
-};
-
 const statusColors = {
-    confirmed: 'text-green-600 bg-green-100',
-    pending: 'text-yellow-600 bg-yellow-100',
-    cancelled: 'text-red-600 bg-red-100'
+    AVAILABLE: 'text-yellow-600 bg-yellow-100',
+    BOOKED: 'text-blue-600 bg-blue-100',
+    PROCESSING: 'text-gray-600 bg-gray-100',
+    CANCEL: 'text-red-600 bg-red-100',
+    COMPLETED: 'text-green-600 bg-green-100',
 };
 
 const sampleAppointments: Appointment[] = [
     {
         id: '1',
-        name: 'Sarah Johnson',
-        email: 'sarah.johnson@email.com',
-        phone: '+1 (555) 123-4567',
-        link: 'https://zoom.us/j/123456789',
+        candidate: '1',
         date: new Date(2025, 5, 15),
-        time: '09:00',
-        duration: '60 min',
-        type: 'consultation',
-        notes: 'Initial consultation for web development project',
-        status: 'confirmed'
+        starttime: new Date(2025, 5, 15, 9, 0),
+        endtime: new Date(2025, 5, 15, 9, 30),
+        status: 'AVAILABLE'
     },
     {
         id: '2',
-        name: 'Michael Chen',
-        email: 'michael.chen@company.com',
-        phone: '+1 (555) 987-6543',
+        candidate: '2',
         date: new Date(2025, 5, 15),
-        time: '14:30',
-        duration: '45 min',
-        type: 'meeting',
-        notes: 'Project review and next steps discussion',
-        status: 'confirmed'
+        starttime: new Date(2025, 5, 15, 10, 0),
+        endtime: new Date(2025, 5, 15, 10, 30),
+        status: 'BOOKED'
     },
     {
         id: '3',
-        name: 'Emily Rodriguez',
-        email: 'emily.r@startup.io',
-        phone: '+1 (555) 456-7890',
-        link: 'https://meet.google.com/abc-defg-hij',
+        candidate: '3',
         date: new Date(2025, 5, 16),
-        time: '10:00',
-        duration: '30 min',
-        type: 'interview',
-        notes: 'Technical interview for frontend developer position',
-        status: 'pending'
+        starttime: new Date(2025, 5, 16, 11, 0),
+        endtime: new Date(2025, 5, 16, 11, 30),
+        status: 'PROCESSING'
     },
     {
         id: '4',
-        name: 'David Wilson',
-        email: 'david.wilson@corp.com',
-        phone: '+1 (555) 321-0987',
+        candidate: '4',
         date: new Date(2025, 5, 17),
-        time: '16:00',
-        duration: '30 min',
-        type: 'call',
-        notes: 'Follow-up call regarding proposal',
-        status: 'confirmed'
+        starttime: new Date(2025, 5, 17, 14, 0),
+        endtime: new Date(2025, 5, 17, 15, 30),
+        status: 'CANCEL'
     },
     {
         id: '5',
-        name: 'Lisa Thompson',
-        email: 'lisa.thompson@agency.com',
-        phone: '+1 (555) 654-3210',
-        link: 'https://teams.microsoft.com/l/meetup-join/xyz',
+        candidate: '5',
         date: new Date(2025, 5, 25),
-        time: '11:30',
-        duration: '90 min',
-        type: 'consultation',
-        notes: 'Brand strategy consultation session',
-        status: 'confirmed'
+        starttime: new Date(2025, 5, 25, 16, 0),
+        endtime: new Date(2025, 5, 25, 16, 30),
+        status: 'COMPLETED'
     }
 ];
 
 const Schedule: React.FC = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [appointments, setAppointments] = useState<Appointment[]>(sampleAppointments);
+    const [status, setStatus] = useState(statusColors);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     const monthNames = [
         'January', 'February', 'March', 'April', 'May', 'June',
@@ -243,20 +214,7 @@ const Schedule: React.FC = () => {
                                                     </div>
 
                                                     <div className="space-y-1">
-                                                        {dayAppointments.slice(0, 2).map((appointment) => (
-                                                            <div
-                                                                key={appointment.id}
-                                                                className={`text-xs p-1 rounded text-white truncate ${appointmentTypes[appointment.type].color
-                                                                    }`}
-                                                            >
-                                                                {appointment.time} - {appointment.name}
-                                                            </div>
-                                                        ))}
-                                                        {dayAppointments.length > 2 && (
-                                                            <div className="text-xs text-gray-500 font-medium">
-                                                                +{dayAppointments.length - 2} more
-                                                            </div>
-                                                        )}
+                                                        <TimeCard appointments={dayAppointments}/>
                                                     </div>
                                                 </div>
                                             );
@@ -292,149 +250,14 @@ const Schedule: React.FC = () => {
                                 </div>
 
                                 <div className="p-6">
-                                    {selectedDate ? (
-                                        selectedDateAppointments.length > 0 ? (
-                                            <div className="space-y-4">
-                                                {selectedDateAppointments
-                                                    .sort((a, b) => a.time.localeCompare(b.time))
-                                                    .map((appointment) => (
-                                                        <div
-                                                            key={appointment.id}
-                                                            className={`p-4 rounded-lg border-l-4 ${appointmentTypes[appointment.type].bgLight} ${appointmentTypes[appointment.type].color} border-l-current`}
-                                                        >
-                                                            <div className="flex items-start justify-between mb-3">
-                                                                <div className="flex-1">
-                                                                    <h4 className={`font-semibold ${appointmentTypes[appointment.type].textColor}`}>
-                                                                        {appointment.name}
-                                                                    </h4>
-                                                                    <div className="flex items-center space-x-2 mt-1">
-                                                                        <span className={`text-xs px-2 py-1 rounded-full font-medium ${statusColors[appointment.status]}`}>
-                                                                            {appointment.status}
-                                                                        </span>
-                                                                        <span className="text-xs text-gray-500 capitalize">
-                                                                            {appointment.type}
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="flex items-center space-x-1 ml-2">
-                                                                    <button
-                                                                        onClick={() => handleEditAppointment(appointment)}
-                                                                        className="p-1 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors duration-200"
-                                                                    >
-                                                                        <AiOutlineEdit size={14} />
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-
-                                                            <div className="space-y-2 text-sm">
-                                                                <div className="flex items-center space-x-2 text-gray-600">
-                                                                    <AiOutlineClockCircle size={16} />
-                                                                    <span>{appointment.time} ({appointment.duration})</span>
-                                                                </div>
-
-                                                                <div className="flex items-center space-x-2 text-gray-600">
-                                                                    <AiOutlineMail size={16} />
-                                                                    <a
-                                                                        href={`mailto:${appointment.email}`}
-                                                                        className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
-                                                                    >
-                                                                        {appointment.email}
-                                                                    </a>
-                                                                </div>
-
-                                                                <div className="flex items-center space-x-2 text-gray-600">
-                                                                    <AiOutlinePhone size={16} />
-                                                                    <a
-                                                                        href={`tel:${appointment.phone}`}
-                                                                        className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
-                                                                    >
-                                                                        {appointment.phone}
-                                                                    </a>
-                                                                </div>
-
-                                                                {appointment.link && (
-                                                                    <div className="flex items-center space-x-2 text-gray-600">
-                                                                        <AiOutlineLink size={16} />
-                                                                        <a
-                                                                            href={appointment.link}
-                                                                            target="_blank"
-                                                                            rel="noopener noreferrer"
-                                                                            className="text-blue-600 hover:text-blue-800 transition-colors duration-200 truncate"
-                                                                        >
-                                                                            Join Meeting
-                                                                        </a>
-                                                                    </div>
-                                                                )}
-
-                                                                {appointment.notes && (
-                                                                    <div className="mt-3 p-2 bg-gray-50 rounded text-xs text-gray-600">
-                                                                        {appointment.notes}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                            </div>
-                                        ) : (
-                                            <div className="text-center py-8">
-                                                <AiOutlineCalendar size={48} className="text-gray-300 mx-auto mb-4" />
-                                                <p className="text-gray-500 mb-4">No appointments scheduled</p>
-                                            </div>
-                                        )
-                                    ) : (
-                                        <div className="text-center py-8">
-                                            <AiOutlineCalendar size={48} className="text-gray-300 mx-auto mb-4" />
-                                            <p className="text-gray-500">Click on a date to view appointments</p>
-                                        </div>
-                                    )}
+                                    <DetailCard selectedDate={selectedDate} selectedDateAppointments={selectedDateAppointments} statusColors={statusColors}/>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Upcoming Appointments */}
-                    <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-200">
-                        <div className="p-6 border-b border-gray-200">
-                            <h3 className="text-lg font-semibold text-gray-900">Upcoming Appointments</h3>
-                        </div>
-                        <div className="p-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                {appointments
-                                    .filter(appointment => appointment.date >= new Date() && appointment.status !== 'cancelled')
-                                    .sort((a, b) => a.date.getTime() - b.date.getTime())
-                                    .slice(0, 6)
-                                    .map((appointment) => (
-                                        <div
-                                            key={appointment.id}
-                                            className={`p-4 rounded-lg border-l-4 ${appointmentTypes[appointment.type].bgLight} ${appointmentTypes[appointment.type].color} border-l-current hover:shadow-md transition-shadow duration-200`}
-                                        >
-                                            <div className="flex items-start justify-between mb-2">
-                                                <h4 className={`font-semibold ${appointmentTypes[appointment.type].textColor}`}>
-                                                    {appointment.name}
-                                                </h4>
-                                                <span className={`text-xs px-2 py-1 rounded-full font-medium ${statusColors[appointment.status]}`}>
-                                                    {appointment.status}
-                                                </span>
-                                            </div>
-                                            <div className="space-y-1 text-sm text-gray-600">
-                                                <div className="flex items-center space-x-2">
-                                                    <AiOutlineCalendar size={14} />
-                                                    <span>{appointment.date.toLocaleDateString()}</span>
-                                                </div>
-                                                <div className="flex items-center space-x-2">
-                                                    <AiOutlineClockCircle size={14} />
-                                                    <span>{appointment.time}</span>
-                                                </div>
-                                                <div className="flex items-center space-x-2">
-                                                    <AiOutlineMail size={14} />
-                                                    <span className="truncate">{appointment.email}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                            </div>
-                        </div>
-                    </div>
+                    <UpcomingCard appointments={appointments} status={statusColors}/>
                 </div>
             </div>
         </div>
