@@ -77,47 +77,47 @@ import { faFacebook, faYoutube, faTiktok } from '@fortawesome/free-brands-svg-ic
 const Footer: React.FC = () => {
   return (
     <footer className="bg-white pt-10 pb-5">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-8xl mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-10 border-t-2 border-b-2  border-solid border-orange-500 p-5">
           <div className="space-y-4">
-            <h3 className="font-bold text-lg text-orange-600">HÀ NỘI</h3>
-            <p className="text-gray-950 text-sm">Khu Giáo dục và Đào tạo – Khu Công nghệ cao Hòa Lạc – Km29 Đại lộ Thăng Long, H. Thạch Thất, TP. Hà Nội</p>
-            <p className="text-gray-950 text-sm">Điện thoại: (024) 7300 5588</p>
-            <p className="text-gray-950 text-sm">Email: tuyensinhhanoi@fpt.edu.vn</p>
+            <h3 className="font-bold text-3xl text-orange-600">HÀ NỘI</h3>
+            <p className="text-gray-950 text-xl">Khu Giáo dục và Đào tạo – Khu Công nghệ cao Hòa Lạc – Km29 Đại lộ Thăng Long, H. Thạch Thất, TP. Hà Nội</p>
+            <p className="text-gray-950 text-xl">Điện thoại: (024) 7300 5588</p>
+            <p className="text-gray-950 text-xl">Email: tuyensinhhanoi@fpt.edu.vn</p>
           </div>
 
           <div className="space-y-4">
-            <h3 className="font-bold text-lg text-orange-600">TP. HỒ CHÍ MINH</h3>
-            <p className="text-gray-950 text-sm">Lô E2a-7, Đường D1 Khu Công nghệ cao, P. Long Thạnh Mỹ, TP. Thủ Đức, TP. Hồ Chí Minh</p>
-            <p className="text-gray-950 text-sm">Điện thoại: (028) 7300 5588</p>
-            <p className="text-gray-950 text-sm">Email: tuyensinhhcm@fpt.edu.vn</p>
+            <h3 className="font-bold text-3xl text-orange-600">TP. HỒ CHÍ MINH</h3>
+            <p className="text-gray-950 text-xl">Lô E2a-7, Đường D1 Khu Công nghệ cao, P. Long Thạnh Mỹ, TP. Thủ Đức, TP. Hồ Chí Minh</p>
+            <p className="text-gray-950 text-xl">Điện thoại: (028) 7300 5588</p>
+            <p className="text-gray-950 text-xl">Email: tuyensinhhcm@fpt.edu.vn</p>
           </div>
 
           <div className="space-y-4">
-            <h3 className="font-bold text-lg text-orange-600">ĐÀ NẴNG</h3>
-            <p className="text-gray-950 text-sm">Khu đô thị công nghệ FPT Đà Nẵng, P. Hoà Hải, Q. Ngũ Hành Sơn, TP. Đà Nẵng</p>
-            <p className="text-gray-950 text-sm">Điện thoại: (0236) 730 0999</p>
-            <p className="text-gray-950 text-sm">Email: tuyensinhdanang@fpt.edu.vn</p>
+            <h3 className="font-bold text-3xl text-orange-600">ĐÀ NẴNG</h3>
+            <p className="text-gray-950 text-xl">Khu đô thị công nghệ FPT Đà Nẵng, P. Hoà Hải, Q. Ngũ Hành Sơn, TP. Đà Nẵng</p>
+            <p className="text-gray-950 text-xl">Điện thoại: (0236) 730 0999</p>
+            <p className="text-gray-950 text-xl">Email: tuyensinhdanang@fpt.edu.vn</p>
           </div>
 
           <div className="space-y-4">
-            <h3 className="font-bold text-lg text-orange-600">CẦN THƠ</h3>
-            <p className="text-gray-950 text-sm">Số 600 Đường Nguyễn Văn Cừ (nối dài), P. An Bình, Q. Ninh Kiều, TP. Cần Thơ</p>
-            <p className="text-gray-950 text-sm">Điện thoại: (0292) 730 3636</p>
-            <p className="text-gray-950 text-sm">Email: tuyensinhcantho@fpt.edu.vn</p>
+            <h3 className="font-bold text-3xl text-orange-600">CẦN THƠ</h3>
+            <p className="text-gray-950 text-xl">Số 600 Đường Nguyễn Văn Cừ (nối dài), P. An Bình, Q. Ninh Kiều, TP. Cần Thơ</p>
+            <p className="text-gray-950 text-xl">Điện thoại: (0292) 730 3636</p>
+            <p className="text-gray-950 text-xl">Email: tuyensinhcantho@fpt.edu.vn</p>
           </div>
 
           <div className="space-y-4">
-            <h3 className="font-bold text-lg text-orange-600">QUY NHƠN</h3>
-            <p className="text-gray-950 text-sm">Khu đô thị mới An Phú Thịnh, Phường Nhơn Bình & Phường Đống Đa, TP. Quy Nhơn, Bình Định</p>
-            <p className="text-gray-950 text-sm">Điện thoại: (0256) 7300 999</p>
-            <p className="text-gray-950 text-sm">Email: tuyensinhquynhon@fpt.edu.vn</p>
+            <h3 className="font-bold text-3xl text-orange-600">QUY NHƠN</h3>
+            <p className="text-gray-950 text-xl">Khu đô thị mới An Phú Thịnh, Phường Nhơn Bình & Phường Đống Đa, TP. Quy Nhơn, Bình Định</p>
+            <p className="text-gray-950 text-xl">Điện thoại: (0256) 7300 999</p>
+            <p className="text-gray-950 text-xl">Email: tuyensinhquynhon@fpt.edu.vn</p>
           </div>
         </div>
 
         <div className="border-t border-gray-200 pt-5 ">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-gray-950 text-sm mb-4 md:mb-0">
+            <div className="text-gray-950 text-lg mb-4 md:mb-0">
               © 2024 Bản quyền thuộc về Trường Đại học FPT.
             </div>
             <div className="flex space-x-6 ">
