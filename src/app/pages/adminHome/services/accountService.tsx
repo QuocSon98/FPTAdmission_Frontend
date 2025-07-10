@@ -32,7 +32,7 @@ export const updateAccount = (id: any, data: any) =>{
 // Xóa account theo id (ADMIN only)
 // DELETE /api/{id}
 export const deleteAccount = (id: any) =>{
-  return api.delete(`/${id}`);
+  return api.delete(`/users/${id}`);
 }
 
 export const register = (data: any) =>{

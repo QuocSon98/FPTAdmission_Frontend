@@ -22,13 +22,17 @@ import Major from "../pages/public/major/major";
 import Introduction from "../pages/public/introduction/introduction";
 import StaffLayout from "../layouts/staffLayout";
 import Schedule from "../pages/staff/schedule/Schedule";
+import { Toaster } from "react-hot-toast";
 import Consultant from "../pages/public/consultant/consultant";
 import { News } from "../pages/public/news/news";
 import SpecializationDetail from "../pages/public/specialization/SpecializationDetail";
 import ProgramList from "../pages/public/program/Program";
+
+
 const MainRoutes = () => {
     return (
         <>
+        <Toaster position="top-right"  reverseOrder={false}/>
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Layout />}>

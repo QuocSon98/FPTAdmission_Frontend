@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FiMenu, FiBell, FiSearch, FiUser, FiLogOut, FiHome, FiFileText, FiLock, FiCalendar } from 'react-icons/fi';
+import { FiMenu, FiBell, FiSearch, FiUser, FiLogOut, FiHome, FiFileText, FiLock, FiCalendar, FiBook } from 'react-icons/fi';
 import type { IconType } from 'react-icons';
 import { AnimatePresence, motion } from 'framer-motion';
 import logoFPT from '../../../app/assets/logo-fpt.png';
@@ -25,7 +25,7 @@ const menuItems: MenuItem[] = [
   // { key: 'reports', label: 'Báo cáo', icon: FiFileText },
   { key: "blog", label: "Bài viết", icon: FiFileText },
   { key: "consultations", label: "Lịch tư vấn", icon: FiCalendar },
-  { key: "program-management", label: "Chương trình đào tạo", icon: FiFileText },
+  { key: "program-management", label: "Chương trình đào tạo", icon: FiBook },
   { key: "profile-management", label: "Thông tin cá nhân", icon: FiLock },
 ];
 
@@ -36,6 +36,23 @@ export default function AdminHome() {
   )
   const [showAddUserModal, setShowAddUserModal] = useState<boolean>(false)
   const navigate = useNavigate();
+  
+  const handleQuickAction = (action: string) => {
+  switch (action) {
+    case "users":
+      setActive("users")
+      setShowAddUserModal(true) // chỉ cái này cần riêng
+      break
+    case "blog":
+      setActive("blog")
+      break
+    case "consultations":
+      setActive("consultations")
+      break
+    
+  }
+}
+
 
   const renderContent = () => {
     switch (active) {
@@ -56,47 +73,41 @@ export default function AdminHome() {
             <DashboardStats />
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <QuickActions onAddUser={() => setShowAddUserModal(true)} />
+              <QuickActions onAction={handleQuickAction} />
               <RecentActivity />
             </div>
           </div>
         )
       case "users":
-        return <ManageUsers showModal={showAddUserModal} setShowModal={setShowAddUserModal} />
-      case "consultations":
-        return <AdminConsultationsPage/>
-      case "reports":
         return (
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-900">Báo cáo thống kê</h2>
-            <div className="text-center py-12">
-              <FiFileText className="mx-auto text-gray-400 mb-4" size={48} />
-              <p className="text-gray-600">Module báo cáo đang được phát triển</p>
-              <p className="text-sm text-gray-500 mt-2">Sẽ có sớm trong phiên bản tiếp theo</p>
-            </div>
-          </div>
+          <ManageUsers showModal={showAddUserModal} setShowModal={setShowAddUserModal} />
+        )
+      case "consultations":
+        return (
+          <AdminConsultationsPage />
         )
       case "profile-management":
         return (
-          <ProfileManagement/>
+          <ProfileManagement />
         )
       case "blog":
         return (
-          <Blog type="post" object={null}/>
+          <Blog />
         )
       case "program-management":
         return (
-          <ProgramManagement/>
+          <ProgramManagement />
         )
       default:
         return null
     }
   }
+
   const handleLogout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("account");
-  navigate("/login");
-};
+    localStorage.removeItem("token");
+    localStorage.removeItem("account");
+    navigate("/login");
+  };
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
@@ -224,6 +235,8 @@ export default function AdminHome() {
               <FiBell size={20} className="text-gray-600" />
               <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
             </motion.button>
+
+            {/* User Dropdown */}
             <div className="relative group">
               <button className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition">
                 <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
@@ -234,7 +247,7 @@ export default function AdminHome() {
                   <p className="text-xs text-gray-500">Quản trị viên</p>
                 </div>
               </button>
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto">
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl opacity-0 overflow-hidden invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                 <button onClick={handleLogout} className="flex items-center w-full px-4 py-3 text-red-600 hover:bg-red-50 transition">
                   <FiLogOut className="mr-3" size={16} />
                   Đăng xuất

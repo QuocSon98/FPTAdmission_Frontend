@@ -65,81 +65,55 @@ export default function AdminConsultationsPage() {
     setStaffList(staffs);
     setCandidate(candidate);
 
-     try {
-    const res = await api.get("/scheduler/get", {
-      params: { page: 0, size: 100 },
-    });
-    const apiData: ScheduleItem[] = res.data?.listData || [];
-    
-    console.log("Bắt đầu xử lý. Tổng số ScheduleItem từ API:", apiData.length);
+    try {
+      const res = await api.get("/scheduler/get", {
+        params: { page: 0, size: 100 },
+      });
+      const apiData: ScheduleItem[] = res.data?.listData || [];
 
-    const processedSlots: { [key: string]: Slot } = {};
+      const processedSlots: { [key: string]: Slot } = {};
 
-    apiData.forEach((item, index) => {
-      console.log(`%c[${index}] Đang xử lý item:`, "color: blue", item);
+      apiData.forEach((item) => {
+        if (!item.bookingList || item.bookingList.length === 0) return;
+        item.bookingList.forEach((booking) => {
+          const startTimeObject = parse(booking.startTime, "dd-MM-yy HH:mm", new Date());
+          if (isNaN(startTimeObject.getTime())) {
+            console.error("--> LỖI: Parse ngày tháng thất bại! Bỏ qua item này.");
+            return;
+          }
+          const date = format(startTimeObject, "yyyy-MM-dd");
+          const time = format(startTimeObject, "HH:mm");
+          const slotKey = `${date}-${time}`;
+          if (!processedSlots[slotKey]) {
+            processedSlots[slotKey] = {
+              date,
+              time,
+              assignedTo: [],
+              displayNames: [],
+              statuses: [],
+            };
+          }
+          const slot = processedSlots[slotKey];
+          if (booking.staffUuid) {
+            const staff = staffs.find((s) => s.uuid === booking.staffUuid);
+            if (staff) {
+              slot.assignedTo.push(staff.uuid);
+              slot.displayNames?.push(staff.fullName);
+              slot.statuses?.push(booking.status);
+            } else {
+              console.warn(`Không tìm thấy staff với uuid = ${booking.staffUuid}`);
+            }
+          }
+        });
+      });
+      setSlots(Object.values(processedSlots));
 
-      if (!item.bookingList || item.bookingList.length === 0) {
-        console.warn("-> Item này không có bookingList, bỏ qua.");
-        return;
-      }
-      
-      const booking = item.bookingList[0];
-
-      // === BƯỚC KIỂM TRA QUAN TRỌNG NHẤT ===
-      console.log(`--> Input cho parse: "${booking.startTime}"`);
-      const startTimeObject = parse(booking.startTime, "dd-MM-yy HH:mm", new Date());
-      console.log("--> Kết quả của parse:", startTimeObject);
-      // =====================================
-
-      if (isNaN(startTimeObject.getTime())) {
-        console.error("--> LỖI: Parse ngày tháng thất bại! Bỏ qua item này.");
-        return; 
-      }
-
-      // Vô hiệu hóa bộ lọc tuần để kiểm tra
-      // const from = startOfDay(days[0]);
-      // const to = endOfDay(days[6]);
-      // if (startTimeObject < from || startTimeObject > to) {
-      //   console.warn("--> Bị lọc do nằm ngoài tuần xem, bỏ qua.");
-      //   return;
-      // }
-
-      const date = format(startTimeObject, "yyyy-MM-dd");
-      const time = format(startTimeObject, "HH:mm");
-      const slotKey = `${date}-${time}`;
-      
-      console.log(`--> Đã xử lý thành công: key = ${slotKey}`);
-
-      if (!processedSlots[slotKey]) {
-        processedSlots[slotKey] = {
-          date,
-          time,
-          assignedTo: [],
-          displayNames: [],
-          statuses: [],
-        };
-      }
-
-      if (booking.staffUuid) {
-        // ... logic thêm nhân viên ...
-      }
-      
-      console.log("--> SUCCESS: Đã thêm/cập nhật slot. Trạng thái processedSlots hiện tại:", {...processedSlots});
-    });
-    
-    console.log("%cVòng lặp kết thúc. Kết quả processedSlots cuối cùng:", "color: green; font-weight: bold;", processedSlots);
-    setSlots(Object.values(processedSlots));
-
-  } catch (err) {
-    console.error("Error fetching schedules:", err);
-  } finally {
-    setIsLoading(false);
-  }
+    } catch (err) {
+      console.error("Error fetching schedules:", err);
+    } finally {
+      setIsLoading(false);
+    }
   }, [weekOffset])
-
-// useEffect(() => {
-//   console.log("%cDữ liệu slots đã được cập nhật:", "color: green; font-weight: bold;", slots);
-// }, [slots]);
 
   useEffect(() => {
     fetchSlots()
@@ -162,9 +136,10 @@ export default function AdminConsultationsPage() {
         time: time, // "HH:mm"
         date: date, // "yyyy-MM-dd"
         page: 0,
-        size: 10, // Đặt size > 0 để nhận được dữ liệu, ví dụ 10
+        size: 100, // Đặt size > 0 để nhận được dữ liệu, ví dụ 10
       }
-
+      // console.log(time);
+      // console.log(date);
       const res = await api.get("/scheduler/filter", { params: payload })
       const bookingDetails = res.data?.listData || []
       setSlotDetails(bookingDetails)
@@ -254,14 +229,14 @@ export default function AdminConsultationsPage() {
         {/* Header Section */}
         <div className="mb-8">
           <div className="flex items-center mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center mr-4">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center mr-4">
               <FiCalendar className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                 Lịch tư vấn tuyển sinh
               </h1>
-              <p className="mt-1 text-gray-600">Quản lý và phân công lịch tư vấn cho nhân viên</p>
+              {/* <p className="mt-1 text-gray-600">Quản lý và phân công lịch tư vấn cho nhân viên</p> */}
             </div>
           </div>
         </div>
@@ -618,7 +593,7 @@ export default function AdminConsultationsPage() {
                     <div>
                       <span className="text-sm font-semibold text-gray-600">Thời gian:</span>
                       <p className="font-medium text-gray-900">
-                        {format(new Date(b.startTime), 'dd/MM/yyyy HH:mm')} → {format(new Date(b.endTime),'HH:mm')}
+                        {format(new Date(b.startTime), 'dd/MM/yyyy HH:mm')} → {format(new Date(b.endTime), 'HH:mm')}
                       </p>
                     </div>
                     <div>

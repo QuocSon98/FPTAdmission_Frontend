@@ -61,6 +61,57 @@ export default function ProfileManagement() {
         e.preventDefault()
         setLoading(true)
         setError("")
+        // Validation
+        const { userName, email, phone, fullName, address } = profile
+        if (!userName.trim()) {
+            setError("UserName cannot be blank")
+            setLoading(false)
+            return
+        }
+        if (!/^\S+$/.test(userName)) {
+            setError("Username cannot have space!")
+            setLoading(false)
+            return
+        }
+
+        if (!email.trim()) {
+            setError("Email cannot be blank")
+            setLoading(false)
+            return
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            setError("Invalid Email!")
+            setLoading(false)
+            return
+        }
+
+        if (!phone.trim()) {
+            setError("Phone cannot be blank")
+            setLoading(false)
+            return
+        }
+        if (!/^(84|0[3|5|7|8|9])(\d{8})$/.test(phone)) {
+            setError("Invalid phone!")
+            setLoading(false)
+            return
+        }
+
+        if (!fullName.trim()) {
+            setError("Name cannot be blank")
+            setLoading(false)
+            return
+        }
+        if (/\d/.test(fullName)) {
+            setError("Name cannot contain numbers!")
+            setLoading(false)
+            return
+        }
+
+        if (!address.trim()) {
+            setError("Address cannot be blank")
+            setLoading(false)
+            return
+        }
         try {
             const response = await updateAccount(`/${profile.uuid}`, {
                 email: profile.email,

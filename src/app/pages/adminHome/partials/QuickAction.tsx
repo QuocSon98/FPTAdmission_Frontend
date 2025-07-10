@@ -4,7 +4,7 @@ import { FiUserPlus, FiFileText, FiSettings, FiMessageSquare } from "react-icons
 import { motion } from "framer-motion"
 
 interface QuickActionsProps {
-  onAddUser: () => void
+  onAction: (action: string) => void
 }
 
 const actions = [
@@ -13,14 +13,14 @@ const actions = [
     description: "Tạo tài khoản mới",
     icon: FiUserPlus,
     color: "bg-blue-500 hover:bg-blue-600",
-    action: "addUser",
+    action: "users", // 👉 phải khớp với các tab trong renderContent
   },
   {
-    title: "Tạo báo cáo",
-    description: "Xuất báo cáo thống kê",
+    title: "Tạo blog",
+    description: "Quản lý bài viết",
     icon: FiFileText,
     color: "bg-green-500 hover:bg-green-600",
-    action: "createReport",
+    action: "blog",
   },
   {
     title: "Cài đặt hệ thống",
@@ -34,27 +34,11 @@ const actions = [
     description: "Xem yêu cầu tư vấn",
     icon: FiMessageSquare,
     color: "bg-orange-500 hover:bg-orange-600",
-    action: "consultation",
+    action: "consultations",
   },
 ]
 
-export default function QuickActions({ onAddUser }: QuickActionsProps) {
-  const handleAction = (action: string) => {
-    switch (action) {
-      case "addUser":
-        onAddUser()
-        break
-      case "createReport":
-        console.log("Create report")
-        break
-      case "settings":
-        console.log("Open settings")
-        break
-      case "consultation":
-        console.log("View consultations")
-        break
-    }
-  }
+export default function QuickActions({ onAction }: QuickActionsProps) {
 
   return (
     <motion.div
@@ -73,7 +57,7 @@ export default function QuickActions({ onAddUser }: QuickActionsProps) {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4 + index * 0.1 }}
-              onClick={() => handleAction(action.action)}
+              onClick={() => onAction(action.action)}
               className={`${action.color} text-white p-4 rounded-lg transition-colors text-left`}
             >
               <Icon size={24} className="mb-2" />
