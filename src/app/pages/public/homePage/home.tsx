@@ -29,10 +29,117 @@ import {
   Award,
   MapPin
 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+interface Major {
+  id: string;
+  name: string;
+  description: string;
+}
 
+interface Specialization {
+  id: string;
+  name: string;
+  description: string;
+  major: Major;
+}
+
+interface MajorWithSpecializations extends Major {
+  specializations: Specialization[];
+}
+
+// Interface for rendering programs
+interface Program {
+  id: string;
+  title: string;
+  items: string[];
+}
 
 
 const Home: React.FC = () => {
+
+  const [programs, setPrograms] = useState<Program[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchMajorsAndSpecializations();
+  }, []);
+
+  const fetchMajorsAndSpecializations = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Fetch all majors
+      const majorsResponse = await axios.get('http://localhost:8080/api/major?page=0&size=1000', {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
+        },
+      });
+      let majorsList: Major[] = [];
+      if (majorsResponse.data) {
+        if (majorsResponse.data.listData) {
+          majorsList = majorsResponse.data.listData;
+        } else if (majorsResponse.data.data) {
+          majorsList = Array.isArray(majorsResponse.data.data) ? majorsResponse.data.data : [majorsResponse.data.data];
+        } else if (Array.isArray(majorsResponse.data)) {
+          majorsList = majorsResponse.data;
+        }
+      }
+      // Fetch specializations for each major
+      const majorsWithSpecializations: MajorWithSpecializations[] = await Promise.all(
+        majorsList.map(async (major) => {
+          try {
+            const specializationsResponse = await axios.get(`http://localhost:8080/api/specialization/major/${major.id}`, {
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
+              },
+            });
+
+            let specializations: Specialization[] = [];
+            if (specializationsResponse.data) {
+              if (specializationsResponse.data.listData) {
+                specializations = specializationsResponse.data.listData;
+              } else if (specializationsResponse.data.data) {
+                specializations = Array.isArray(specializationsResponse.data.data) 
+                  ? specializationsResponse.data.data 
+                  : [specializationsResponse.data.data];
+              } else if (Array.isArray(specializationsResponse.data)) {
+                specializations = specializationsResponse.data;
+              }
+            }
+
+            return {
+              ...major,
+              specializations
+            };
+          } catch (error) {
+            console.error(`Error fetching specializations for major ${major.id}:`, error);
+            return {
+              ...major,
+              specializations: []
+              };
+          }
+        })
+      );
+
+      // Convert to program format for rendering
+      const programsData: Program[] = majorsWithSpecializations.map(major => ({
+        id: major.id,
+        title: major.name, // Major name becomes title
+        items: major.specializations.map(spec => spec.name) // Specialization names become items
+      }));
+
+      setPrograms(programsData);
+    } catch (error) {
+      console.error('Error fetching majors:', error);
+      setError('Không thể tải thông tin chuyên ngành. Sử dụng dữ liệu mẫu.');
+    }
+  };
+
   return (
     <div className="w-full">
       {/* Hero Section */}
@@ -144,7 +251,7 @@ const Home: React.FC = () => {
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
                 Các ngành đào tạo HOT
               </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className="text-xl text-gray-900 max-w-3xl mx-auto">
                 Chuẩn xu thế AI & Kinh tế số - Đáp ứng nhu cầu thị trường lao động tương lai
               </p>
             </div>
@@ -226,54 +333,4 @@ const Home: React.FC = () => {
     </div>
   );
 };
-
-// Programs data
-const programs = [
-  {
-    title: "Công nghệ thông tin",
-    items: [
-      "An toàn thông tin",
-      "Công nghệ ô tô số",
-      "Chuyển đổi số",
-      "Kỹ thuật phần mềm",
-      "Thiết kế mỹ thuật số",
-      "Thiết kế vi mạch bán dẫn",
-      "Trí tuệ nhân tạo"
-    ]
-  },
-  {
-    title: "Quản trị kinh doanh",
-    items: [
-      "Tài chính đầu tư",
-      "Công nghệ tài chính (Fintech)",
-      "Digital Marketing",
-      "Kinh doanh quốc tế",
-      "Logistics và quản lý chuỗi cung ứng"
-    ]
-  },
-  {
-    title: "Ngôn ngữ",
-    items: [
-      "Ngôn ngữ Anh",
-      "Song ngữ Nhật - Anh",
-      "Song ngữ Hàn - Anh",
-      "Song ngữ Trung - Anh"
-    ]
-  },
-  {
-    title: "Công nghệ truyền thông",
-    items: [
-      "Quan hệ công chúng",
-      "Truyền thông đa phương tiện"
-    ]
-  },
-  {
-    title: "Luật",
-    items: [
-      "Luật kinh tế",
-      "Luật thương mại quốc tế"
-    ]
-  }
-];
-
 export default Home;

@@ -1,381 +1,250 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faCode,
-  faShieldAlt,
-  faChartLine,
-  faScaleBalanced,
-  faGavel,
-  faLanguage,
-  faGlobe,
-  faCar,
-  faArrowsToCircle,
-  faPaintBrush,
-  faMicrochip,
-  faBrain
-} from '@fortawesome/free-solid-svg-icons';
+interface Major {
+  id: string;
+  name: string;
+  description: string;
+}
+
+interface Specialization {
+  id: string;
+  name: string;
+  description: string;
+  major: Major;
+}
+
+interface MajorWithSpecializations extends Major {
+  specializations: Specialization[];
+}
+
+import React, { useState, useEffect } from 'react';
+import { GraduationCap, BookOpen, Sparkles, Loader2 } from 'lucide-react';
+import TrainingPhase from './TraningPhase';
+import Program from '../program/Program';
+import axios from 'axios';
+
 
 const Major: React.FC = () => {
-  const majors = [
-    {
-      id: 'cntt',
-      name: 'Công nghệ thông tin',
-      icon: faCode,
-      link: '/major/informationTechnology',
-      specializations: [
-        {
-          id: 'attt',
-          name: 'An toàn thông tin',
-          icon: faShieldAlt,
-          description: 'Chuyên ngành đào tạo về bảo mật và an ninh mạng',
-          link: '/informationSecurity'
-        },
-        {
-          id: 'cnots',
-          name: 'Công nghệ ô tô số',
-          icon: faCar,
-          description: 'Chuyên ngành về phân tích và xử lý dữ liệu lớn',
-          link: '/digitalCarTechnology'
-        },
-        {
-          id: 'ktpm',
-          name: 'Kỹ thuật phần mềm',
-          icon: faCode,
-          description: 'Chuyên ngành đào tạo về bảo mật và an ninh mạng',
-          link: '/softwareEngineering'
-        },
-        {
-          id: 'cds',
-          name: 'Chuyển đổi số',
-          icon: faArrowsToCircle,
-          description: 'Chuyên ngành về phân tích và xử lý dữ liệu lớn',
-          link: '/digitalConversion'
-        },
-        {
-          id: 'tkmts',
-          name: 'Thiết kế mỹ thuật số',
-          icon: faPaintBrush,
-          description: 'Chuyên ngành đào tạo về bảo mật và an ninh mạng',
-          link: '/digitalDesign'
-        },
-        {
-          id: 'tkvibd',
-          name: 'Thiết kế vi mạch bán dẫn',
-          icon: faMicrochip,
-          description: 'Chuyên ngành về phân tích và xử lý dữ liệu lớn',
-          link: '/semiconductorDesign'
-        },
-        {
-          id: 'ttnt',
-          name: 'Trí tuệ nhân tạo',
-          icon: faBrain,
-          description: 'Chuyên ngành về phân tích và xử lý dữ liệu lớn',
-          link: '/artificialIntelligence'
-        }
-      ]
-    },
-    {
-      id: 'luat',
-      name: 'Luật',
-      icon: faScaleBalanced,
-      specializations: [
-        {
-          id: 'lkt',
-          name: 'Luật kinh tế',
-          icon: faGavel,
-          description: 'Chuyên ngành về pháp luật trong lĩnh vực kinh tế',
-          link: '/nganh-hoc/luat/luat-kinh-te'
-        },
-        {
-          id: 'ltm',
-          name: 'Luật thương mại quốc tế',
-          icon: faGavel,
-          description: 'Chuyên ngành về pháp luật trong lĩnh vực thương mại',
-          link: '/nganh-hoc/luat/luat-thuong-mai'
-        }
-      ]
-    },
-    {
-      id: 'ngonngu',
-      name: 'Ngôn ngữ',
-      icon: faLanguage,
-      specializations: [
-        {
-          id: 'ta',
-          name: 'Tiếng Anh',
-          icon: faGlobe,
-          description: 'Chương trình đào tạo tiếng Anh chuyên sâu',
-          link: '/nganh-hoc/ngon-ngu/tieng-anh'
-        },
-        {
-          id: 'tn',
-          name: 'Song ngữ Nhật-Anh',
-          icon: faGlobe,
-          description: 'Chương trình đào tạo tiếng Nhật chuyên sâu',
-          link: '/nganh-hoc/ngon-ngu/tieng-nhat'
-        },
-        {
-          id: 'th',
-          name: 'Song ngữ Hàn-Anh',
-          icon: faGlobe,
-          description: 'Chương trình đào tạo tiếng Nhật chuyên sâu',
-          link: '/nganh-hoc/ngon-ngu/tieng-nhat'
-        },
-        {
-          id: 'tt',
-          name: 'Song ngữ Trung-Anh',
-          icon: faGlobe,
-          description: 'Chương trình đào tạo tiếng Nhật chuyên sâu',
-          link: '/nganh-hoc/ngon-ngu/tieng-nhat'
-        }
-      ]
-    },
-    {
-      id: 'qtkd',
-      name: 'Quản trị kinh doanh',
-      icon: faCode,
-      link: '/nganh-hoc/cong-nghe-thong-tin/an-toan-thong-tin',
-      specializations: [
-        {
-          id: 'cntc',
-          name: 'Công nghệ tài chính',
-          icon: faShieldAlt,
-          description: 'Chuyên ngành đào tạo về bảo mật và an ninh mạng',
-          link: '/nganh-hoc/cong-nghe-thong-tin/an-toan-thong-tin'
-        },
-        {
-          id: 'Digital',
-          name: 'Digital Marketing',
-          icon: faChartLine,
-          description: '',
-          link: ''
-        },
-        {
-          id: 'kdqt',
-          name: 'Kinh doanh quốc tế',
-          icon: faChartLine,
-          description: '',
-          link: ''
-        },
-        {
-          id: 'Logistics',
-          name: 'Logistics và Quản lý chuỗi cung ứng toàn cầu',
-          icon: faChartLine,
-          description: '',
-          link: ''
-        },
-        {
-          id: 'qtks',
-          name: 'Quản trị khách sạn',
-          icon: faChartLine,
-          description: '',
-          link: ''
-        },
-        {
-          id: 'dl',
-          name: 'Quản trị dịch vụ du lịch và lữ hành',
-          icon: faChartLine,
-          description: '',
-          link: ''
-        },
-        {
-          id: 'tcdn',
-          name: 'Tài chính doanh nghiệp',
-          icon: faChartLine,
-          description: '',
-          link: ''
-        },
-        {
-          id: 'nh',
-          name: 'Ngân hàng số - Tài chính',
-          icon: faChartLine,
-          description: '',
-          link: ''
-        },
-        {
-          id: 'tcdt',
-          name: 'Tài chính - Đầu tư',
-          icon: faChartLine,
-          description: '',
-          link: ''
-        },
-      ]
-    },
-    {
-      id: 'truyenthong',
-      name: 'Truyền thông',
-      icon: faCode,
-      link: '/nganh-hoc/cong-nghe-thong-tin/an-toan-thong-tin',
-      specializations: [
-        {
-          id: 'qhcc',
-          name: 'Quan hệ công chúng',
-          icon: faShieldAlt,
-          description: '',
-          link: ''
-        },
-        {
-          id: 'ttdaphuongtien',
-          name: 'Truyền thông đa phương tiện',
-          icon: faChartLine,
-          description: '',
-          link: ''
-        },
-      ]
-    }
+  const [majors, setMajors] = useState<MajorWithSpecializations[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    fetchMajorsAndSpecializations();
+  }, []);
+
+  const fetchMajorsAndSpecializations = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Fetch all majors
+      const majorsResponse = await axios.get('http://localhost:8080/api/major?page=0&size=1000', {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
+        },
+      });
+
+      let majorsList: Major[] = [];
+      if (majorsResponse.data) {
+        if (majorsResponse.data.listData) {
+          majorsList = majorsResponse.data.listData;
+        } else if (majorsResponse.data.data) {
+          majorsList = Array.isArray(majorsResponse.data.data) ? majorsResponse.data.data : [majorsResponse.data.data];
+        } else if (Array.isArray(majorsResponse.data)) {
+          majorsList = majorsResponse.data;
+        }
+      }
+
+      // Fetch specializations for each major
+      const majorsWithSpecializations: MajorWithSpecializations[] = await Promise.all(
+        majorsList.map(async (major) => {
+          try {
+            const specializationsResponse = await axios.get(`http://localhost:8080/api/specialization/major/${major.id}`, {
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
+              },
+            });
+
+            let specializations: Specialization[] = [];
+            if (specializationsResponse.data) {
+              if (specializationsResponse.data.listData) {
+                specializations = specializationsResponse.data.listData;
+              } else if (specializationsResponse.data.data) {
+                specializations = Array.isArray(specializationsResponse.data.data)
+                  ? specializationsResponse.data.data
+                  : [specializationsResponse.data.data];
+              } else if (Array.isArray(specializationsResponse.data)) {
+                specializations = specializationsResponse.data;
+              }
+            }
+
+            return {
+              ...major,
+              specializations,
+            };
+          } catch (error) {
+            console.error(`Error fetching specializations for major ${major.id}:`, error);
+            return {
+              ...major,
+              specializations: [],
+            };
+          }
+        })
+      );
+
+      setMajors(majorsWithSpecializations);
+    } catch (error) {
+      console.error('Error fetching majors and specializations:', error);
+      setError('Failed to fetch majors and specializations');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const trainingPhases = [
+    {
+      number: 1,
+      title: 'Giai đoạn nền tảng',
+      description: 'Sinh viên hoàn thành các kỳ học: Tuần lễ định hướng, Tháng rèn luyện tập trung, Giai đoạn tiếng Anh nền tảng, Học kỳ tiếng Anh tại nước ngoài, Học phần Vovinam và Nhạc cụ dân tộc. Kết thúc giai đoạn nền tảng, sinh viên được trang bị các phương pháp học đại học hiệu quả và đạt trình độ tiếng Anh tối thiểu tương đương IELTS 6.0.'
+    },
+    {
+      number: 2,
+      title: 'Giai đoạn cơ bản và cơ sở ngành',
+      description: 'Sinh viên được đào tạo các khối kiến thức, kỹ năng liên quan đến nghiệp vụ chuyên môn. Về ngoại ngữ, ngoài tiếng Anh đã được học ở giai đoạn nền tảng, sinh viên khối ngành công nghệ thông tin được đào tạo thêm tiếng Nhật, sinh viên khối ngành kinh tế sẽ được học thêm tiếng Trung.'
+    },
+    {
+      number: 3,
+      title: 'Giai đoạn đào tạo trong doanh nghiệp',
+      description: 'Ở học kỳ 6, sinh viên sẽ được đào tạo trong doanh nghiệp (On the Job Training – OJT). Giai đoạn này, sinh viên sẽ được các chuyên gia hàng đầu trong ngành như FPT Software, Bosch, KMS Technology trực tiếp đào tạo trong môi trường doanh nghiệp thực tế.'
+    },
+    {
+      number: 4,
+      title: 'Giai đoạn chuyên ngành hẹp và Khóa luận',
+      description: 'Sinh viên có cơ hội chọn lựa chuyên ngành chuyên sâu theo đúng định hướng nghề nghiệp và hoàn thiện khóa luận tốt nghiệp dưới sự hỗ trợ của giảng viên có kinh nghiệm từ các doanh nghiệp, tổ chức hàng đầu trong ngành.'
+    }
   ];
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-orange-50/30 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-16 h-16 text-orange-500 animate-spin mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-gray-700 mb-2">Đang tải thông tin</h2>
+          <p className="text-gray-600">Vui lòng chờ một chút...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-orange-50/30 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-red-500 text-2xl">⚠️</span>
+          </div>
+          <h2 className="text-2xl font-bold text-red-600 mb-2">Có lỗi xảy ra</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors"
+          >
+            Thử lại
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Banner Section */}
-      <div className="relative h-[250px]">
-        <img
-          src="/src/app/assets/img03.png"
-          alt="Banner"
-          className="w-full h-full object-cover brightness-50"
-        />
-        <h1 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
-                       text-6xl text-white text-center">
-          CHƯƠNG TRÌNH ĐÀO TẠO
-        </h1>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-orange-50/30">
+      {/* Hero Banner */}
+      <div className="relative h-[400px] overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-600 via-red-500 to-pink-500"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
 
-      {/* Content Section */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-center mb-12 bg-orange-700 text-white p-4 rounded-lg">Chuyên ngành đào tạo</h1>
-        {/* Major List */}
-        {majors.map(major => (
-          <div key={major.id} className="mb-16">
-            {/* Major Title */}
-            {/* <div className="flex items-center gap-4 mb-8 p-4 bg-orange-500 rounded-lg">
-              <FontAwesomeIcon icon={major.icon} className="text-4xl text-white" />
-              <h2 className="text-3xl font-bold text-white">{major.name}</h2>
-            </div> */}
+        {/* Animated background elements */}
+        <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute top-32 right-20 w-32 h-32 bg-white/5 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-20 left-1/3 w-24 h-24 bg-white/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '2s' }}></div>
 
-            <Link to={major.link} className="block">
-              <div className="flex items-center gap-4 mb-8 p-4 bg-orange-500 rounded-lg 
-                    hover:bg-orange-600 transition-colors duration-300">
-                <FontAwesomeIcon icon={major.icon} className="text-4xl text-white" />
-                <h2 className="text-3xl font-bold text-white">{major.name}</h2>
-              </div>
-            </Link>
-
-            {/* Specializations Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {major.specializations.map(spec => (
-                <Link
-                  key={spec.id}
-                  to={spec.link}
-                  className="block p-6 bg-white rounded-lg shadow-md hover:shadow-lg 
-                           transition-all duration-300 border border-gray-100
-                           hover:border-orange-500 group"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="p-4 bg-orange-100 rounded-full 
-                                  group-hover:bg-orange-500 transition-colors duration-300">
-                      <FontAwesomeIcon
-                        icon={spec.icon}
-                        className="text-2xl text-orange-500 group-hover:text-white"
-                      />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                        {spec.name}
-                      </h3>
-                      <p className="text-gray-600">
-                        {spec.description}
-                      </p>
-                      <span className="inline-block mt-4 text-orange-500 group-hover:text-orange-600
-                                     flex items-center gap-2">
-                        Tìm hiểu thêm
-                        <span className="transform group-hover:translate-x-2 transition-transform">→</span>
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+        <div className="relative h-full flex items-center justify-center text-center px-4">
+          <div className="max-w-4xl">
+            <div className="flex items-center justify-center mb-6">
+              <GraduationCap className="w-16 h-16 text-white mr-4" />
+              <Sparkles className="w-12 h-12 text-yellow-300 animate-pulse" />
             </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="bg-white py-2">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-5 bg-orange-700 text-white p-4 rounded-lg">
-            Tổng quan chương trình đào tạo
-          </h2>
-          <div className="mb-10">
-            <p className="text-black-600 max-w-6xl mx-auto space-y-10 text-justify">
-              Lựa chọn cách tiếp cận hiện đại nhằm mang lại năng lực cạnh tranh toàn cầu, chương trình đào tạo tại Trường Đại học FPT được thiết kế từ đầu với tư duy hướng chuẩn đầu ra đáp ứng nhu cầu của thị trường lao động và tạo nền tảng phát triển sự nghiệp lâu dài cho người học. Hoạt động đào tạo chú trọng vào các yếu tố: (1) Thực tiễn thông qua kết nối sâu với ngành công nghiệp, và (2) Thực chiến với phương pháp kiến tạo và học qua dự án. Đồng thời, tiếng Anh là ngôn ngữ chính của hầu hết hoạt động học tập tại trường, từ tài liệu, bài kiểm tra, bài thi, đến khóa luận tốt nghiệp, và một phần trong việc giảng bài.
+            <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 leading-tight">
+              CHƯƠNG TRÌNH
+              <span className="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+                ĐÀO TẠO
+              </span>
+            </h1>
+            <p className="text-xl text-white/90 max-w-2xl mx-auto leading-relaxed">
+              Khám phá hành trình học tập đẳng cấp quốc tế tại Trường Đại học FPT
             </p>
           </div>
-          <div className="flex items-center gap-4 mb-1 mt-5 p-2 bg-orange-500 rounded-lg 
-                    hover:bg-orange-600 transition-colors duration-300">
-            <h2 className="text-xl font-bold text-white">Trải nghiệm 04 giai đoạn đào tạo đặc biệt</h2>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-8xl mx-auto px-4 mt-12">
+        {/* Section Header */}
+        <div className="text-center ">
+          <div className="inline-flex items-center gap-3 bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-4 rounded-full text-2xl font-bold shadow-lg">
+            <BookOpen className="w-10 h-8" />
+            Chuyên ngành đào tạo
           </div>
-          <div className="max-w-6xl mx-auto">
-            <img
-              src="https://daihoc.fpt.edu.vn/wp-content/uploads/2024/11/4giaidoan.avif"
-              alt="Trải nghiệm 04 giai đoạn đào tạo đặc biệt"
-              className="w-full h-auto rounded-lg"
-            />
+        </div>
+        <Program />
+      </div>
+
+      {/* Training Overview Section */}
+      <div className="bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          {/* Section Header */}
+          <div className="text-center mb-2">
+            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-orange-600 to-red-600 text-white px-8 py-4 rounded-full text-2xl font-bold shadow-lg mb-8">
+              <GraduationCap className="w-10 h-8" />
+              Tổng quan chương trình đào tạo
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 ">
-            {/* Phase 1 */}
-            <div className="bg-orange-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                  1
-                </div>
-                <h3 className="text-xl font-bold text-gray-800">Giai đoạn nền tảng</h3>
-              </div>
-              <p className="text-gray-600 text-justify">
-                Sinh viên hoàn thành các kỳ học: Tuần lễ định hướng, Tháng rèn luyện tập trung, Giai đoạn tiếng Anh nền tảng, Học kỳ tiếng Anh tại nước ngoài, Học phần Vovinam và Nhạc cụ dân tộc. Kết thúc giai đoạn nền tảng, sinh viên được trang bị các phương pháp học đại học hiệu quả: tự học, thuyết trình – phản biện, làm việc nhóm… và đạt trình độ tiếng Anh tối thiểu tương đương IELTS 6.0, sẵn sàng lĩnh hội kiến thức chuyên ngành bằng giáo trình quốc tế trong các học kỳ kế tiếp. Trường hợp, sinh viên đã có chứng chỉ tương đương từ IELTS 6.0 được miễn đào tạo giai đoạn tiếng Anh chuẩn bị
-              </p>
-            </div>
 
-            {/* Phase 2 */}
-            <div className="bg-orange-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                  2
-                </div>
-                <h3 className="text-xl font-bold text-gray-800">Giai đoạn cơ bản và cơ sở ngành</h3>
-              </div>
-              <p className="text-gray-600 text-justify">
-                Sinh viên được đào tạo các khối kiến thức, kỹ năng liên quan đến nghiệp vụ chuyên môn. Về ngoại ngữ, ngoài tiếng Anh đã được học ở giai đoạn nền tảng, sinh viên khối ngành công nghệ thông tin được đào tạo thêm ngôn ngữ thứ hai là tiếng Nhật, sinh viên khối ngành kinh tế sẽ được học thêm ngoại ngữ thứ hai là tiếng Trung.
-              </p>
-            </div>
-
-            {/* Phase 3 */}
-            <div className="bg-orange-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                  3
-                </div>
-                <h3 className="text-xl font-bold text-gray-800">Giai đoạn đào tạo trong doanh nghiệp</h3>
-              </div>
-              <p className="text-gray-600 text-justify">
-                Ở học kỳ 6, sinh viên sẽ được đào tạo trong doanh nghiệp (On the Job Training – OJT). Giai đoạn này, sinh viên sẽ được lãnh đạo ưu tú, các chuyên gia hàng đầu trong ngành như FPT Software, Bosch, KMS Technology… trực tiếp đào tạo trong môi trường doanh nghiệp. Sinh viên có cơ hội tham gia vào các dự án thực tế của doanh nghiệp.
-              </p>
-            </div>
-
-            {/* Phase 4 */}
-            <div className="bg-orange-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                  4
-                </div>
-                <h3 className="text-xl font-bold text-gray-800">Giai đoạn chuyên ngành hẹp và Khóa luận tốt nghiệp</h3>
-              </div>
-              <p className="text-gray-600 text-justify">
-                Sinh viên có cơ hội chọn lựa chuyên ngành chuyên sâu theo đúng định hướng nghề nghiệp và hoàn thiện khóa luận tốt nghiệp dưới sự hỗ trợ của giảng viên có kinh nghiệm từ các doanh nghiệp, tổ chức hàng đầu trong ngành.
+          {/* Overview Text */}
+          <div className="max-w-7xl mx-auto mb-16">
+            <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl p-8 shadow-lg">
+              <p className="text-gray-700 text-lg leading-relaxed text-justify">
+                Lựa chọn cách tiếp cận hiện đại nhằm mang lại năng lực cạnh tranh toàn cầu, chương trình đào tạo tại Trường Đại học FPT được thiết kế từ đầu với tư duy hướng chuẩn đầu ra đáp ứng nhu cầu của thị trường lao động và tạo nền tảng phát triển sự nghiệp lâu dài cho người học. Hoạt động đào tạo chú trọng vào các yếu tố: (1) Thực tiễn thông qua kết nối sâu với ngành công nghiệp, và (2) Thực chiến với phương pháp kiến tạo và học qua dự án. Đồng thời, tiếng Anh là ngôn ngữ chính của hầu hết hoạt động học tập tại trường, từ tài liệu, bài kiểm tra, bài thi, đến khóa luận tốt nghiệp, và một phần trong việc giảng bài.
               </p>
             </div>
           </div>
 
+          {/* Training Phases Header */}
+          <div className="text-center">
+            <h3 className="text-3xl font-bold text-gray-800 mb-2">
+              Trải nghiệm 04 giai đoạn đào tạo đặc biệt
+            </h3>
+            {/* <div className="w-24 h-1 bg-gradient-to-r from-orange-500 to-red-500 mx-auto rounded-full"></div> */}
+          </div>
+
+          {/* Training Process Image */}
+          <div className="max-w-7xl mx-auto mb-2">
+            <div className="rounded-2xl ">
+              <img
+                src="https://daihoc.fpt.edu.vn/wp-content/uploads/2024/11/4giaidoan.avif"
+                alt="Trải nghiệm 04 giai đoạn đào tạo đặc biệt"
+                className="w-full h-auto"
+              />
+              {/* <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div> */}
+            </div>
+          </div>
+
+          {/* Training Phases Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {trainingPhases.map((phase, index) => (
+              <TrainingPhase key={phase.number} phase={phase} index={index} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
