@@ -3,27 +3,37 @@ import { FiUser, FiMail, FiPhone, FiMapPin, FiHome } from 'react-icons/fi';
 import { ProvinceList } from '../data/data';
 import type { ProcessPage } from '../interface/interface';
 
-const PersonalInformation: React.FC<ProcessPage> = ({ 
-    formData, 
-    updateFormData, 
-    onNext 
+const PersonalInformation: React.FC<ProcessPage> = ({
+    formData,
+    updateFormData,
+    onNext
 }) => {
+
     useEffect(() => {
         const accountData = localStorage.getItem('account');
         if (accountData) {
             try {
                 const account = JSON.parse(accountData);
-                updateFormData({
-                    fullname: account.fullname || '',
-                    email: account.email || '',
-                    phone: account.phone || '',
-                    address: account.address || ''
-                });
+
+                // Chỉ update nếu dữ liệu khác
+                if (
+                    formData.fullName !== account.fullName ||
+                    formData.email !== account.email ||
+                    formData.phone !== account.phone ||
+                    formData.address !== account.address
+                ) {
+                    updateFormData({
+                        fullName: account.fullName || '',
+                        email: account.email || '',
+                        phone: account.phone || '',
+                        address: account.address || ''
+                    });
+                }
             } catch (error) {
                 console.error('Error parsing account data:', error);
             }
         }
-    }, [updateFormData]);
+    }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -38,7 +48,7 @@ const PersonalInformation: React.FC<ProcessPage> = ({
     };
 
     const formFields = [
-        { name: 'fullname', label: 'Họ và tên', type: 'text', icon: FiUser, required: true },
+        { name: 'fullName', label: 'Họ và tên', type: 'text', icon: FiUser, required: true },
         { name: 'email', label: 'Email', type: 'email', icon: FiMail, required: true },
         { name: 'phone', label: 'Số điện thoại', type: 'tel', icon: FiPhone, required: true, pattern: '[0-9]{10,11}' },
         { name: 'address', label: 'Địa chỉ', type: 'text', icon: FiHome, required: true }

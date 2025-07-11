@@ -11,14 +11,14 @@ import ConfirmationStep from './form/Confirmation';
 
 const Consultant: React.FC = () => {
     const [formData, setFormData] = useState<Form>({
-        fullname: '',
+        fullName: '',
         email: '',
         phone: '',
         province: '',
         address: '',
         campusUuid: '',
         specializationUuid: '',
-        scholarshipUuid: false,
+        scholarshipUuid: '',
         schedularUuid: ''
     });
 
