@@ -3,24 +3,24 @@
 import { useEffect, useState } from "react"
 import {
   FiSearch,
-  FiCalendar,
   FiEye,
   FiChevronRight,
   FiPlus,
-  FiCheckCircle,
-  FiX
+  FiX,
+  FiTrash2
 } from "react-icons/fi"
 import type { BlogPost, EditorDetails } from "../models/BlogModel"
 import EditorPage from "./components/EditorPage"
 import { api } from "../services/blogService"
+import toast from "react-hot-toast"
 
 export default function Blog() {
   const [searchQuery, setSearchQuery] = useState("")
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
-  const [modalSuccess, setModalSuccess] = useState(false)
   const [isCreateNewPost, setIsCreateNewPost] = useState(false)
   const [isEditPost, setIsEditPost] = useState(false)
   const [selectedPost, setSelectedPost] = useState<EditorDetails | null>(null)
+  const [postToDelete, setPostToDelete] = useState<BlogPost | null>(null)
 
   const fetchBlogPosts = async () => {
     const response = await api.get("/posts")
@@ -53,6 +53,22 @@ export default function Blog() {
       name: "",
       bio: ""
     })
+  }
+
+  const handleDeletePost = async (post: BlogPost) => {
+    const id = post.id
+
+    try {
+      const res = await api.delete(`/posts/${id}`)
+      if (res.status === 200 || res.status === 204) {
+        toast.success("Xóa bài viết thành công");
+      } else {
+        toast.error("Xóa không thành công");
+      }
+    } catch (error) {
+      console.log("Đã xảy ra lỗi", error);
+      toast.error("Xóa bài viết thất bại");
+    }
   }
 
   return (
@@ -92,16 +108,23 @@ export default function Blog() {
 
       {/* Modal tạo mới */}
       {isCreateNewPost && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center ">
           <div className="absolute inset-0 bg-black/40" onClick={() => setIsCreateNewPost(false)} />
           <div className="relative z-10 bg-white rounded-xl shadow-xl max-w-4xl max-h-[90vh] w-full overflow-y-auto p-4">
+            {/* Icon đóng */}
+            <button
+              onClick={() => setIsCreateNewPost(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition"
+              aria-label="Đóng"
+            >
+              <FiX className="w-6 h-6" />
+            </button>
             <EditorPage
               type="post"
               object={null}
               onSuccess={() => {
                 setIsCreateNewPost(false)
                 fetchBlogPosts()
-                setModalSuccess(true)
               }}
             />
           </div>
@@ -113,13 +136,20 @@ export default function Blog() {
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="absolute inset-0 bg-black/40" onClick={() => setIsEditPost(false)} />
           <div className="relative z-10 bg-white rounded-xl shadow-xl max-w-5xl max-h-[90vh] w-full overflow-y-auto p-4">
+            {/* Icon đóng */}
+            <button
+              onClick={() => setIsEditPost(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition"
+              aria-label="Đóng"
+            >
+              <FiX className="w-6 h-6" />
+            </button>
             <EditorPage
               type="editPost"
               object={selectedPost}
               onSuccess={() => {
-                setIsCreateNewPost(false)
+                setIsEditPost(false)
                 fetchBlogPosts()
-                setModalSuccess(true)
               }}
             />
           </div>
@@ -158,13 +188,20 @@ export default function Blog() {
                       <span>{post.view}</span>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
                     <button
-                      className="flex items-center gap-1 bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+                      className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm"
                       onClick={() => handleEditProfile(post)}
                     >
                       Chỉnh sửa
                       <FiChevronRight className="w-4 h-4" />
+                    </button>
+                    <button
+                      className="flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm"
+                      onClick={() => setPostToDelete(post)}
+                    >
+                      Xóa
+                      <FiTrash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -173,32 +210,45 @@ export default function Blog() {
           ))}
         </div>
       </div>
-
-      {/* Modal thông báo thành công */}
-      {modalSuccess && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/30 bg-opacity-50 transition-opacity" onClick={() => setModalSuccess(false)} />
-          <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4 transform transition-all animate-in fade-in-0 zoom-in-95 duration-200">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <div className="flex items-center space-x-3">
-                <FiCheckCircle className="h-8 w-8 text-green-500" />
-                <h3 className="text-lg font-semibold text-gray-900">Thành công!</h3>
+      {/* Delete Confirmation Modal */}
+      {postToDelete && (
+        <div className="fixed inset-0 bg-black/30 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="mt-3 text-center">
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                <svg className="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z"
+                  />
+                </svg>
               </div>
-              <button onClick={() => setModalSuccess(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
-                <FiX className="h-6 w-6" />
-              </button>
-            </div>
-            <div className="p-6 text-center">
-              <p className="text-gray-600">Cập nhật thông tin người dùng thành công!</p>
-              <p className="text-sm text-gray-500 mt-2">Thông tin đã được lưu và cập nhật vào hệ thống.</p>
-            </div>
-            <div className="flex justify-center p-6 pt-0">
-              <button
-                onClick={() => setModalSuccess(false)}
-                className="bg-green-600 hover:bg-green-700 text-white px-8 py-2 rounded-md"
-              >
-                Đóng
-              </button>
+              <h3 className="text-lg font-medium text-gray-900 mt-4">Xác nhận xóa</h3>
+              <div className="mt-2 px-7 py-3">
+                <p className="text-sm text-gray-500">
+                  Bạn có chắc chắn muốn xóa “{postToDelete.topic}”?
+                </p>
+              </div>
+              <div className="flex justify-center space-x-3 mt-4">
+                <button
+                  onClick={() => setPostToDelete(null)}
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                >
+                  Hủy
+                </button>
+                <button
+                  onClick={async () => {
+                    await handleDeletePost(postToDelete);
+                    setPostToDelete(null); // Đóng modal sau khi xóa
+                    fetchBlogPosts(); // Reload lại danh sách nếu cần
+                  }}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                >
+                  Xóa
+                </button>
+              </div>
             </div>
           </div>
         </div>

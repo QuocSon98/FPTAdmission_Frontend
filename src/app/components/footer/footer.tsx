@@ -1,133 +1,146 @@
-// import React from 'react';
-// // import { Link } from 'react-router-dom';
-// import './Footer.css';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// //npm install @fortawesome/free-brands-svg-icons
-// import { faFacebook, faYoutube, faTiktok } from '@fortawesome/free-brands-svg-icons';
-
-// const Footer: React.FC = () => {
-//   return (
-//     <footer className="footer">
-//       <div className="footer-top">
-//         <div className="container">
-//           <div className="footer-grid">
-//             <div className="footer-col">
-//               <h3>HÀ NỘI</h3>
-//               <p>Khu Giáo dục và Đào tạo – Khu Công nghệ cao Hòa Lạc – Km29 Đại lộ Thăng Long, H. Thạch Thất, TP. Hà Nội</p>
-//               <p>Điện thoại: (024) 7300 5588</p>
-//               <p>Email: tuyensinhhanoi@fpt.edu.vn</p>
-//             </div>
-//             <div className="footer-col">
-//               <h3>TP. HỒ CHÍ MINH</h3>
-//               <p>Lô E2a-7, Đường D1 Khu Công nghệ cao, P. Long Thạnh Mỹ, TP. Thủ Đức, TP. Hồ Chí Minh</p>
-//               <p>Điện thoại: (028) 7300 5588</p>
-//               <p>Email:  tuyensinhhcm@fpt.edu.vn</p>
-//             </div>
-//             <div className="footer-col">
-//               <h3>ĐÀ NẴNG</h3>
-//               <p>Khu đô thị công nghệ FPT Đà Nẵng, P. Hoà Hải, Q. Ngũ Hành Sơn, TP. Đà Nẵng</p>
-//               <p>Điện thoại: (0236) 730 0999</p>
-//               <p>Email: tuyensinhdanang@fpt.edu.vn</p>
-//             </div>
-//             <div className="footer-col">
-//               <h3>CẦN THƠ</h3>
-//               <p>Số 600 Đường Nguyễn Văn Cừ (nối dài), P. An Bình, Q. Ninh Kiều, TP. Cần Thơ</p>
-//               <p>Điện thoại: (0292) 730 3636</p>
-//               <p>Email: tuyensinhcantho@fpt.edu.vn</p>
-//             </div>
-//             <div className="footer-col">
-//               <h3>Quy Nhơn</h3>
-//               <p>Khu đô thị mới An Phú Thịnh, Phường Nhơn Bình & Phường Đống Đa, TP. Quy Nhơn, Bình Định</p>
-//               <p>Điện thoại: (0256) 7300 999</p>
-//               <p>Email: tuyensinhquynhon@fpt.edu.vn</p>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//       <div className="footer-bottom">
-//         <div className="container">
-//           <div className="footer-bottom-content">
-//             <div className="copyright">
-//               © 2024 Bản quyền thuộc về Trường Đại học FPT.
-//             </div>
-//             <div className="social-links">
-//               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-//                 <FontAwesomeIcon icon={faFacebook} />
-//               </a>
-//               <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-//                 <FontAwesomeIcon icon={faYoutube} />
-//               </a>
-//               <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer">
-//                 <FontAwesomeIcon icon={faTiktok} />
-//               </a>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </footer>
-//   );
-// };
-
-// export default Footer; 
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faYoutube, faTiktok } from '@fortawesome/free-brands-svg-icons';
+import axios from 'axios';
+import { faMapMarkerAlt, faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+
+
+interface Campus {
+  id: string;
+  name: string;
+  address: string;
+  description: string;
+  email: string;
+  phone: string;
+}
 
 const Footer: React.FC = () => {
-  return (
-    <footer className="bg-white pt-10 pb-5">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-10 border-t-2 border-b-2  border-solid border-orange-500 p-5">
-          <div className="space-y-4">
-            <h3 className="font-bold text-lg text-orange-600">HÀ NỘI</h3>
-            <p className="text-gray-950 text-sm">Khu Giáo dục và Đào tạo – Khu Công nghệ cao Hòa Lạc – Km29 Đại lộ Thăng Long, H. Thạch Thất, TP. Hà Nội</p>
-            <p className="text-gray-950 text-sm">Điện thoại: (024) 7300 5588</p>
-            <p className="text-gray-950 text-sm">Email: tuyensinhhanoi@fpt.edu.vn</p>
-          </div>
 
-          <div className="space-y-4">
-            <h3 className="font-bold text-lg text-orange-600">TP. HỒ CHÍ MINH</h3>
-            <p className="text-gray-950 text-sm">Lô E2a-7, Đường D1 Khu Công nghệ cao, P. Long Thạnh Mỹ, TP. Thủ Đức, TP. Hồ Chí Minh</p>
-            <p className="text-gray-950 text-sm">Điện thoại: (028) 7300 5588</p>
-            <p className="text-gray-950 text-sm">Email: tuyensinhhcm@fpt.edu.vn</p>
-          </div>
+  const [campuses, setCampuses] = useState<Campus[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-          <div className="space-y-4">
-            <h3 className="font-bold text-lg text-orange-600">ĐÀ NẴNG</h3>
-            <p className="text-gray-950 text-sm">Khu đô thị công nghệ FPT Đà Nẵng, P. Hoà Hải, Q. Ngũ Hành Sơn, TP. Đà Nẵng</p>
-            <p className="text-gray-950 text-sm">Điện thoại: (0236) 730 0999</p>
-            <p className="text-gray-950 text-sm">Email: tuyensinhdanang@fpt.edu.vn</p>
-          </div>
+  useEffect(() => {
+    const fetchCampuses = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://localhost:8080/api/campus/get', {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
+          },
+        });
 
-          <div className="space-y-4">
-            <h3 className="font-bold text-lg text-orange-600">CẦN THƠ</h3>
-            <p className="text-gray-950 text-sm">Số 600 Đường Nguyễn Văn Cừ (nối dài), P. An Bình, Q. Ninh Kiều, TP. Cần Thơ</p>
-            <p className="text-gray-950 text-sm">Điện thoại: (0292) 730 3636</p>
-            <p className="text-gray-950 text-sm">Email: tuyensinhcantho@fpt.edu.vn</p>
-          </div>
+        if (response.data) {
+          // Handle different response structures
+          if (response.data.data) {
+            setCampuses(Array.isArray(response.data.data) ? response.data.data : [response.data.data]);
+          } else if (response.data.listData) {
+            setCampuses(response.data.listData);
+          } else if (Array.isArray(response.data)) {
+            setCampuses(response.data);
+          } else {
+            setCampuses([response.data]);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching campuses:', error);
+        setError('Không thể tải thông tin cơ sở');
+        // Fallback to default data if API fails
+        setCampuses([
+          {
+            id: '1',
+            name: 'FPT Hà Nội',
+            address: 'Khu Giáo dục và Đào tạo – Khu Công nghệ cao Hòa Lạc – Km29 Đại lộ Thăng Long, H. Thạch Thất, TP. Hà Nội',
+            description: 'Cơ sở chính',
+            email: 'tuyensinhhanoi@fpt.edu.vn',
+            phone: '(024) 7300 5588',
+          }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-          <div className="space-y-4">
-            <h3 className="font-bold text-lg text-orange-600">QUY NHƠN</h3>
-            <p className="text-gray-950 text-sm">Khu đô thị mới An Phú Thịnh, Phường Nhơn Bình & Phường Đống Đa, TP. Quy Nhơn, Bình Định</p>
-            <p className="text-gray-950 text-sm">Điện thoại: (0256) 7300 999</p>
-            <p className="text-gray-950 text-sm">Email: tuyensinhquynhon@fpt.edu.vn</p>
+    fetchCampuses();
+  }, []);
+
+  // Function to extract city name from campus name
+  const getCityName = (campusName: string): string => {
+    if (campusName.includes('Hà Nội')) return 'HÀ NỘI';
+    if (campusName.includes('Hồ Chí Minh') || campusName.includes('HCM')) return 'TP. HỒ CHÍ MINH';
+    if (campusName.includes('Đà Nẵng')) return 'ĐÀ NẴNG';
+    if (campusName.includes('Cần Thơ')) return 'CẦN THƠ';
+    if (campusName.includes('Quy Nhơn')) return 'QUY NHƠN';
+    return campusName.toUpperCase();
+  };
+
+  if (loading) {
+    return (
+      <footer className="bg-white pt-10 pb-5">
+        <div className="max-w-8xl mx-auto px-4">
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-orange-500"></div>
+            <span className="ml-3 text-gray-600">Đang tải thông tin cơ sở...</span>
           </div>
         </div>
+      </footer>
+    );
+  }
+  return (
+    <footer className="bg-white pt-10 pb-5">
+      <div className="max-w-8xl mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-10 border-t-2 border-b-2  border-solid border-orange-500 p-5">
+          {campuses.map((campus) => (
+            <div key={campus.id} className="space-y-4">
+              <h3 className="font-bold text-3xl text-orange-600">
+                {getCityName(campus.name)}
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-start gap-2">
+                  <FontAwesomeIcon
+                    icon={faMapMarkerAlt}
+                    className="text-orange-500 mt-1 flex-shrink-0"
+                  />
+                  <p className="text-gray-950 text-xl">{campus.address}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FontAwesomeIcon
+                    icon={faPhone}
+                    className="text-orange-500 flex-shrink-0"
+                  />
+                  <p className="text-gray-950 text-xl">
+                    Điện thoại: <a href={`tel:${campus.phone}`} className="hover:text-orange-600">{campus.phone}</a>
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FontAwesomeIcon
+                    icon={faEnvelope}
+                    className="text-orange-500 flex-shrink-0"
+                  />
+                  <p className="text-gray-950 text-xl">
+                    Email: <a href={`mailto:${campus.email}`} className="hover:text-orange-600">{campus.email}</a>
+                  </p>
+                </div>
+                {campus.description && (
+                  <p className="text-gray-600 text-lg italic">{campus.description}</p>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
 
         <div className="border-t border-gray-200 pt-5 ">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-gray-950 text-sm mb-4 md:mb-0">
+            <div className="text-gray-950 text-lg mb-4 md:mb-0">
               © 2024 Bản quyền thuộc về Trường Đại học FPT.
             </div>
-            <div className="flex space-x-6 ">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-600 text-xl">
+            <div className="flex space-x-10">
+              <a href="https://www.facebook.com/daihocfpt?utm_source=GGMA&utm_medium=DKTS2025&utm_campaign=TV" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-600 text-5xl">
                 <FontAwesomeIcon icon={faFacebook} />
               </a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-red-600 text-xl">
-                <FontAwesomeIcon icon={faYoutube} />
-              </a>
-              <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-black text-xl">
+              <a href="https://www.tiktok.com/@fptuniversity?utm_source=GGMA&utm_medium=DKTS2025&utm_campaign=TV" target="_blank" rel="noopener noreferrer" className="text-black-600 hover:text-black text-5xl">
                 <FontAwesomeIcon icon={faTiktok} />
               </a>
             </div>
