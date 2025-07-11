@@ -138,8 +138,8 @@ export default function AdminConsultationsPage() {
         page: 0,
         size: 100, // Đặt size > 0 để nhận được dữ liệu, ví dụ 10
       }
-      // console.log(time);
-      // console.log(date);
+      console.log(time);
+      console.log(date);
       const res = await api.get("/scheduler/filter", { params: payload })
       const bookingDetails = res.data?.listData || []
       setSlotDetails(bookingDetails)
@@ -398,8 +398,11 @@ export default function AdminConsultationsPage() {
                           : "hover:shadow-lg hover:scale-[1.02] cursor-pointer hover:-translate-y-1"
                           }`}
                         onClick={() => {
-                          if (isPastSlot) return
-                          handleSlotClick(dateStr, time)
+                          if (isPastSlot) {
+                            return
+                          } else if(status === "empty"){
+                            toggleAssign(dateStr, time)
+                          }else handleSlotClick(dateStr, time)
                         }}
                       >
                         <div className="flex flex-col h-full justify-center items-center text-center relative">
@@ -441,7 +444,7 @@ export default function AdminConsultationsPage() {
                           {status === "empty" && (
                             <>
                               <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center shadow-lg mb-2 group-hover:bg-gray-500 transition-colors">
-                                <FiPlus className="text-white text-lg" />
+                                <FiPlus  className="text-white text-lg" />
                               </div>
                               <span className="font-medium text-sm">Chưa tạo</span>
                               <span className="text-xs opacity-75 mt-1">Nhấn để tạo mới</span>
@@ -460,8 +463,8 @@ export default function AdminConsultationsPage() {
                             <FiEdit className="text-gray-600 text-sm" />
                           </button>
                         )}
-
-                        {status === "assigned" && (
+                        {/* Cho xem lịch khi đã qua */}
+                        {/* {status === "assigned" && (
                           <button
                             className="absolute bottom-2 right-2 p-2 rounded-full bg-white/80 hover:bg-white shadow-md opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
                             onClick={(e) => {
@@ -471,7 +474,25 @@ export default function AdminConsultationsPage() {
                           >
                             <FiEye className="text-gray-600 text-sm" />
                           </button>
+                        )} */}
+                        {/* Không Cho xem lịch khi đã qua */}
+                        {status === "assigned" && (
+                          <button
+                            className={`absolute bottom-2 right-2 p-2 rounded-full shadow-md transition-all duration-200 hover:scale-110 ${isPastSlot
+                              ? "bg-gray-100 cursor-not-allowed opacity-50"
+                              : "bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100"
+                              }`}
+                            disabled={isPastSlot}
+                            title={isPastSlot ? "Lịch đã qua" : "Xem chi tiết"}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (!isPastSlot) handleSlotClick(dateStr, time);
+                            }}
+                          >
+                            <FiEye className="text-gray-600 text-sm" />
+                          </button>
                         )}
+
                       </div>
                     )
                   })}
@@ -563,7 +584,17 @@ export default function AdminConsultationsPage() {
       {/* Slot Details Modal */}
       {slotDetails && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-8 max-h-[80vh] overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-8 max-h-[80vh] overflow-hidden relative">
+            {/* Icon đóng */}
+            <button
+              onClick={() => setSlotDetails(null)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition"
+              aria-label="Đóng"
+            >
+              <FiX className="w-6 h-6" />
+            </button>
+
+            {/* Header */}
             <div className="flex items-center mb-6">
               <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center mr-4">
                 <FiEye className="w-6 h-6 text-white" />
@@ -571,6 +602,7 @@ export default function AdminConsultationsPage() {
               <h2 className="text-xl font-bold text-gray-900">Chi tiết lịch tư vấn</h2>
             </div>
 
+            {/* Nội dung lịch */}
             <div className="space-y-4 max-h-[400px] overflow-auto pr-2">
               {slotDetails.map((b) => (
                 <div
@@ -613,26 +645,14 @@ export default function AdminConsultationsPage() {
                         {b.status}
                       </span>
                     </div>
-                    {/* <div>
-                      <span className="text-sm font-semibold text-gray-600">Tạo lúc:</span>
-                      <p className="font-medium text-gray-900">{format(new Date(b.createdAt), "dd/MM/yyyy HH:mm")}</p>
-                    </div> */}
                   </div>
                 </div>
               ))}
             </div>
-
-            <div className="mt-6 flex justify-end">
-              <button
-                onClick={() => setSlotDetails(null)}
-                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 font-medium shadow-lg"
-              >
-                Đóng
-              </button>
-            </div>
           </div>
         </div>
       )}
+
     </div>
   )
 }

@@ -2,8 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import ReactQuill, { Quill } from 'react-quill';
 import BlotFormatter from 'quill-blot-formatter';
 import 'react-quill/dist/quill.snow.css';
-import { FaCheckCircle } from 'react-icons/fa';
-import { IoClose } from "react-icons/io5";
 import { api } from '../../services/blogService';
 import ImageUploader from 'quill-image-uploader';
 import ImageResize from 'quill-image-resize-module-react';
@@ -72,7 +70,6 @@ export default function EditorPage({ type, object, onSuccess }: EditorProps) {
     const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
     const [thumbnail, setThumbnail] = useState<string>('');
     const [isChangeCategory, setIsChangeCategory] = useState(false)
-    const [modalSuccess, setModalSuccess] = useState(false)
 
     const handleChange = (content: string) => {
         setHtml(content);
@@ -109,28 +106,32 @@ export default function EditorPage({ type, object, onSuccess }: EditorProps) {
     const handleSave = async () => {
         const editor = quillRef.current?.getEditor();
         const delta = editor?.getContents();
-        console.log(topic);
-        console.log(html);
-        console.log(delta);
-        console.log(category);
-        console.log(thumbnail);
+        // console.log(topic);
+        // console.log(html);
+        // console.log(delta);
+        // console.log(category);
+        // console.log(thumbnail);
 
+        try {
+            const res = await api.post('/posts/create', {
+                topic: topic,
+                htmlContent: html,
+                deltaContent: JSON.stringify(delta),
+                categoryId: category,
+                thumbnail: thumbnail
+            });
 
-        const res = await api.post('/posts/create', {
-            topic: topic,
-            htmlContent: html,
-            deltaContent: JSON.stringify(delta),
-            categoryId: category,
-            thumbnail: thumbnail
-        });
-
-        if (res.status) {
-            setModalSuccess(true)
-            // console.log('Post saved successfully:', res.data);
-            toast.success("Tạo bài viết thành công")
-        } else {
-            console.error('Error saving post:', res.data);
-            toast.error("Tạo thất bại")
+            if (res.status) {
+                // setModalSuccess(true)
+                if (onSuccess) onSuccess();
+                toast.success("Tạo bài viết thành công")
+            } else {
+                console.error('Error saving post:', res.data);
+                toast.error("Tạo thất bại")
+            }
+        } catch (error) {
+            console.error("Lỗi khi tạo bài viết:", error);
+            toast.error("Đã xảy ra lỗi hệ thống");
         }
 
     };
@@ -185,8 +186,8 @@ export default function EditorPage({ type, object, onSuccess }: EditorProps) {
             });
             if (res.status) {
                 // console.log('Post saved successfully:', res.data);
+                if(onSuccess) onSuccess()
                 toast.success("Cập nhật bài viết thành công")
-                
             } else {
                 console.error('Error saving post:', res.data);
                 toast.error("Cập nhật thất bại")
@@ -406,44 +407,7 @@ export default function EditorPage({ type, object, onSuccess }: EditorProps) {
                 )}
 
             </div>
-            {modalSuccess && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center">
-                    {/* Backdrop */}
-                    <div className="absolute inset-0 bg-black/30 bg-opacity-50 transition-opacity" onClick={() => setModalSuccess(false)} />
-
-                    {/* Modal Content */}
-                    <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4 transform transition-all animate-in fade-in-0 zoom-in-95 duration-200">
-                        {/* Header */}
-                        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                            <div className="flex items-center space-x-3">
-                                <div className="flex-shrink-0">
-                                    <FaCheckCircle className="h-8 w-8 text-green-500" />
-                                </div>
-                                <h3 className="text-lg font-semibold text-gray-900">Thành công!</h3>
-                            </div>
-                            <button onClick={() => setModalSuccess(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
-                                <IoClose className="h-6 w-6" />
-                            </button>
-                        </div>
-
-                        {/* Body */}
-                        <div className="p-6">
-                            <p className="text-gray-600 text-center">Tạo bài viết thành công!</p>
-                            <p className="text-sm text-gray-500 text-center mt-2">Thông tin đã được lưu và cập nhật vào hệ thống.</p>
-                        </div>
-
-                        {/* Footer */}
-                        <div className="flex justify-center p-6 pt-0">
-                            <button
-                                onClick={() => setModalSuccess(false)}
-                                className="bg-green-600 hover:bg-green-700 text-white px-8 py-2 rounded-md font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                            >
-                                Đóng
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+           
         </>
 
     );
