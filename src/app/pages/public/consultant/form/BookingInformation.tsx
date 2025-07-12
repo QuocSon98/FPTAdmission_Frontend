@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiCalendar, FiClock, FiAlertCircle, FiUser, FiLoader, FiCheckCircle } from 'react-icons/fi';
 import type { ProcessPage, SchedulerFilter } from '../interface/interface';
 import { getApi } from '../data/getApi';
@@ -47,6 +47,7 @@ const BookingInformation: React.FC<ProcessPage> = ({
 
         updateFormData({
             consultationTime: `${start} - ${end}`,
+            bookingUuid: '',
         });
     };
 
@@ -58,7 +59,7 @@ const BookingInformation: React.FC<ProcessPage> = ({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (formData.consultationDate && formData.consultationTime) {
+        if (formData.consultationDate && formData.consultationTime && formData.bookingUuid) {
             onNext?.();
         }
     };
@@ -159,7 +160,6 @@ const BookingInformation: React.FC<ProcessPage> = ({
                                         new Date(consultant.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
                                     const isSelected = (formData.bookingUuid === consultant.bookingUuid) && isAvailable;
-                                    console.log(consultant);
 
                                     return (
                                         <button

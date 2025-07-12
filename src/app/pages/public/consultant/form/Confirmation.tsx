@@ -18,7 +18,7 @@ const ConfirmationStep: React.FC<ProcessPage> = ({
         e.preventDefault();
 
         const payload = {
-            fullname: formData.fullName,
+            fullname: formData.fullname,
             email: formData.email,
             phone: formData.phone,
             province: formData.province,
@@ -26,7 +26,7 @@ const ConfirmationStep: React.FC<ProcessPage> = ({
             campusUuid: formData.campusUuid,
             specializationUuid: formData.specializationUuid,
             scholarshipUuid: formData.scholarshipUuid,
-            schedularUuid: formData.bookingUuid
+            bookingUuid: formData.bookingUuid
         };
 
         try {
@@ -70,7 +70,7 @@ const ConfirmationStep: React.FC<ProcessPage> = ({
                         <div className="flex items-center">
                             <FiUser className="h-4 w-4 mr-2 text-gray-400" />
                             <span className="text-sm text-gray-600 mr-2">Họ tên:</span>
-                            <span className="font-medium">{formData.fullName}</span>
+                            <span className="font-medium">{formData.fullname}</span>
                         </div>
                         <div className="flex items-center">
                             <FiMail className="h-4 w-4 mr-2 text-gray-400" />

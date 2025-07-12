@@ -3,7 +3,7 @@ import Login from "../pages/authentication";
 import AdminHome from "../pages/adminHome";
 import Register from "../pages/authentication/register";
 import ResetPassword from "../pages/authentication/partials/reset-password";
-import PrivateRoutes from "./PrivateRoutes";
+import ProtectedRoute from "./ProtectedRoutes";
 import Layout from "../layouts/layout";
 import Home from "../pages/public/homePage/home";
 import Contract from "../pages/public/contract/contract";
@@ -18,7 +18,7 @@ import SpecializationDetail from "../pages/public/specialization/specializationD
 import ProgramList from "../pages/public/program/Program";
 import { Toaster } from "react-hot-toast";
 
-export const MainRoutes = () => {
+const MainRoutes = () => {
   return (
     <>
       <Toaster position="top-right" reverseOrder={false} />
@@ -35,9 +35,9 @@ export const MainRoutes = () => {
             <Route
               path="consultant"
               element={
-                <PrivateRoutes>
+                <ProtectedRoute>
                   <Consultant />
-                </PrivateRoutes>
+                </ProtectedRoute>
               }
             />
             <Route path="tin-tuc" element={<News />} />
@@ -48,9 +48,9 @@ export const MainRoutes = () => {
           <Route
             path="/staff"
             element={
-              <PrivateRoutes>
+              <ProtectedRoute>
                 <StaffLayout />
-              </PrivateRoutes>
+              </ProtectedRoute>
             }
           >
             <Route index element={<Schedule />} />
@@ -62,9 +62,9 @@ export const MainRoutes = () => {
           <Route
             path="/admin"
             element={
-              <PrivateRoutes>
+              <ProtectedRoute>
                 <AdminHome />
-              </PrivateRoutes>
+              </ProtectedRoute>
             }
           />
           <Route path="/reset-password" element={<ResetPassword />} />
@@ -73,3 +73,5 @@ export const MainRoutes = () => {
     </>
   );
 };
+
+export default MainRoutes;

@@ -27,18 +27,18 @@ export interface ChildSchedulerFilter {
 
 export interface Scheduler {
     uuid: string,
-    bookingList: BookingList[]
+    bookingList: Booking[]
 }
 
-export interface BookingList {
+export interface Booking {
     uuid: string,
     candidateUuid: string,
     staffUuid: string,
     createdAt: Date,
     status: 'AVAILABLE' | 'BOOKED' | 'PROCESSING' | 'CANCEL' | 'COMPLETED',
-    availableDate: Date,
-    startTime: Date,
-    endTime: Date
+    availableDate: string,
+    startTime: string,
+    endTime: string
 }
 
 export interface Process {
@@ -56,7 +56,7 @@ export interface ProcessPage {
 }
 
 export interface Form {
-    fullName: string;
+    fullname: string;
     email: string;
     phone: string;
     province: string;

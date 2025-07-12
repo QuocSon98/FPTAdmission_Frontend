@@ -17,13 +17,13 @@ const PersonalInformation: React.FC<ProcessPage> = ({
 
                 // Chỉ update nếu dữ liệu khác
                 if (
-                    formData.fullName !== account.fullName ||
+                    formData.fullname !== account.fullName ||
                     formData.email !== account.email ||
                     formData.phone !== account.phone ||
                     formData.address !== account.address
                 ) {
                     updateFormData({
-                        fullName: account.fullName || '',
+                        fullname: account.fullName || '',
                         email: account.email || '',
                         phone: account.phone || '',
                         address: account.address || ''
@@ -48,7 +48,7 @@ const PersonalInformation: React.FC<ProcessPage> = ({
     };
 
     const formFields = [
-        { name: 'fullName', label: 'Họ và tên', type: 'text', icon: FiUser, required: true },
+        { name: 'fullname', label: 'Họ và tên', type: 'text', icon: FiUser, required: true },
         { name: 'email', label: 'Email', type: 'email', icon: FiMail, required: true },
         { name: 'phone', label: 'Số điện thoại', type: 'tel', icon: FiPhone, required: true, pattern: '[0-9]{10,11}' },
         { name: 'address', label: 'Địa chỉ', type: 'text', icon: FiHome, required: true }

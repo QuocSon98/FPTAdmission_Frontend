@@ -11,7 +11,7 @@ import ConfirmationStep from './form/Confirmation';
 
 const Consultant: React.FC = () => {
     const [formData, setFormData] = useState<Form>({
-        fullName: '',
+        fullname: '',
         email: '',
         phone: '',
         province: '',
@@ -19,24 +19,11 @@ const Consultant: React.FC = () => {
         campusUuid: '',
         specializationUuid: '',
         scholarshipUuid: '',
-        schedularUuid: ''
+        bookingUuid: ''
     });
 
     const [currentStep, setCurrentStep] = useState(0);
     const [processes, setProcesses] = useState<Process[]>(processesList);
-
-    const checkLogin = () => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            // For demo purposes, we'll comment this out
-            // window.location.href = '/login';
-            console.log('No token found, but continuing for demo');
-        }
-    };
-
-    useEffect(() => {
-        checkLogin();
-    }, []);
 
     const updateFormData = (newData: Partial<Form>) => {
         setFormData(prev => ({ ...prev, ...newData }));
@@ -82,7 +69,6 @@ const Consultant: React.FC = () => {
     const handleSubmit = async () => {
         try {
             // Here you would normally submit to your API
-            console.log('Submitting form data:', formData);
             
             // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 1000));
