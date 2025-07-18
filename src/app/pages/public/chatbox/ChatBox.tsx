@@ -1,16 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import ChatBoxArea from './component/ChatBoxArea';
 import InputArea from './component/InputArea';
-import { getAIResponse, type Content, type ResponseMessage } from './utils/AIResponse';
+import { getAIResponse, type Message, type ResponseMessage } from './utils/AIResponse';
 import { HeaderBox } from './component/HeaderBox';
-
-// Message type definition
-interface Message {
-    id: string;
-    role: string;
-    content: string;
-    timestamp: Date;
-}
 
 export const ChatBox: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);
