@@ -1,3 +1,10 @@
+import React, { useState, useEffect } from 'react';
+import { GraduationCap, BookOpen, Loader2 } from 'lucide-react';
+import TrainingPhase from './TraningPhase';
+import Program from '../program/Program';
+import axios from 'axios';
+import TitleBanner from './../../../components/banner/titleBanner';
+
 interface Major {
   id: string;
   name: string;
@@ -14,15 +21,6 @@ interface Specialization {
 interface MajorWithSpecializations extends Major {
   specializations: Specialization[];
 }
-
-import React, { useState, useEffect } from 'react';
-import { GraduationCap, BookOpen, Sparkles, Loader2 } from 'lucide-react';
-import TrainingPhase from './TraningPhase';
-import Program from '../program/Program';
-import axios from 'axios';
-import TitleBanner from './../../../components/banner/titleBanner';
-
-
 
 const Major: React.FC = () => {
   const [majors, setMajors] = useState<MajorWithSpecializations[]>([]);

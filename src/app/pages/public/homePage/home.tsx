@@ -1,30 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGlobe, faHandshake, faGraduationCap, faBriefcase, faSchool } from '@fortawesome/free-solid-svg-icons';
 import {
   Globe,
   Handshake,
   GraduationCap,
   Briefcase,
-  School,
-  Shield,
-  Car,
-  RefreshCw,
   Code,
-  Palette,
-  Cpu,
   Brain,
-  TrendingUp,
-  CreditCard,
   Target,
-  Globe2,
-  Truck,
-  Languages,
-  Megaphone,
-  Scale,
   ArrowRight,
-  Star,
   Users,
   Award,
   Trophy,
@@ -33,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+
 interface Major {
   id: string;
   name: string;
@@ -131,8 +116,8 @@ const Home: React.FC = () => {
       // Convert to program format for rendering
       const programsData: Program[] = majorsWithSpecializations.map(major => ({
         id: major.id,
-        title: major.name, // Major name becomes title
-        items: major.specializations.map(spec => spec.name) // Specialization names become items
+        title: major.name, 
+        items: major.specializations.map(spec => spec.name) 
       }));
 
       setPrograms(programsData);
@@ -144,19 +129,6 @@ const Home: React.FC = () => {
 
   return (
     <div className="w-full">
-      {/* Hero Section */}
-      {/* <div className="bg-[url('/src/app/assets/img02.png')] bg-cover bg-center h-[700px]">
-        <section className="w-3/5 text-center text-orange-500 py-25 font-sans relative">
-          <div>
-            <h1 className="font-bold text-6xl mt-18">TUYỂN SINH ĐẠI HỌC</h1>
-            <h1 className="font-bold text-6xl mt-1">NĂM HỌC 2025</h1>
-            <h2 className="italic text-5xl font-initial mt-4">chính thức bắt đầu!</h2>
-            <Link to="/consultant" className="inline-block px-8 py-4 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition w-48 text-center mt-4">
-              TƯ VẤN NGAY
-            </Link>
-          </div>
-        </section>
-      </div> */}
       <div className='relative overflow-hidden '>
 
         <div
@@ -385,9 +357,6 @@ const Home: React.FC = () => {
                 <div className="w-10 h-10 bg-orange-300 rounded-full border-2 border-white"></div>
                 <div className="w-10 h-10 bg-orange-200 rounded-full border-2 border-white"></div>
               </div>
-              {/* <span className="text-sm">
-                <strong>1,000+</strong> sinh viên đã đăng ký tuần này
-              </span> */}
             </div>
           </div>
         </div>
