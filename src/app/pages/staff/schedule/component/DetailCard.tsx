@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     AiOutlineCalendar,
     AiOutlineClockCircle,
@@ -9,8 +9,7 @@ import {
 import { getColor } from './Color';
 import type { Booking } from '../../../public/consultant/interface/interface';
 import { parseAvailableTime } from '../Schedule';
-import { getApi, sendData } from '../../../public/consultant/data/getApi';
-import { set } from 'date-fns';
+import { sendData } from '../../../public/consultant/data/getApi';
 
 interface StatusColors {
     [key: string]: string;
@@ -23,36 +22,28 @@ interface DetailCardProps {
 
 }
 
-
-
 const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppointments, statusColors }) => {
 
     const [openEditId, setOpenEditId] = useState<string | null>(null);
 
-    const [formData, setFormData] = useState({
-        userUuid: '',
-        staffUuid: '',
-        status: ''
-    });
-
-    const handleEditAppointment = async (appointment: Booking, status: string) => {
-        setFormData({
-            userUuid: appointment.candidateUuid,
-            staffUuid: appointment.staffUuid,
+        const handleEditAppointment = async (appointment: Booking, status: string) => {
+        const updatedFormData = {
             status: status
-        });
-
-        console.log('Current appointment:', appointment);
-        console.log('Editing appointment:', formData);
-        await sendData(`/booking/status/${appointment.uuid}`, 'PUT', formData)
-            .then(() => {
-                console.log('Appointment updated successfully');
-                // Cập nhật lại danh sách cuộc hẹn sau khi chỉnh sửa
-                // Có thể cần gọi lại API để lấy danh sách mới hoặc cập nhật state
-            })
-            .catch((error) => {
-                console.error('Error updating appointment:', error);
-            });
+        };
+        
+        try {
+            await sendData(`/booking/status/${appointment.uuid}`, 'PUT', updatedFormData);
+            console.log('Appointment updated successfully');
+            
+            // Close the edit dropdown
+            setOpenEditId(null);
+            
+            // Optionally trigger a refresh of appointments
+            // You might need to call a parent function to refresh the data
+            
+        } catch (error) {
+            console.error('Error updating appointment:', error);
+        }
     };
 
     const getDuration = (start: Date, end: Date) => {
@@ -76,8 +67,8 @@ const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppoi
                                 >
                                     <div className="flex items-start justify-between mb-3">
                                         <div className="flex-1">
-                                            <h4 className={`font-semibold text-white`}>
-                                                {appointment.candidateUuid}
+                                            <h4 className={`font-semibold text-black`}>
+                                                {appointment.fullName || appointment.userName && ''}
                                             </h4>
                                             <div className="flex items-center space-x-2 mt-1">
                                                 <span className={`text-xs px-2 py-1 rounded-full font-medium ${statusColors[appointment.status]}`}>
@@ -89,11 +80,9 @@ const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppoi
                                             <button
                                                 onClick={() => {
                                                     setOpenEditId(openEditId === appointment.uuid ? null : appointment.uuid);
-                                                    console.log('Edit appointment:', appointment.uuid);
-                                                    console.log('Current status:', openEditId);
                                                 }}
-                                                // disabled={appointment.status !== 'PROCESSING'}
-                                                className="p-1 text-black hover:text-gray-500 hover:bg-white rounded transition-colors duration-200"
+                                                disabled={appointment.status !== 'PROCESSING'}
+                                                className={`p-1 text-black hover:text-gray-500 hover:bg-white rounded transition-colors duration-200 ${appointment.status !== 'PROCESSING' ? 'hidden' : ''}`}
                                             >
                                                 <AiOutlineEdit size={14} />
                                             </button>
@@ -136,20 +125,20 @@ const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppoi
                                         <div className={`flex items-center space-x-2 text-black`}>
                                             <AiOutlineMail size={16} />
                                             <a
-                                                href={`mailto:${appointment.candidateUuid}`}
+                                                href={`mailto:${appointment.email}`}
                                                 className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
                                             >
-                                                {appointment.candidateUuid}
+                                                {appointment.email && 'N/A'}
                                             </a>
                                         </div>
 
                                         <div className={`flex items-center space-x-2 text-black`}>
                                             <AiOutlinePhone size={16} />
                                             <a
-                                                href={`tel:${appointment.candidateUuid}`}
+                                                href={`tel:${appointment.phone}`}
                                                 className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
                                             >
-                                                {appointment.candidateUuid}
+                                                {appointment.phone && 'N/A'}
                                             </a>
                                         </div>
                                     </div>

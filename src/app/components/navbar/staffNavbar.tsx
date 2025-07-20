@@ -23,7 +23,7 @@ const navItems: NavItem[] = [
     // { id: 'search', label: 'Search', icon: <AiOutlineSearch size={20} />, href: '#' },
     // { id: 'settings', label: 'Settings', icon: <AiOutlineSetting size={20} />, href: '#' },
     { id: 'schedule', label: 'Schedule', icon: <RiCalendarScheduleLine size={20} />, href: '/staff' },
-    { id: 'notification', label: 'Notification', icon: <Bell size={20} />, href: '/staff/notification' },
+    // { id: 'notification', label: 'Notification', icon: <Bell size={20} />, href: '/staff/notification' },
     // { id: 'logout', label: 'Logout', icon: <HiOutlineLogout size={20} />, href: '#'},
 ];
 
@@ -122,7 +122,7 @@ const StaffNavbar: React.FC = () => {
                     </div>
                     <div className="text-white">
                         <p className="text-sm font-medium">{account.userName}</p>
-                        <p className="text-xs text-gray-400">{account.email}</p>
+                        <p className="text-xs text-white">{account.email}</p>
                     </div>
                 </div>
             </div>

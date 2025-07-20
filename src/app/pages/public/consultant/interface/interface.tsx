@@ -38,7 +38,13 @@ export interface Booking {
     status: 'AVAILABLE' | 'BOOKED' | 'PROCESSING' | 'CANCELED' | 'COMPLETED' | 'ABSENT',
     availableDate: string,
     startTime: string,
-    endTime: string
+    endTime: string,
+    userName?: string,
+    fullName?: string,
+    phone?: string,
+    email?: string,
+    address?: string,
+    image?: string,
 }
 
 export interface Process {

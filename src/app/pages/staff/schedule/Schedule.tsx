@@ -58,7 +58,7 @@ export const parseAvailableTime = (dateString: string): Date => {
 const Schedule: React.FC = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [appointments, setAppointments] = useState<Scheduler[]>();
-    const bookingList: Booking[] = appointments?.[0].bookingList || [];
+    const bookingList: Booking[] = appointments?.flatMap(scheduler => scheduler.bookingList || []) || [];
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedAppointment, setSelectedAppointment] = useState<Booking | null>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
