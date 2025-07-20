@@ -28,7 +28,7 @@ const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppoi
 
     const [openEditId, setOpenEditId] = useState<string | null>(null);
     const [isOpenInfo, setIsOpenInfo] = useState<boolean>(false);
-    const [selectedCandidateBooking, setSelectedCandidateBooking] = useState<string | null>(null);
+    const [selectedCandidateBooking, setSelectedCandidateBooking] = useState<Booking | null>(null);
     const [candidateInfo, setCandidateInfo] = useState<AccountResponse | undefined>(undefined);
 
     const handleEditAppointment = async (appointment: Booking, status: string) => {
@@ -55,7 +55,8 @@ const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppoi
         if (!selectedCandidateBooking) return;
 
         try {
-            await getApi<AccountResponse>(`/users/${selectedCandidateBooking}`)
+            console.log('Fetching candidate info for:', selectedCandidateBooking);
+            await getApi<AccountResponse>(`/users/${selectedCandidateBooking.candidateUuid}`)
                 .then(response => {
                     setCandidateInfo(response);
                 })
@@ -98,14 +99,14 @@ const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppoi
                                         <div className="relative flex items-center space-x-1 ml-2">
                                             <button
                                                 onClick={() => {
-                                                    setSelectedCandidateBooking(appointment.candidateUuid);
+                                                    setSelectedCandidateBooking(appointment);
                                                     setIsOpenInfo(!isOpenInfo);
                                                 }}
                                                 className={`p-1 text-black hover:text-gray-500 hover:bg-white rounded transition-colors duration-200`}
                                             >
                                                 <InfoIcon size={14} />
                                             </button>
-                                            {isOpenInfo && selectedCandidateBooking === appointment.uuid && (
+                                            {isOpenInfo && selectedCandidateBooking?.uuid === appointment.uuid && (
                                                 <div className="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
                                                     <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-96 overflow-y-auto">
                                                         <div className="flex justify-between items-center mb-4">
