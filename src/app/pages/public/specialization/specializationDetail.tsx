@@ -947,7 +947,7 @@ const SpecializationDetail: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-orange-600 to-red-500 text-white py-16">
+      <div className="bg-orange-500 text-white py-16">
         <div className="max-w-7xl mx-auto px-4">
           <Link 
             to="/major" 
@@ -1054,7 +1054,7 @@ const SpecializationDetail: React.FC = () => {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Admission Summary */}
-            <div className="bg-gradient-to-br from-orange-500 to-red-500 text-white rounded-2xl p-6 shadow-lg">
+            <div className="bg-orange-500 text-white rounded-2xl p-6 shadow-lg">
               <h3 className="text-xl font-bold mb-4">Thông tin tuyển sinh</h3>
               <div className="space-y-4">
                 <div className="flex justify-between">

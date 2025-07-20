@@ -118,7 +118,7 @@ const Header: React.FC = () => {
                 <input
                   type="text"
                   placeholder="Tìm kiếm..."
-                  className="px-15 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="px-10 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
                 <button
                   type="button"

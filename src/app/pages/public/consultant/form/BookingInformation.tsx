@@ -27,6 +27,8 @@ const BookingInformation: React.FC<ProcessPage> = ({
 
         try {
             for (const time of hours) {
+                console.log(date, time);
+                
                 const res = await getApi('/scheduler/filter', { date, time, page: 0, size: 10 });
                 const valid = (res?.listData || []).filter((slot: SchedulerFilter) => {
                     return slot.status === 'AVAILABLE' && new Date(slot.availableDate) > new Date();
