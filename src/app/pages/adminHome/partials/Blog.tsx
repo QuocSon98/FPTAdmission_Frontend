@@ -179,15 +179,7 @@ export default function Blog() {
                     {post.topic}
                   </h3>
                   <p className="text-slate-600 mb-4 line-clamp-2">{post.stamp}</p>
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500 mb-4">
-                    {/* <div className="flex items-center">
-                      <span>Basico Lawyer</span>
-                    </div> */}
-                    <div className="flex items-center">
-                      <FiEye className="w-4 h-4 mr-1" />
-                      <span>{post.view}</span>
-                    </div>
-                  </div>
+                  
                   <div className="flex items-center gap-4">
                     <button
                       className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm"
