@@ -83,8 +83,7 @@ export default function EditorPage({ type, object, onSuccess }: EditorProps) {
         }
         fetchData();
     }, []);
-
-    useEffect(() => {
+useEffect(() => {
         if (object?.categoryName) {
             console.log(object.categoryName)
             const found = getCategoryByName(object.categoryName, categories);
@@ -149,7 +148,11 @@ export default function EditorPage({ type, object, onSuccess }: EditorProps) {
         formData.append('file', file);
 
         try {
-            const res = await api.post('/assets/upload', formData);
+            const res = await api.post('/assets/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
 
             if (res.data.status) {
                 setThumbnail(res.data.result); // đường dẫn ảnh đã upload
@@ -169,7 +172,7 @@ export default function EditorPage({ type, object, onSuccess }: EditorProps) {
         let categoryIdToSend = category;
 
         if (!isChangeCategory && object) {
-            const found = getCategoryByName(object.categoryName, categories);
+const found = getCategoryByName(object.categoryName, categories);
             if (found) {
                 categoryIdToSend = found.id;
             }
@@ -187,7 +190,7 @@ export default function EditorPage({ type, object, onSuccess }: EditorProps) {
             });
             if (res.status) {
                 // console.log('Post saved successfully:', res.data);
-                if(onSuccess) onSuccess()
+                if (onSuccess) onSuccess()
                 toast.success("Cập nhật bài viết thành công")
             } else {
                 console.error('Error saving post:', res.data);
@@ -236,7 +239,7 @@ export default function EditorPage({ type, object, onSuccess }: EditorProps) {
                                         className="rounded-lg border w-full max-w-sm object-cover h-64 shadow-md"
                                     />
                                 </div>
-                            )}
+)}
                         </div>
 
                         {/* Danh mục */}
@@ -292,7 +295,7 @@ export default function EditorPage({ type, object, onSuccess }: EditorProps) {
                                 placeholder="Nhập tiêu đề"
                                 value={topic}
                                 onChange={(e) => setTopic(e.target.value)}
-                                className="w-full border border-gray-300 rounded px-4 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+className="w-full border border-gray-300 rounded px-4 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
 
@@ -346,7 +349,7 @@ export default function EditorPage({ type, object, onSuccess }: EditorProps) {
                                 <>
                                     <input
                                         type="text"
-                                        className="border border-gray-300 rounded px-3 py-2 w-48 bg-gray-100"
+className="border border-gray-300 rounded px-3 py-2 w-48 bg-gray-100"
                                         value={object?.categoryName}
                                         readOnly
                                     />
