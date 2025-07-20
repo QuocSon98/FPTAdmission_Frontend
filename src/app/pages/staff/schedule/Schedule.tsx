@@ -17,6 +17,7 @@ const statusColors = {
     PROCESSING: 'text-gray-600 bg-gray-100',
     CANCEL: 'text-red-600 bg-red-100',
     COMPLETED: 'text-green-600 bg-green-100',
+    ABSENT: 'text-yellow-600 bg-yellow-100'
 };
 
 const monthNames = [

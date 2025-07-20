@@ -18,7 +18,6 @@ import SpecializationDetail from "../pages/public/specialization/specializationD
 import ProgramList from "../pages/public/program/Program";
 import { Toaster } from "react-hot-toast";
 import { ChatBox } from "../pages/public/chatbox/ChatBox";
-import { Notification } from "../pages/staff/notification/Notification";
 
 const MainRoutes = () => {
   return (
@@ -52,13 +51,10 @@ const MainRoutes = () => {
           <Route
             path="/staff"
             element={
-              <ProtectedRoute>
-                <StaffLayout />
-              </ProtectedRoute>
+              <StaffLayout />
             }
           >
             <Route index element={<Schedule />} />
-            <Route path="notification" element={<Notification />} />
           </Route>
 
           {/* Authentication */}

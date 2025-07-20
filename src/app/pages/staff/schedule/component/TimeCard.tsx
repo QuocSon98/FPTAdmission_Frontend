@@ -11,7 +11,7 @@ const TimeCard: React.FC<{ bookingList: Booking[] }> = ({ bookingList }) => {
                 bookingList.slice(0, 2).map((booking) => (
                     <div
                         key={booking.uuid}
-                        className={`text-xs p-1 rounded text-white truncate ${getColor(booking.uuid).color}`}
+                        className={`text-xs p-1 rounded text-gray-600 truncate ${getColor(booking.uuid).color}`}
                     >
                         {parseAvailableTime(booking.startTime).toLocaleTimeString('en-US', {
                             hour: '2-digit',

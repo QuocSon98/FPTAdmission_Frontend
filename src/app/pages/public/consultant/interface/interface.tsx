@@ -14,7 +14,7 @@ export interface SchedulerFilter {
     availableDate: Date,
     candidateUuid: string,
     bookingUuid: string
-}
+}   
 
 export interface ChildSchedulerFilter {
     uuid: string,
@@ -35,7 +35,7 @@ export interface Booking {
     candidateUuid: string,
     staffUuid: string,
     createdAt: Date,
-    status: 'AVAILABLE' | 'BOOKED' | 'PROCESSING' | 'CANCEL' | 'COMPLETED',
+    status: 'AVAILABLE' | 'BOOKED' | 'PROCESSING' | 'CANCELED' | 'COMPLETED' | 'ABSENT',
     availableDate: string,
     startTime: string,
     endTime: string

@@ -9,6 +9,8 @@ import {
 import { getColor } from './Color';
 import type { Booking } from '../../../public/consultant/interface/interface';
 import { parseAvailableTime } from '../Schedule';
+import { getApi, sendData } from '../../../public/consultant/data/getApi';
+import { set } from 'date-fns';
 
 interface StatusColors {
     [key: string]: string;
@@ -21,12 +23,36 @@ interface DetailCardProps {
 
 }
 
+
+
 const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppointments, statusColors }) => {
-    const [selectedAppointment, setSelectedAppointment] = useState<Booking | null>(null);
 
+    const [openEditId, setOpenEditId] = useState<string | null>(null);
 
-    const handleEditAppointment = (appointment: Booking) => {
-        setSelectedAppointment(appointment);
+    const [formData, setFormData] = useState({
+        userUuid: '',
+        staffUuid: '',
+        status: ''
+    });
+
+    const handleEditAppointment = async (appointment: Booking, status: string) => {
+        setFormData({
+            userUuid: appointment.candidateUuid,
+            staffUuid: appointment.staffUuid,
+            status: status
+        });
+
+        console.log('Current appointment:', appointment);
+        console.log('Editing appointment:', formData);
+        await sendData(`/booking/status/${appointment.uuid}`, 'PUT', formData)
+            .then(() => {
+                console.log('Appointment updated successfully');
+                // Cập nhật lại danh sách cuộc hẹn sau khi chỉnh sửa
+                // Có thể cần gọi lại API để lấy danh sách mới hoặc cập nhật state
+            })
+            .catch((error) => {
+                console.error('Error updating appointment:', error);
+            });
     };
 
     const getDuration = (start: Date, end: Date) => {
@@ -59,18 +85,46 @@ const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppoi
                                                 </span>
                                             </div>
                                         </div>
-                                        <div className="flex items-center space-x-1 ml-2">
+                                        <div className="relative flex items-center space-x-1 ml-2">
                                             <button
-                                                onClick={() => handleEditAppointment(appointment)}
-                                                className="p-1 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors duration-200"
+                                                onClick={() => {
+                                                    setOpenEditId(openEditId === appointment.uuid ? null : appointment.uuid);
+                                                    console.log('Edit appointment:', appointment.uuid);
+                                                    console.log('Current status:', openEditId);
+                                                }}
+                                                // disabled={appointment.status !== 'PROCESSING'}
+                                                className="p-1 text-black hover:text-gray-500 hover:bg-white rounded transition-colors duration-200"
                                             >
                                                 <AiOutlineEdit size={14} />
                                             </button>
+
+                                            {openEditId === appointment.uuid && (
+                                                <div className="absolute top-full right-0 mt-1 rounded-md 
+                                            bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden z-10">
+                                                    <div role="none" className="p-1">
+                                                        <button
+                                                            onClick={() => handleEditAppointment(appointment, 'COMPLETED')}
+                                                            className="block px-4 py-2 text-sm text-white bg-green-300 w-full rounded-md hover:bg-green-400">
+                                                            Completed
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleEditAppointment(appointment, 'CANCELED')}
+                                                            className="block px-4 py-2 text-sm my-1 text-white bg-red-300 w-full rounded-md hover:bg-red-400">
+                                                            Canceled
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleEditAppointment(appointment, 'ABSENT')}
+                                                            className="block px-4 py-2 text-sm text-white bg-yellow-300 w-full rounded-md hover:bg-yellow-400">
+                                                            Absent
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 
                                     <div className="space-y-2 text-sm">
-                                        <div className={`flex items-center space-x-2 text-white`}>
+                                        <div className={`flex items-center space-x-2 text-black`}>
                                             <AiOutlineClockCircle size={16} />
                                             <span>{parseAvailableTime(appointment.startTime).toLocaleTimeString('en-US', {
                                                 hour: '2-digit',
@@ -79,7 +133,7 @@ const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppoi
                                             })} ({getDuration(parseAvailableTime(appointment.startTime), parseAvailableTime(appointment.endTime))})</span>
                                         </div>
 
-                                        <div className={`flex items-center space-x-2 text-white`}>
+                                        <div className={`flex items-center space-x-2 text-black`}>
                                             <AiOutlineMail size={16} />
                                             <a
                                                 href={`mailto:${appointment.candidateUuid}`}
@@ -89,7 +143,7 @@ const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppoi
                                             </a>
                                         </div>
 
-                                        <div className={`flex items-center space-x-2 text-white`}>
+                                        <div className={`flex items-center space-x-2 text-black`}>
                                             <AiOutlinePhone size={16} />
                                             <a
                                                 href={`tel:${appointment.candidateUuid}`}

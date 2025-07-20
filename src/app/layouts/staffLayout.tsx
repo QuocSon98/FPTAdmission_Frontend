@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import StaffNavbar from '../components/navbar/staffNavbar';
+import NotiPopup from '../pages/staff/notification/NotiPopup';
 
 const StaffLayout: React.FC = () => {
   return (
@@ -9,6 +10,7 @@ const StaffLayout: React.FC = () => {
       <main>
         <Outlet />
       </main>
+      <NotiPopup />
     </div>
   );
 };

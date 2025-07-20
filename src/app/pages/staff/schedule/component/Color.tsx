@@ -3,9 +3,9 @@ const getRandomColor = (appointmentId: string) => {
     // Danh sách các màu Tailwind thông dụng
     const colors = [
         // can show color
-        'blue', 'red', 'green', 'purple', 'orange', 'emerald', 'gray',
+        'blue', 'red', 'green', 'yellow', 'orange', 'emerald', 'gray', 'indigo',
         // not show color
-        // 'yellow', 'amber', 'fuchsia', 'pink', 'indigo', 'teal', 'cyan', 
+        //  'amber', 'fuchsia', 'pink', 'teal', 'cyan', 'purple',
         // 'rose', 'lime', 'sky', 'violet', 'slate', 'zinc', 'neutral', 'stone'
     ];
 
@@ -15,15 +15,15 @@ const getRandomColor = (appointmentId: string) => {
         asciiSum += appointmentId.charCodeAt(i);
     }
     const colorIndex = asciiSum % colors.length;
-    console.log(colorIndex)
     return colors[colorIndex] || colors[0];
     // return 'stone'; // Mặc định là 'blue' nếu không tìm thấy màu
+    // return colors[0]; // Mặc định là 'blue' nếu không tìm thấy màu
 };
 
 // Hàm lấy màu text và background dựa trên màu chính
 const getColorVariants = (color: string) => {
     return {
-        color: `bg-${color}-300`,
+        color: `bg-${color}-100`,
         textColor: `text-${color}-700`,
         bgLight: `bg-${color}-50`
     };

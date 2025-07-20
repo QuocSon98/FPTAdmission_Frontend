@@ -47,6 +47,7 @@ const StaffNavbar: React.FC = () => {
         if (currentItem) {
             setActiveItem(currentItem.id);
         }
+        getAccount();
     }, [location.pathname]);
 
     const handleNavigation = (item: NavItem) => {
@@ -122,16 +123,6 @@ const StaffNavbar: React.FC = () => {
                     <div className="text-white">
                         <p className="text-sm font-medium">{account.userName}</p>
                         <p className="text-xs text-gray-400">{account.email}</p>
-                    </div>
-                    <div className='ml-auto my-auto'>
-                        <a className='text-white flex hover:text-orange-200'
-                            onClick={() => {
-                                setActiveItem('notification');
-                                window.location.href = '/staff/notification';
-                            }}>
-                            <Bell size={25} />
-                            <div className="absolute top-3 right-3 w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                        </a>
                     </div>
                 </div>
             </div>

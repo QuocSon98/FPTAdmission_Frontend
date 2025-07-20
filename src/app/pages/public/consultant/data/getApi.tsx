@@ -23,7 +23,7 @@ export const getApi = async <T = any>(url: string, params?: Record<string, any>)
     }
 };
 
-export const sendData = async (url: string, method: string, data: any) => {
+export const sendData = async <T = any>(url: string, method: string, data: any): Promise<T | undefined> => {
     const fullUrl = `${BASE_URL}${url}`;
 
     const api = axios.create({
@@ -36,21 +36,21 @@ export const sendData = async (url: string, method: string, data: any) => {
 
     switch (method.toLowerCase()) {
         case 'post':
-            return api.post('', data)
+            return api.post<T>('', data)
                 .then(response => response.data)
                 .catch(error => {
                     console.error("Error sending data:", error);
                     throw error;
                 });
         case 'put':
-            return api.put('', data)
+            return api.put<T>('', data)
                 .then(response => response.data)
                 .catch(error => {
                     console.error("Error updating data:", error);
                     throw error;
                 });
         case 'delete':
-            return api.delete('')
+            return api.delete<T>('')
                 .then(response => response.data)
                 .catch(error => {
                     console.error("Error deleting data:", error);
