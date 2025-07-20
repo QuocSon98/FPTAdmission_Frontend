@@ -2,7 +2,19 @@
 
 import { FiUsers, FiFileText, FiTrendingUp, FiMessageSquare } from "react-icons/fi"
 import { motion } from "framer-motion"
+import { useState } from "react";
+import { useWebSocket } from "../../../hooks/websocket";
 
+export default function DashboardStats() {
+  const [bookingReport, setBookingReport] = useState(42); // giá trị ban đầu
+  // Lắng nghe report mới từ topic WebSocket
+  useWebSocket(
+    (message) => {
+      console.log("Received new report:", message);
+      setBookingReport((prev) => prev + 1);
+    },
+    "/topic/report-channel/new-booking-report/FPT" // sửa tên campus nếu cần
+  );
 const stats = [
   {
     title: "Tổng người dùng",
@@ -14,7 +26,7 @@ const stats = [
   },
   {
     title: "Tư vấn trong tháng",
-    value: "856",
+    value: `${bookingReport}`,
     change: "+8%",
     changeType: "increase",
     icon: FiMessageSquare,
@@ -22,7 +34,7 @@ const stats = [
   },
   {
     title: "Báo cáo mới",
-    value: "42",
+    value: "43",
     change: "+23%",
     changeType: "increase",
     icon: FiFileText,
@@ -37,8 +49,6 @@ const stats = [
     color: "bg-purple-500",
   },
 ]
-
-export default function DashboardStats() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       {stats.map((stat, index) => {

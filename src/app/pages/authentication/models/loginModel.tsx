@@ -14,7 +14,6 @@ export interface RegisterFormData {
   email: string
   phone: string
   password: string
-  confirmPassword: string
   fullName: string
   address: string
   role: string

@@ -30,6 +30,10 @@ export default function ResetPasswordModal({ isOpen, onClose }: ResetPasswordMod
       setError("Mật khẩu xác nhận không khớp")
       return
     }
+    if (formData.newPassword.length < 6) {
+      setError("Mật khẩu phải có ít nhất 6 ký tự")
+      return
+    }
 
     setLoading(true)
     setError("")
