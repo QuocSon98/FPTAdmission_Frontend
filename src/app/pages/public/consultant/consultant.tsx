@@ -71,10 +71,7 @@ const Consultant: React.FC = () => {
             // Here you would normally submit to your API
             
             // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            alert('Đăng ký tư vấn thành công! Chúng tôi sẽ liên hệ với bạn sớm nhất.');
-            
+            await new Promise(resolve => setTimeout(resolve, 1000));            
             // Reset form or redirect
             // window.location.href = '/success';
         } catch (error) {

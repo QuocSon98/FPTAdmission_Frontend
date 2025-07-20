@@ -52,16 +52,35 @@ export default function NotiPopup() {
                     ]);
                 }
             );
+
+            stompClient.subscribe(
+                `/topic/new-scheduler/${account?.uuid}`,
+                (message) => {
+                    const data = JSON.parse(message.body) as SocketNewApplicationEvent;
+                    console.log("Received event:", data);
+
+                    setEvents((prev) => [
+                        {
+                            name: data.submitApplicationEvent.fullname,
+                            consultantUuid: data.consultantUuid,
+                            description: `Specialization: ${data.submitApplicationEvent.specialization} | Campus: ${data.submitApplicationEvent.campus}`,
+                        },
+                        ...prev,
+                    ]);
+                }
+            );
         });
 
         return () => {
-            stompClient.disconnect();
+            if (stompClient.connected) {
+                stompClient.disconnect();
+            }
         };
     }, [account?.uuid]);
 
     useEffect(() => {
-        if (events.length > 0) {
-            const latestEvent = events[events.length - 1];
+        if (events.length > 0 && (!visibleEvent || events[0].consultantUuid !== visibleEvent.consultantUuid)) {
+            const latestEvent = events[0];
             setVisibleEvent(latestEvent);
             setIsVisible(true);
 
@@ -80,8 +99,8 @@ export default function NotiPopup() {
         setTimeout(() => setVisibleEvent(null), 300);
     };
 
-    // // Don't render if no visible event
-    // if (!visibleEvent) return null;
+    // Don't render if no visible event
+    if (!visibleEvent) return null;
 
     return (
         <div className={`fixed bottom-5 right-5 z-50 max-w-sm transition-all duration-300 ease-in-out ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'

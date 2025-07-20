@@ -31,7 +31,6 @@ const ConfirmationStep: React.FC<ProcessPage> = ({
 
         try {
             await sendData('/application/submit', 'post', payload);
-            alert('Gửi thông tin thành công!');
             setIsSubmitted(true); // ✅ Đánh dấu đã gửi
             onSubmit?.();
         } catch (error) {
