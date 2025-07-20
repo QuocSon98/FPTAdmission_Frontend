@@ -9,7 +9,9 @@ import {
 import { getColor } from './Color';
 import type { Booking } from '../../../public/consultant/interface/interface';
 import { parseAvailableTime } from '../Schedule';
-import { sendData } from '../../../public/consultant/data/getApi';
+import { getApi, sendData } from '../../../public/consultant/data/getApi';
+import { InfoIcon, User, X } from 'lucide-react';
+import type { AccountResponse } from '../../../authentication/models/loginModel';
 
 interface StatusColors {
     [key: string]: string;
@@ -25,26 +27,46 @@ interface DetailCardProps {
 const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppointments, statusColors }) => {
 
     const [openEditId, setOpenEditId] = useState<string | null>(null);
+    const [isOpenInfo, setIsOpenInfo] = useState<boolean>(false);
+    const [selectedCandidateBooking, setSelectedCandidateBooking] = useState<string | null>(null);
+    const [candidateInfo, setCandidateInfo] = useState<AccountResponse | undefined>(undefined);
 
-        const handleEditAppointment = async (appointment: Booking, status: string) => {
+    const handleEditAppointment = async (appointment: Booking, status: string) => {
         const updatedFormData = {
             status: status
         };
-        
+
         try {
             await sendData(`/booking/status/${appointment.uuid}`, 'PUT', updatedFormData);
             console.log('Appointment updated successfully');
-            
+
             // Close the edit dropdown
             setOpenEditId(null);
-            
+
             // Optionally trigger a refresh of appointments
             // You might need to call a parent function to refresh the data
-            
+
         } catch (error) {
             console.error('Error updating appointment:', error);
         }
     };
+
+    const getCandidateInfo = async () => {
+        if (!selectedCandidateBooking) return;
+
+        try {
+            await getApi<AccountResponse>(`/users/${selectedCandidateBooking}`)
+                .then(response => {
+                    setCandidateInfo(response);
+                })
+        } catch (error) {
+            console.error('Error fetching candidate info:', error);
+        }
+    };
+
+    useEffect(() => {
+        getCandidateInfo();
+    }, [selectedCandidateBooking]);
 
     const getDuration = (start: Date, end: Date) => {
         const diff = end.getTime() - start.getTime();
@@ -67,9 +89,6 @@ const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppoi
                                 >
                                     <div className="flex items-start justify-between mb-3">
                                         <div className="flex-1">
-                                            <h4 className={`font-semibold text-black`}>
-                                                {appointment.fullName || appointment.userName && ''}
-                                            </h4>
                                             <div className="flex items-center space-x-2 mt-1">
                                                 <span className={`text-xs px-2 py-1 rounded-full font-medium ${statusColors[appointment.status]}`}>
                                                     {appointment.status}
@@ -79,6 +98,62 @@ const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppoi
                                         <div className="relative flex items-center space-x-1 ml-2">
                                             <button
                                                 onClick={() => {
+                                                    setSelectedCandidateBooking(appointment.uuid);
+                                                    setIsOpenInfo(!isOpenInfo);
+                                                }}
+                                                className={`p-1 text-black hover:text-gray-500 hover:bg-white rounded transition-colors duration-200`}
+                                            >
+                                                <InfoIcon size={14} />
+                                            </button>
+                                            {isOpenInfo && selectedCandidateBooking === appointment.uuid && (
+                                                <div className="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+                                                    <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-96 overflow-y-auto">
+                                                        <div className="flex justify-between items-center mb-4">
+                                                            <h3 className="text-lg font-semibold text-gray-800">Candidate Information</h3>
+                                                            <button
+                                                                onClick={() => {
+                                                                    setIsOpenInfo(false);
+                                                                    setSelectedCandidateBooking(null);
+                                                                }}
+                                                                className="text-gray-400 hover:text-gray-600"
+                                                            >
+                                                                <X size={20} />
+                                                            </button>
+                                                        </div>
+                                                        <div className="space-y-3">
+                                                            <div className="flex items-center space-x-2">
+                                                                <User size={16} className="text-gray-500" />
+                                                                <span className="text-sm text-gray-700">{candidateInfo?.fullName || 'N/A'}</span>
+                                                            </div>
+                                                            <div className="flex items-center space-x-2">
+                                                                <AiOutlineMail size={16} className="text-gray-500" />
+                                                                <span className="text-sm text-gray-700">{candidateInfo?.email || 'N/A'}</span>
+                                                            </div>
+                                                            <div className="flex items-center space-x-2">
+                                                                <AiOutlinePhone size={16} className="text-gray-500" />
+                                                                <span className="text-sm text-gray-700">{candidateInfo?.phone || 'N/A'}</span>
+                                                            </div>
+                                                            <div className="flex items-center space-x-2">
+                                                                <AiOutlineCalendar size={16} className="text-gray-500" />
+                                                                <span className="text-sm text-gray-700">
+                                                                    {parseAvailableTime(appointment.startTime).toLocaleTimeString('en-US', {
+                                                                        hour: '2-digit',
+                                                                        minute: '2-digit',
+                                                                        hour12: false
+                                                                    })} -
+                                                                    {parseAvailableTime(appointment.endTime).toLocaleTimeString('en-US', {
+                                                                        hour: '2-digit',
+                                                                        minute: '2-digit',
+                                                                        hour12: false
+                                                                    })}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                            <button
+                                                onClick={() => {
                                                     setOpenEditId(openEditId === appointment.uuid ? null : appointment.uuid);
                                                 }}
                                                 disabled={appointment.status !== 'PROCESSING'}
@@ -86,7 +161,6 @@ const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppoi
                                             >
                                                 <AiOutlineEdit size={14} />
                                             </button>
-
                                             {openEditId === appointment.uuid && (
                                                 <div className="absolute top-full right-0 mt-1 rounded-md 
                                             bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden z-10">
@@ -120,26 +194,6 @@ const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppoi
                                                 minute: '2-digit',
                                                 hour12: false
                                             })} ({getDuration(parseAvailableTime(appointment.startTime), parseAvailableTime(appointment.endTime))})</span>
-                                        </div>
-
-                                        <div className={`flex items-center space-x-2 text-black`}>
-                                            <AiOutlineMail size={16} />
-                                            <a
-                                                href={`mailto:${appointment.email}`}
-                                                className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
-                                            >
-                                                {appointment.email && 'N/A'}
-                                            </a>
-                                        </div>
-
-                                        <div className={`flex items-center space-x-2 text-black`}>
-                                            <AiOutlinePhone size={16} />
-                                            <a
-                                                href={`tel:${appointment.phone}`}
-                                                className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
-                                            >
-                                                {appointment.phone && 'N/A'}
-                                            </a>
                                         </div>
                                     </div>
                                 </div>
