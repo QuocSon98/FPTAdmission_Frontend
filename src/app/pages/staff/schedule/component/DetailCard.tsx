@@ -98,7 +98,7 @@ const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppoi
                                         <div className="relative flex items-center space-x-1 ml-2">
                                             <button
                                                 onClick={() => {
-                                                    setSelectedCandidateBooking(appointment.uuid);
+                                                    setSelectedCandidateBooking(appointment.candidateUuid);
                                                     setIsOpenInfo(!isOpenInfo);
                                                 }}
                                                 className={`p-1 text-black hover:text-gray-500 hover:bg-white rounded transition-colors duration-200`}
