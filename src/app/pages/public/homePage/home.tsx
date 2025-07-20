@@ -27,6 +27,8 @@ import {
   Star,
   Users,
   Award,
+  Trophy,
+  BookOpen,
   MapPin
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -143,7 +145,7 @@ const Home: React.FC = () => {
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <div className="bg-[url('/src/app/assets/img02.png')] bg-cover bg-center h-[700px]">
+      {/* <div className="bg-[url('/src/app/assets/img02.png')] bg-cover bg-center h-[700px]">
         <section className="w-3/5 text-center text-orange-500 py-25 font-sans relative">
           <div>
             <h1 className="font-bold text-6xl mt-18">TUYỂN SINH ĐẠI HỌC</h1>
@@ -154,7 +156,74 @@ const Home: React.FC = () => {
             </Link>
           </div>
         </section>
+      </div> */}
+      <div className='relative overflow-hidden '>
+
+        <div
+          className="bg-cover bg-center h-[750px] relative"
+          style={{
+            backgroundImage: 'url("https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop")'
+          }}
+        >
+          {/* Gradient overlay for better text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent"></div>
+
+          {/* Animated background elements */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-20 left-10 w-32 h-32 bg-orange-500/10 rounded-full animate-pulse"></div>
+            <div className="absolute bottom-20 right-10 w-24 h-24 bg-orange-400/10 rounded-full animate-pulse delay-1000"></div>
+            <div className="absolute top-1/2 right-1/4 w-16 h-16 bg-orange-300/10 rounded-full animate-pulse delay-500"></div>
+          </div>
+
+          <div className="relative px-40 py-20 z-10 mx-auto">
+            {/* Badge */}
+            <div className="inline-flex items-center px-4 py-2 bg-orange-500/20 border border-orange-500/30 rounded-full text-orange-300 text-sm font-medium mb-6 backdrop-blur-sm animate-fadeInUp">
+              <Trophy className="w-4 h-4 mr-2" />
+              Đại học hàng đầu về Công nghệ
+            </div>
+
+            {/* Main heading */}
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight animate-fadeInUp delay-200">
+              <span className="text-orange-400">TUYỂN SINH</span>
+              <br />
+              <span className="bg-gradient-to-r from-white to-orange-200 bg-clip-text text-transparent">
+                ĐẠI HỌC
+              </span>
+            </h1>
+
+            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 animate-fadeInUp delay-300">
+              NĂM HỌC <span className="text-orange-400">2025</span>
+            </h2>
+
+            <p className="text-2xl md:text-4xl italic text-orange-200 font-light mb-8 animate-fadeInUp delay-400">
+              chính thức bắt đầu!
+            </p>
+
+            {/* Features */}
+            <div className="flex flex-wrap gap-6 mb-8 animate-fadeInUp delay-500">
+              <div className="flex items-center text-white/90">
+                <BookOpen className="w-5 h-5 mr-2 text-orange-400" />
+                <span className="text-sm font-medium">Chương trình đào tạo quốc tế</span>
+              </div>
+              <div className="flex items-center text-white/90">
+                <Users className="w-5 h-5 mr-2 text-orange-400" />
+                <span className="text-sm font-medium">100% sinh viên có việc làm</span>
+              </div>
+            </div>
+
+            {/* CTA Button */}
+            <div className="animate-fadeInUp delay-600">
+              <Link to="/consultant" className="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full font-semibold text-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-1">
+                TƯ VẤN NGAY
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+              </Link>
+            </div>
+          </div>
+          {/* Decorative elements */}
+          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-orange-500/20 to-transparent"></div>
+        </div>
       </div>
+
 
       <section id="why-choose" className="py-10 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl  mx-auto ">
