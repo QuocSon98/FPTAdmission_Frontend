@@ -228,8 +228,8 @@ export default function ProgramManagement() {
                             <label className="block text-sm font-medium text-gray-700 mb-2">Tên Campus</label>
                             <input
                                 type="text"
-                                name="name"
-                                value={formData.name || ""}
+                                name="campusName"
+                                value={formData.campusName || ""}
                                 onChange={handleInputChange}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required

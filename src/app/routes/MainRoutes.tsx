@@ -17,6 +17,7 @@ import Consultant from "../pages/public/consultant/consultant";
 import SpecializationDetail from "../pages/public/specialization/specializationDetail";
 import ProgramList from "../pages/public/program/Program";
 import { Toaster } from "react-hot-toast";
+import SocketWeb from "../pages/adminHome/partials/test";
 import { ChatBox } from "../pages/public/chatbox/ChatBox";
 import { Notification } from "../pages/staff/notification/Notification";
 
@@ -73,6 +74,7 @@ const MainRoutes = () => {
             }
           />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/test" element={<SocketWeb />} />
         </Routes>
       </BrowserRouter>
     </>

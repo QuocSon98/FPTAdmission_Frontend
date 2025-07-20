@@ -25,12 +25,15 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState("")
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     const { newPassword, confirmPassword, currentPassword } = formData;
-
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setError("Vui lòng điền đầy đủ thông tin");
+      return;
+    }
     if (newPassword !== confirmPassword) {
       setError("Mật khẩu mới và xác nhận không khớp")
       return
