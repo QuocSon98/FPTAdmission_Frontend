@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BASE_URL = 'http://localhost:8080/api';
 
-export const getApi = async (url: string, params?: Record<string, any>) => {
+export const getApi = async <T = any>(url: string, params?: Record<string, any>): Promise<T | undefined> => {
 
     const queryString = new URLSearchParams(params).toString();
     const fullUrl = `${BASE_URL}${url}${queryString ? `?${queryString}` : ''}`;

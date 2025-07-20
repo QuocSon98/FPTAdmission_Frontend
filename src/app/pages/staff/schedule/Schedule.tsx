@@ -1,26 +1,15 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
     AiOutlineLeft,
     AiOutlineRight,
-    AiOutlineCalendar,
-    AiOutlineClockCircle,
-    AiOutlineEdit,
-    AiOutlineMail,
-    AiOutlinePhone,
+
 } from 'react-icons/ai';
 import UpcomingCard from './component/UpcomingCard';
 import TimeCard from './component/TimeCard';
 import DetailCard from './component/DetailCard';
-
-interface Appointment {
-    id: string;
-    candidate: string;
-    date: Date;
-    starttime: Date;
-    endtime: Date;
-    status: 'AVAILABLE' | 'BOOKED' | 'PROCESSING' | 'CANCEL' | 'COMPLETED';
-}
+import type { Booking, Scheduler } from '../../public/consultant/interface/interface';
+import { getApi } from '../../public/consultant/data/getApi';
 
 const statusColors = {
     AVAILABLE: 'text-yellow-600 bg-yellow-100',
@@ -30,63 +19,67 @@ const statusColors = {
     COMPLETED: 'text-green-600 bg-green-100',
 };
 
-const sampleAppointments: Appointment[] = [
-    {
-        id: '1',
-        candidate: '1',
-        date: new Date(2025, 5, 15),
-        starttime: new Date(2025, 5, 15, 9, 0),
-        endtime: new Date(2025, 5, 15, 9, 30),
-        status: 'AVAILABLE'
-    },
-    {
-        id: '2',
-        candidate: '2',
-        date: new Date(2025, 5, 15),
-        starttime: new Date(2025, 5, 15, 10, 0),
-        endtime: new Date(2025, 5, 15, 10, 30),
-        status: 'BOOKED'
-    },
-    {
-        id: '3',
-        candidate: '3',
-        date: new Date(2025, 5, 16),
-        starttime: new Date(2025, 5, 16, 11, 0),
-        endtime: new Date(2025, 5, 16, 11, 30),
-        status: 'PROCESSING'
-    },
-    {
-        id: '4',
-        candidate: '4',
-        date: new Date(2025, 5, 17),
-        starttime: new Date(2025, 5, 17, 14, 0),
-        endtime: new Date(2025, 5, 17, 15, 30),
-        status: 'CANCEL'
-    },
-    {
-        id: '5',
-        candidate: '5',
-        date: new Date(2025, 5, 25),
-        starttime: new Date(2025, 5, 25, 16, 0),
-        endtime: new Date(2025, 5, 25, 16, 30),
-        status: 'COMPLETED'
-    }
+const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
 ];
+
+const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+export const parseAvailableDay = (dateString: string): Date => {
+    // Parse "25-07-13 08:00" format
+    const [datePart, timePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('-');
+    const [hours, minutes] = timePart.split(':');
+
+    return new Date(
+        parseInt('20' + year), // Convert YY to 20YY
+        parseInt(month) - 1,   // Month is 0-indexed
+        parseInt(day)
+    );
+};
+
+export const parseAvailableTime = (dateString: string): Date => {
+    // Parse "25-07-13 08:00" format
+    const [datePart, timePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('-');
+    const [hours, minutes] = timePart.split(':');
+
+    return new Date(
+        parseInt('20' + year), // Convert YY to 20YY
+        parseInt(month) - 1,   // Month is 0-indexed
+        parseInt(day),
+        parseInt(hours),
+        parseInt(minutes)
+    );
+};
 
 const Schedule: React.FC = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
-    const [appointments, setAppointments] = useState<Appointment[]>(sampleAppointments);
-    const [status, setStatus] = useState(statusColors);
+    const [appointments, setAppointments] = useState<Scheduler[]>();
+    const bookingList: Booking[] = appointments?.[0].bookingList || [];
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-    const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+    const [selectedAppointment, setSelectedAppointment] = useState<Booking | null>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-    const monthNames = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-    ];
+    useEffect(() => {
+        fetchSchedulers();
+    }, []);
 
-    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const fetchSchedulers = async () => {
+        const account = localStorage.getItem('account');
+        try {
+            const accountData = account ? JSON.parse(account) : null;
+            if (accountData?.uuid) {
+                await getApi<Scheduler[]>(`/scheduler/staff/${accountData.uuid}`)
+                    .then((response) => {
+                        setAppointments(response);
+                    });
+            }
+        } catch (error) {
+            console.error('Error fetching schedulers:', error);
+        }
+    };
 
     const calendarDays = useMemo(() => {
         const year = currentDate.getFullYear();
@@ -108,8 +101,8 @@ const Schedule: React.FC = () => {
     }, [currentDate]);
 
     const getAppointmentsForDate = (date: Date) => {
-        return appointments.filter(appointment =>
-            appointment.date.toDateString() === date.toDateString()
+        return bookingList?.filter(appointment =>
+            parseAvailableDay(appointment.availableDate).toDateString() === date.toDateString()
         );
     };
 
@@ -138,7 +131,7 @@ const Schedule: React.FC = () => {
         setSelectedDate(date);
     };
 
-    const handleEditAppointment = (appointment: Appointment) => {
+    const handleEditAppointment = (appointment: Booking) => {
         setSelectedAppointment(appointment);
     };
 
@@ -214,7 +207,7 @@ const Schedule: React.FC = () => {
                                                     </div>
 
                                                     <div className="space-y-1">
-                                                        <TimeCard appointments={dayAppointments}/>
+                                                        <TimeCard bookingList={dayAppointments} />
                                                     </div>
                                                 </div>
                                             );
@@ -244,20 +237,20 @@ const Schedule: React.FC = () => {
                                     </h3>
                                     {selectedDate && (
                                         <p className="text-sm text-gray-600 mt-1">
-                                            {selectedDateAppointments.length} appointment{selectedDateAppointments.length !== 1 ? 's' : ''}
+                                            {selectedDateAppointments?.length} appointment{selectedDateAppointments?.length !== 1 ? 's' : ''}
                                         </p>
                                     )}
                                 </div>
 
                                 <div className="p-6">
-                                    <DetailCard selectedDate={selectedDate} selectedDateAppointments={selectedDateAppointments} statusColors={statusColors}/>
+                                    <DetailCard selectedDate={selectedDate} selectedDateAppointments={selectedDateAppointments} statusColors={statusColors} />
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Upcoming Appointments */}
-                    <UpcomingCard appointments={appointments} status={statusColors}/>
+                    <UpcomingCard appointments={bookingList} status={statusColors} />
                 </div>
             </div>
         </div>

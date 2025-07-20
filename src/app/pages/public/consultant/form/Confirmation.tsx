@@ -1,36 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 // import { mockCampusList, mockSpecializationList, ProvinceList } from '../data/mockData';
 import { LuGraduationCap, LuBuilding } from "react-icons/lu";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { FiUser, FiMail, FiPhone, FiMapPin, FiAward, FiCalendar, FiClock} from 'react-icons/fi';
+import { FiUser, FiMail, FiPhone, FiMapPin, FiAward, FiCalendar, FiClock } from 'react-icons/fi';
 import type { ProcessPage } from '../interface/interface';
+import { sendData } from '../data/getApi';
 
-const ConfirmationStep: React.FC<ProcessPage> = ({ 
-    formData, 
-    onPrevious, 
-    onSubmit 
+const ConfirmationStep: React.FC<ProcessPage> = ({
+    formData,
+    onPrevious,
+    onSubmit
 }) => {
-    const handleSubmit = (e: React.FormEvent) => {
+
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (onSubmit) {
-            onSubmit();
+
+        const payload = {
+            fullname: formData.fullname,
+            email: formData.email,
+            phone: formData.phone,
+            province: formData.province,
+            address: formData.address,
+            campusUuid: formData.campusUuid,
+            specializationUuid: formData.specializationUuid,
+            scholarshipUuid: formData.scholarshipUuid,
+            bookingUuid: formData.bookingUuid
+        };
+
+        try {
+            await sendData('/application/submit', 'post', payload);
+            alert('Gửi thông tin thành công!');
+            setIsSubmitted(true); // ✅ Đánh dấu đã gửi
+            onSubmit?.();
+        } catch (error) {
+            alert('Có lỗi xảy ra khi gửi thông tin.');
+            console.error('Lỗi gửi API:', error);
         }
     };
-
-    // const getCampusName = (uuid: string) => {
-    //     const campus = mockCampusList.find(c => c.uuid === uuid);
-    //     return campus ? campus.name : '';
-    // };
-
-    // const getSpecializationName = (uuid: string) => {
-    //     const specialization = mockSpecializationList.find(s => s.uuid === uuid);
-    //     return specialization ? specialization.name : '';
-    // };
-
-    // const getProvinceName = (value: string) => {
-    //     const province = ProvinceList.find(p => p.value === value);
-    //     return province ? province.label : '';
-    // };
 
     const formatDate = (dateString: string) => {
         if (!dateString) return '';
@@ -52,7 +60,7 @@ const ConfirmationStep: React.FC<ProcessPage> = ({
             </div>
 
             <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-                {/* Personal Information */}
+                {/* Thông tin cá nhân */}
                 <div className="p-6 border-b border-gray-200">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                         <FiUser className="h-5 w-5 mr-2 text-orange-500" />
@@ -87,7 +95,7 @@ const ConfirmationStep: React.FC<ProcessPage> = ({
                     </div>
                 </div>
 
-                {/* Consultation Information */}
+                {/* Thông tin tư vấn */}
                 <div className="p-6 border-b border-gray-200">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                         <LuGraduationCap className="h-5 w-5 mr-2 text-orange-500" />
@@ -97,24 +105,24 @@ const ConfirmationStep: React.FC<ProcessPage> = ({
                         <div className="flex items-center">
                             <LuBuilding className="h-4 w-4 mr-2 text-gray-400" />
                             <span className="text-sm text-gray-600 mr-2">Cơ sở:</span>
-                            <span className="font-medium">{formData.campusUuid}</span>
+                            <span className="font-medium">{formData.campusName || 'Không rõ'}</span>
                         </div>
                         <div className="flex items-center">
                             <LuGraduationCap className="h-4 w-4 mr-2 text-gray-400" />
                             <span className="text-sm text-gray-600 mr-2">Chuyên ngành:</span>
-                            <span className="font-medium">{formData.specializationUuid}</span>
+                            <span className="font-medium">{formData.specializationName || 'Không rõ'}</span>
                         </div>
                         <div className="flex items-center md:col-span-2">
                             <FiAward className="h-4 w-4 mr-2 text-gray-400" />
                             <span className="text-sm text-gray-600 mr-2">Quan tâm học bổng:</span>
                             <span className={`font-medium ${formData.scholarshipUuid ? 'text-green-600' : 'text-gray-500'}`}>
-                                {formData.scholarshipUuid ? 'Có' : 'Không'}
+                                {formData.scholarshipName || 'Không'}
                             </span>
                         </div>
                     </div>
                 </div>
 
-                {/* Booking Information */}
+                {/* Thông tin lịch hẹn */}
                 <div className="p-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                         <FiCalendar className="h-5 w-5 mr-2 text-orange-500" />
@@ -124,31 +132,47 @@ const ConfirmationStep: React.FC<ProcessPage> = ({
                         <div className="flex items-center">
                             <FiCalendar className="h-4 w-4 mr-2 text-gray-400" />
                             <span className="text-sm text-gray-600 mr-2">Ngày:</span>
-                            <span className="font-medium">00-00-0000</span>
+                            <span className="font-medium">
+                                {formatDate(formData.consultationDate || '')}
+                            </span>
                         </div>
                         <div className="flex items-center">
                             <FiClock className="h-4 w-4 mr-2 text-gray-400" />
                             <span className="text-sm text-gray-600 mr-2">Giờ:</span>
-                            <span className="font-medium">00:00</span>
+                            <span className="font-medium">
+                                {formData.consultationTime || 'Không có'}
+                            </span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className="flex justify-between pt-6">
-                <button
-                    type="button"
-                    onClick={onPrevious}
-                    className="px-8 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200"
-                >
-                    Quay lại
-                </button>
-                <button
-                    onClick={handleSubmit}
-                    className="px-8 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl"
-                >
-                    Xác nhận đăng ký
-                </button>
+            {/* Buttons */}
+            <div className="flex justify-center pt-6">
+                {isSubmitted ? (
+                    <a
+                        href="/"
+                        className="px-8 py-3 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600"
+                    >
+                        Về trang chủ
+                    </a>
+                ) : (
+                    <>
+                        <button
+                            type="button"
+                            onClick={onPrevious}
+                            className="px-8 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50"
+                        >
+                            Quay lại
+                        </button>
+                        <button
+                            onClick={handleSubmit}
+                            className="ml-4 px-8 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700"
+                        >
+                            Xác nhận đăng ký
+                        </button>
+                    </>
+                )}
             </div>
         </div>
     );

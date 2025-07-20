@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FiAward } from 'react-icons/fi';
 import { LuGraduationCap, LuBuilding } from "react-icons/lu";
-import type { Campus, ProcessPage, Specialization } from '../interface/interface';
+import type { Campus, ProcessPage, Scholarship, Specialization } from '../interface/interface';
 import { getApi } from '../data/getApi';
 
 const ConsultationInformation: React.FC<ProcessPage> = ({
@@ -13,14 +13,14 @@ const ConsultationInformation: React.FC<ProcessPage> = ({
 
     const [campusList, setCampusList] = useState<Campus[]>([]);
     const [specializationList, setSpecializationList] = useState<Specialization[]>([]);
+    const [scholarshipList, setScholarshipList] = useState<Scholarship[]>([]);
+
 
     useEffect(() => {
         Promise.all([
-            getApi('/campus')
-                .then(data => setCampusList(data)),
-
-            getApi('/program', { page: 0, size: 1000 })
-                .then(data => setSpecializationList(data.listData)),
+            getApi('/campus/get').then(data => setCampusList(Array.isArray(data) ? data : [])),
+            getApi('/specialization', { page: 0, size: 1000 }).then(data => setSpecializationList(data?.listData || [])),
+            getApi('/scholarship').then(data => setScholarshipList(Array.isArray(data) ? data : [])),
         ]).catch(error => {
             console.error('Error fetching data:', error);
         });
@@ -38,9 +38,19 @@ const ConsultationInformation: React.FC<ProcessPage> = ({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (onNext) {
-            onNext();
-        }
+
+        // Lưu thêm name cho UUID để hiển thị sau
+        const campus = campusList.find(c => c.id === formData.campusUuid);
+        const specialization = specializationList.find(s => s.specializationId === formData.specializationUuid);
+        const scholarship = scholarshipList.find(s => s.id === formData.scholarshipUuid);
+
+        updateFormData({
+            campusName: campus?.name || '',
+            specializationName: specialization?.name || '',
+            scholarshipName: scholarship?.name || ''
+        });
+
+        if (onNext) onNext();
     };
 
     return (
@@ -95,26 +105,24 @@ const ConsultationInformation: React.FC<ProcessPage> = ({
                     </select>
                 </div>
 
-                <div className="bg-orange-50 p-6 rounded-lg border border-orange-200">
-                    <div className="flex items-start space-x-3">
-                        <input
-                            type="checkbox"
-                            name="scholarshipUuid"
-                            id="scholarshipUuid"
-                            checked={formData.scholarshipUuid}
-                            onChange={handleInputChange}
-                            className="mt-1 h-5 w-5 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-                        />
-                        <div className="flex-1">
-                            <label htmlFor="scholarshipUuid" className="flex items-center text-sm font-semibold text-gray-700 cursor-pointer">
-                                <FiAward className="h-4 w-4 mr-2 text-orange-500" />
-                                Quan tâm đến học bổng
-                            </label>
-                            <p className="text-sm text-gray-600 mt-1">
-                                Tích chọn nếu bạn muốn được tư vấn về các chương trình học bổng
-                            </p>
-                        </div>
-                    </div>
+                <div className="space-y-2">
+                    <label className="flex items-center text-sm font-semibold text-gray-700">
+                        <FiAward className="h-4 w-4 mr-2 text-orange-500" />
+                        Chương trình học bổng (nếu có)
+                    </label>
+                    <select
+                        name="scholarshipUuid"
+                        value={formData.scholarshipUuid || ""}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 hover:border-gray-400"
+                    >
+                        <option value="">Không chọn học bổng</option>
+                        {scholarshipList.map(({ id, name }) => (
+                            <option key={id} value={id}>
+                                {name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
                 <div className="flex justify-between pt-6">

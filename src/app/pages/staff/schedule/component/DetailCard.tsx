@@ -7,15 +7,8 @@ import {
     AiOutlinePhone,
 } from 'react-icons/ai';
 import { getColor } from './Color';
-
-interface Appointment {
-    id: string;
-    candidate: string;
-    date: Date;
-    starttime: Date;
-    endtime: Date;
-    status: 'AVAILABLE' | 'BOOKED' | 'PROCESSING' | 'CANCEL' | 'COMPLETED';
-}
+import type { Booking } from '../../../public/consultant/interface/interface';
+import { parseAvailableTime } from '../Schedule';
 
 interface StatusColors {
     [key: string]: string;
@@ -23,16 +16,16 @@ interface StatusColors {
 
 interface DetailCardProps {
     selectedDate: Date | null;
-    selectedDateAppointments: Appointment[];
+    selectedDateAppointments: Booking[];
     statusColors: StatusColors;
 
 }
 
 const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppointments, statusColors }) => {
-    const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+    const [selectedAppointment, setSelectedAppointment] = useState<Booking | null>(null);
 
 
-    const handleEditAppointment = (appointment: Appointment) => {
+    const handleEditAppointment = (appointment: Booking) => {
         setSelectedAppointment(appointment);
     };
 
@@ -49,16 +42,16 @@ const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppoi
                 selectedDateAppointments.length > 0 ? (
                     <div className="space-y-4">
                         {selectedDateAppointments
-                            .sort((a, b) => a.starttime.getTime() - b.starttime.getTime())
+                            .sort((a, b) => parseAvailableTime(a.startTime).getTime() - parseAvailableTime(b.startTime).getTime())
                             .map((appointment) => (
                                 <div
-                                    key={appointment.id}
-                                    className={`p-4 rounded-lg border-l-4 border-l-current ${getColor(appointment.id).color} ${getColor(appointment.id).bgLight}`}
+                                    key={appointment.uuid}
+                                    className={`p-4 rounded-lg border-l-4 border-l-current ${getColor(appointment.uuid).color} ${getColor(appointment.uuid).bgLight}`}
                                 >
                                     <div className="flex items-start justify-between mb-3">
                                         <div className="flex-1">
-                                            <h4 className={`font-semibold ${getColor(appointment.id).textColor}`}>
-                                                {appointment.candidate}
+                                            <h4 className={`font-semibold text-white`}>
+                                                {appointment.candidateUuid}
                                             </h4>
                                             <div className="flex items-center space-x-2 mt-1">
                                                 <span className={`text-xs px-2 py-1 rounded-full font-medium ${statusColors[appointment.status]}`}>
@@ -77,32 +70,32 @@ const DetailCard: React.FC<DetailCardProps> = ({ selectedDate, selectedDateAppoi
                                     </div>
 
                                     <div className="space-y-2 text-sm">
-                                        <div className="flex items-center space-x-2 text-gray-600">
+                                        <div className={`flex items-center space-x-2 text-white`}>
                                             <AiOutlineClockCircle size={16} />
-                                            <span>{appointment.starttime.toLocaleTimeString('en-US', {
+                                            <span>{parseAvailableTime(appointment.startTime).toLocaleTimeString('en-US', {
                                                 hour: '2-digit',
                                                 minute: '2-digit',
                                                 hour12: false
-                                            })} ({getDuration(appointment.starttime, appointment.endtime)})</span>
+                                            })} ({getDuration(parseAvailableTime(appointment.startTime), parseAvailableTime(appointment.endTime))})</span>
                                         </div>
 
-                                        <div className="flex items-center space-x-2 text-gray-600">
+                                        <div className={`flex items-center space-x-2 text-white`}>
                                             <AiOutlineMail size={16} />
                                             <a
-                                                href={`mailto:${appointment.candidate}`}
+                                                href={`mailto:${appointment.candidateUuid}`}
                                                 className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
                                             >
-                                                {appointment.candidate}
+                                                {appointment.candidateUuid}
                                             </a>
                                         </div>
 
-                                        <div className="flex items-center space-x-2 text-gray-600">
+                                        <div className={`flex items-center space-x-2 text-white`}>
                                             <AiOutlinePhone size={16} />
                                             <a
-                                                href={`tel:${appointment.candidate}`}
+                                                href={`tel:${appointment.candidateUuid}`}
                                                 className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
                                             >
-                                                {appointment.candidate}
+                                                {appointment.candidateUuid}
                                             </a>
                                         </div>
                                     </div>
