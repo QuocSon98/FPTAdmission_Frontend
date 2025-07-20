@@ -23,7 +23,7 @@ const getRandomColor = (appointmentId: string) => {
 // Hàm lấy màu text và background dựa trên màu chính
 const getColorVariants = (color: string) => {
     return {
-        color: `bg-${color}-500`,
+        color: `bg-${color}-300`,
         textColor: `text-${color}-700`,
         bgLight: `bg-${color}-50`
     };

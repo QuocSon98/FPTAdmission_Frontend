@@ -18,6 +18,8 @@ import SpecializationDetail from "../pages/public/specialization/specializationD
 import ProgramList from "../pages/public/program/Program";
 import { Toaster } from "react-hot-toast";
 import SocketWeb from "../pages/adminHome/partials/test";
+import { ChatBox } from "../pages/public/chatbox/ChatBox";
+import { Notification } from "../pages/staff/notification/Notification";
 
 const MainRoutes = () => {
   return (
@@ -25,6 +27,7 @@ const MainRoutes = () => {
       <Toaster position="top-right" reverseOrder={false} />
       <BrowserRouter>
         <Routes>
+          <Route path="/chatbox" element={<ChatBox />} />
           {/* Public Pages with Layout */}
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
@@ -33,6 +36,7 @@ const MainRoutes = () => {
             <Route path="introduction" element={<Introduction />} />
             <Route path="specialization/:id" element={<SpecializationDetail />} />
             <Route path="program" element={<ProgramList />} />
+
             <Route
               path="consultant"
               element={
@@ -55,6 +59,7 @@ const MainRoutes = () => {
             }
           >
             <Route index element={<Schedule />} />
+            <Route path="notification" element={<Notification />} />
           </Route>
 
           {/* Authentication */}
