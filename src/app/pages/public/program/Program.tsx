@@ -412,7 +412,7 @@ const ProgramList: React.FC = () => {
                 <div key={majorId} className="bg-white rounded-2xl shadow-lg overflow-hidden">
                   {/* Major Header */}
                   <div
-                    className="bg-gradient-to-r from-orange-500 to-red-500 text-white p-6 cursor-pointer hover:from-orange-600 hover:to-red-600 transition-all duration-300"
+                    className="bg-orange-500 text-white p-6 cursor-pointer hover:from-orange-600 hover:to-red-600 transition-all duration-300"
                     onClick={() => toggleMajorExpansion(majorId)}
                   >
                     <div className="flex items-center justify-between">
@@ -469,7 +469,7 @@ const ProgramList: React.FC = () => {
                           </div>
 
                           {/* Programs for this specialization */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
                             {specializationData.programs.map((program) => (
                               <div
                                 key={program.id}

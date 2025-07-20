@@ -24,15 +24,14 @@ import StaffLayout from "../layouts/staffLayout";
 import Schedule from "../pages/staff/schedule/Schedule";
 import { Toaster } from "react-hot-toast";
 import Consultant from "../pages/public/consultant/consultant";
-import { News } from "../pages/public/news/news";
-import SpecializationDetail from "../pages/public/specialization/SpecializationDetail";
+import SpecializationDetail from "../pages/public/specialization/specializationDetail";
 import ProgramList from "../pages/public/program/Program";
 
 
 const MainRoutes = () => {
     return (
         <>
-        <Toaster position="top-right"  reverseOrder={false}/>
+            <Toaster position="top-right" reverseOrder={false} />
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Layout />}>
@@ -41,10 +40,10 @@ const MainRoutes = () => {
                         <Route path="/major" element={<Major />} />
                         <Route path="/introduction" element={<Introduction />} />
                         <Route path="/consultant" element={<Consultant />} />
-      <Route path="/specialization/:id" element={<SpecializationDetail />} />
+                        <Route path="/specialization/:id" element={<SpecializationDetail />} />
                         <Route path="/program" element={<ProgramList />} />
                     </Route>
-                    <Route path="/tin-tuc" element={<News />} />
+
 
                     <Route path="/staff" element={<StaffLayout />}>
                         <Route index element={<Schedule />} />

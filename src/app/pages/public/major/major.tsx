@@ -20,6 +20,8 @@ import { GraduationCap, BookOpen, Sparkles, Loader2 } from 'lucide-react';
 import TrainingPhase from './TraningPhase';
 import Program from '../program/Program';
 import axios from 'axios';
+import TitleBanner from './../../../components/banner/titleBanner';
+
 
 
 const Major: React.FC = () => {
@@ -159,32 +161,8 @@ const Major: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-orange-50/30">
       {/* Hero Banner */}
-      <div className="relative h-[400px] overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-600 via-red-500 to-pink-500"></div>
-        <div className="absolute inset-0 bg-black/20"></div>
-
-        {/* Animated background elements */}
-        <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-        <div className="absolute top-32 right-20 w-32 h-32 bg-white/5 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-20 left-1/3 w-24 h-24 bg-white/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-
-        <div className="relative h-full flex items-center justify-center text-center px-4">
-          <div className="max-w-4xl">
-            <div className="flex items-center justify-center mb-6">
-              <GraduationCap className="w-16 h-16 text-white mr-4" />
-              <Sparkles className="w-12 h-12 text-yellow-300 animate-pulse" />
-            </div>
-            <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 leading-tight">
-              CHƯƠNG TRÌNH
-              <span className="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
-                ĐÀO TẠO
-              </span>
-            </h1>
-            <p className="text-xl text-white/90 max-w-2xl mx-auto leading-relaxed">
-              Khám phá hành trình học tập đẳng cấp quốc tế tại Trường Đại học FPT
-            </p>
-          </div>
-        </div>
+      <div className="">
+        <TitleBanner title='CHƯƠNG TRÌNH ĐÀO TẠO' />
       </div>
 
       {/* Main Content */}

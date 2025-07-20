@@ -90,26 +90,26 @@ const Footer: React.FC = () => {
   return (
     <footer className="bg-white pt-10 pb-5">
       <div className="max-w-8xl mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-10 border-t-2 border-b-2  border-solid border-orange-500 p-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-10 border-t-2 border-b-2  border-solid border-orange-500 p-5">
           {campuses.map((campus) => (
-            <div key={campus.id} className="space-y-4">
-              <h3 className="font-bold text-3xl text-orange-600">
+            <div key={campus.id} className="space-y-2">
+              <h3 className="font-bold text-xl text-orange-600">
                 {getCityName(campus.name)}
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <div className="flex items-start gap-2">
                   <FontAwesomeIcon
                     icon={faMapMarkerAlt}
                     className="text-orange-500 mt-1 flex-shrink-0"
                   />
-                  <p className="text-gray-950 text-xl">{campus.address}</p>
+                  <p className="text-gray-950 text-lg">{campus.address}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <FontAwesomeIcon
                     icon={faPhone}
                     className="text-orange-500 flex-shrink-0"
                   />
-                  <p className="text-gray-950 text-xl">
+                  <p className="text-gray-950 text-lg">
                     Điện thoại: <a href={`tel:${campus.phone}`} className="hover:text-orange-600">{campus.phone}</a>
                   </p>
                 </div>
@@ -118,7 +118,7 @@ const Footer: React.FC = () => {
                     icon={faEnvelope}
                     className="text-orange-500 flex-shrink-0"
                   />
-                  <p className="text-gray-950 text-xl">
+                  <p className="text-gray-950 text-lg">
                     Email: <a href={`mailto:${campus.email}`} className="hover:text-orange-600">{campus.email}</a>
                   </p>
                 </div>
@@ -131,16 +131,16 @@ const Footer: React.FC = () => {
         </div>
 
 
-        <div className="border-t border-gray-200 pt-5 ">
+        <div >
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-gray-950 text-lg mb-4 md:mb-0">
+            <div className="text-gray-950 text-md mb-4 md:mb-0">
               © 2024 Bản quyền thuộc về Trường Đại học FPT.
             </div>
-            <div className="flex space-x-10">
-              <a href="https://www.facebook.com/daihocfpt?utm_source=GGMA&utm_medium=DKTS2025&utm_campaign=TV" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-600 text-5xl">
+            <div className="flex space-x-2">
+              <a href="https://www.facebook.com/daihocfpt?utm_source=GGMA&utm_medium=DKTS2025&utm_campaign=TV" target="_blank" rel="noopener noreferrer" className="text-blue-600 mr-5 hover:text-blue-600 text-2xl">
                 <FontAwesomeIcon icon={faFacebook} />
               </a>
-              <a href="https://www.tiktok.com/@fptuniversity?utm_source=GGMA&utm_medium=DKTS2025&utm_campaign=TV" target="_blank" rel="noopener noreferrer" className="text-black-600 hover:text-black text-5xl">
+              <a href="https://www.tiktok.com/@fptuniversity?utm_source=GGMA&utm_medium=DKTS2025&utm_campaign=TV" target="_blank" rel="noopener noreferrer" className="text-black-600 hover:text-black text-2xl">
                 <FontAwesomeIcon icon={faTiktok} />
               </a>
             </div>
