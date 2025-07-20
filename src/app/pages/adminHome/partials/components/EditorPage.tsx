@@ -33,13 +33,14 @@ const modules = {
         upload: async (file: File) => {
             const formData = new FormData();
             formData.append('file', file);
-            const res = await fetch('http://localhost:8080/api/assets/upload', {
-                method: 'POST',
-                body: formData,
-            }).then(response => response.json());
+            const res = await api.post('/assets/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
             if (res.status) {
-                console.log('Image uploaded successfully:', res.result);
-                return res.result;
+                console.log('Image uploaded successfully:', res.data.result);
+                return res.data.result;
             } else {
                 throw new Error('Upload failed');
             }

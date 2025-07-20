@@ -6,6 +6,7 @@ import { registerAPI } from "./services/authService"
 import type { RegisterFormData } from "./models/loginModel"
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 import { BiLoader } from "react-icons/bi"
+import toast from "react-hot-toast"
 
 export default function Register() {
   const [data, setData] = useState<RegisterFormData>({
@@ -13,7 +14,6 @@ export default function Register() {
     email: "",
     phone: "",
     password: "",
-    confirmPassword: "",
     fullName: "",
     address: "",
     role: "USER",
@@ -22,7 +22,6 @@ export default function Register() {
   const [message, setMessage] = useState<string | null>(null)
   const [messageType, setMessageType] = useState<"success" | "error" | null>(null)
   const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
 
@@ -37,7 +36,6 @@ export default function Register() {
       !data.email ||
       !data.phone ||
       !data.password ||
-      !data.confirmPassword ||
       !data.fullName ||
       !data.address ||
       !data.role
@@ -73,12 +71,6 @@ export default function Register() {
       return false
     }
 
-    if (data.password !== data.confirmPassword) {
-      setMessage("Mật khẩu không khớp")
-      setMessageType("error")
-      return false
-    }
-
     return true
   }
 
@@ -88,13 +80,15 @@ export default function Register() {
     setIsLoading(true)
     try {
       const res = await registerAPI(data)
-      if (res.status === 200) {
+      if (res.status === 201) {
         setMessage("Đăng ký thành công!")
+        toast.success("Đăng ký thành công! Vui lòng đăng nhập.")
         setMessageType("success")
         setTimeout(() => navigate("/login"), 1500)
       }
     } catch (error) {
       setMessage("Đăng ký thất bại! Vui lòng thử lại.")
+      toast.error("Đăng ký thất bại! Vui lòng thử lại.")
       setMessageType("error")
     } finally {
       setIsLoading(false)
@@ -168,39 +162,6 @@ export default function Register() {
                       >
                         <span className={showPassword ? "text-red-500 font-medium" : "text-blue-500 font-medium"}>
                           {showPassword ? (
-                            <AiOutlineEyeInvisible className="h-5 w-5 transition-colors" />
-                          ) : (
-                            <AiOutlineEye className="h-5 w-5 transition-colors" />
-                          )}
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Confirm Password */}
-                  <div>
-                    <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                      Xác Nhận Mật Khẩu *
-                    </label>
-                    <div className="relative">
-                      <input
-                        id="confirmPassword"
-                        type={showConfirmPassword ? "text" : "password"}
-                        placeholder="Nhập lại mật khẩu"
-                        value={data.confirmPassword}
-                        onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-                        className="w-full px-5 py-3 rounded-lg bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                        required
-                      />
-                      <button
-                        type="button"
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      >
-                        <span
-                          className={showConfirmPassword ? "text-red-500 font-medium" : "text-blue-500 font-medium"}
-                        >
-                          {showConfirmPassword ? (
                             <AiOutlineEyeInvisible className="h-5 w-5 transition-colors" />
                           ) : (
                             <AiOutlineEye className="h-5 w-5 transition-colors" />
