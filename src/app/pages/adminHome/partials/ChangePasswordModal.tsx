@@ -51,12 +51,6 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
       setError("Mật khẩu không được vượt quá 32 ký tự");
       return;
     }
-
-    if (newPassword !== confirmPassword) {
-      setError("Mật khẩu mới và xác nhận không khớp");
-      return;
-    }
-
     setLoading(true)
     setError("")
 
@@ -66,7 +60,11 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
         newPassword: formData.newPassword,
       })
 
-      if (response.status === 200) {
+      if (response.data === "Invalid current password!") {
+        setError("Mật khẩu hiện tại không đúng.")
+        return
+      }
+       else if (response.data === "Successfully change your password!") {
         setSuccess(true)
       } else {
         setError("Mật khẩu hiện tại không đúng.")
