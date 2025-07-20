@@ -8,7 +8,6 @@ interface Post {
   topic: string;
   htmlContent: string;
   stamp: string;
-  thumbnail: string;
   category_name: string;
 }
 
@@ -93,7 +92,6 @@ const NewsDetail: React.FC = () => {
       <p className="text-lg text-gray-500 italic mb-5">
         {new Date(post.stamp).toLocaleString()}
       </p>
-      <img src={post.thumbnail} alt={post.topic} className="w-full rounded-lg mb-6" />
       <div
         className="prose prose-lg"
         dangerouslySetInnerHTML={{ __html: post.htmlContent }}
