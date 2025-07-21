@@ -27,7 +27,7 @@ const UpcomingCard: React.FC<UpcomingCardProps> = ({ appointments, status }) => 
             <div className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {appointments
-                        .filter(appointment => parseAvailableDay(appointment.availableDate) >= new Date() && appointment.status !== 'CANCEL')
+                        .filter(appointment => parseAvailableDay(appointment.availableDate) >= new Date() && appointment.status !== 'CANCELED' && appointment.status !== 'COMPLETED' && appointment.status !== 'ABSENT')
                         .sort((a, b) => parseAvailableTime(a.availableDate).getTime() - parseAvailableTime(b.availableDate).getTime())
                         .slice(0, 6)
                         .map((appointment) => (

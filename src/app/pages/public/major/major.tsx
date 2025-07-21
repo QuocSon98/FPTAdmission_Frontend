@@ -197,22 +197,10 @@ const Major: React.FC = () => {
 
           {/* Training Phases Header */}
           <div className="text-center">
-            <h3 className="text-3xl font-bold text-gray-800 mb-2">
+            <h3 className="text-3xl font-bold mb-2 bg-gradient-to-r from-orange-600 to-red-600 text-white px-8 py-4 rounded-full text-2xl font-bold shadow-lg mb-8">
               Trải nghiệm 04 giai đoạn đào tạo đặc biệt
             </h3>
             {/* <div className="w-24 h-1 bg-gradient-to-r from-orange-500 to-red-500 mx-auto rounded-full"></div> */}
-          </div>
-
-          {/* Training Process Image */}
-          <div className="max-w-7xl mx-auto mb-2">
-            <div className="rounded-2xl ">
-              <img
-                src="https://daihoc.fpt.edu.vn/wp-content/uploads/2024/11/4giaidoan.avif"
-                alt="Trải nghiệm 04 giai đoạn đào tạo đặc biệt"
-                className="w-full h-auto"
-              />
-              {/* <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div> */}
-            </div>
           </div>
 
           {/* Training Phases Grid */}

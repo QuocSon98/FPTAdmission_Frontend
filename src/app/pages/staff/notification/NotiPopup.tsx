@@ -55,7 +55,9 @@ export default function NotiPopup() {
         });
 
         return () => {
-            stompClient.disconnect();
+            if (stompClient.connected) {
+                stompClient.disconnect();
+            }
         };
     }, [account?.uuid]);
 
@@ -66,8 +68,8 @@ export default function NotiPopup() {
         setTimeout(() => setVisibleEvent(null), 300);
     };
 
-    // // Don't render if no visible event
-    // if (!visibleEvent) return null;
+    // Don't render if no visible event
+    if (!visibleEvent) return null;
 
     return (
         visibleEvent && (

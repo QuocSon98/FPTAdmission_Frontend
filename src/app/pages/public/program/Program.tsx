@@ -520,7 +520,7 @@ const ProgramList: React.FC = () => {
                                 {/* Action */}
                                 <Link
                                   to={`/specialization/${program.specialization.id}`}
-                                  className="block w-full bg-gradient-to-r from-orange-500 to-red-500 text-white text-center py-2 rounded-lg font-medium hover:from-orange-600 hover:to-red-600 transition-all duration-300 text-sm"
+                                  className="block w-full bg-orange-500 text-white text-center py-2 rounded-lg font-medium hover:from-orange-600 hover:to-red-600 transition-all duration-300 text-sm"
                                 >
                                   Xem chi tiết
                                 </Link>
