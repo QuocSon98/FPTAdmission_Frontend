@@ -27,6 +27,7 @@ interface BaseEvent {
 export default function NotiPopup() {
     const [visibleEvent, setVisibleEvent] = useState<BaseEvent | null>(null);
     const [isVisible, setIsVisible] = useState(false);
+    const [lastBookingUuid, setLastBookingUuid] = useState<string | null>(null);
 
     const account: Account = localStorage.getItem("account") ? JSON.parse(localStorage.getItem("account")!) : null;
 
@@ -39,6 +40,7 @@ export default function NotiPopup() {
                 (message) => {
                     const data = JSON.parse(message.body) as SocketNewApplicationEvent;
                     console.log("Received event:", data);
+<<<<<<< Updated upstream
                     // Hiện thông tin event mới nhất trong 5 giây
                     setVisibleEvent({
                         name: data.submitApplicationEvent.fullname,
@@ -50,6 +52,20 @@ export default function NotiPopup() {
                         setIsVisible(false);
                         setTimeout(() => setVisibleEvent(null), 300);
                     }, 5000);
+=======
+                    // Chỉ hiện popup nếu bookingUuid mới
+                    if (data.bookingUuid !== lastBookingUuid) {
+                        setEvents((prev) => [
+                            {
+                                name: data.submitApplicationEvent.fullname,
+                                consultantUuid: data.consultantUuid,
+                                description: `Specialization: ${data.submitApplicationEvent.specialization} | Campus: ${data.submitApplicationEvent.campus}`,
+                            },
+                            ...prev,
+                        ]);
+                        setLastBookingUuid(data.bookingUuid);
+                    }
+>>>>>>> Stashed changes
                 }
             );
         });
@@ -59,7 +75,7 @@ export default function NotiPopup() {
                 stompClient.disconnect();
             }
         };
-    }, [account?.uuid]);
+    }, [account?.uuid, lastBookingUuid]);
 
     // useEffect tự động hiện event đã bỏ, xử lý trực tiếp khi nhận event mới
 
@@ -68,7 +84,10 @@ export default function NotiPopup() {
         setTimeout(() => setVisibleEvent(null), 300);
     };
 
+<<<<<<< Updated upstream
     // Don't render if no visible event
+=======
+>>>>>>> Stashed changes
     if (!visibleEvent) return null;
 
     return (
